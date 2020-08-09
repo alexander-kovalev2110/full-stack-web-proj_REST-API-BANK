@@ -1,4 +1,4 @@
 {"date":23.07.2020.21:32:58,"transaction":add_cust,"request":{"name":"Sid","pw":"Sid"},"response":{"customerId":"17"}}
-{"date":24.07.2019.11:14:20,"transaction":add_tr,"request":{"customerId":17,"amount":500},"response":[{"transactionId":"62","customerId":"17","amount":"500.00","date":"24.09.2019"}]}
-{"date":24.07.2019.11:15:02,"transaction":login,"request":{"name":"Sid","pw":"Sid"},"response":{"customerId":"17"}}
-{"date":24.07.2019.11:18:10,"transaction":get_tr,"request":{"customerId":17,"transactionId":62},"response":[{"transactionId":"62","customerId":"17","amount":"500.00","date":"24.09.2019"}]}
+{"date":24.07.2020.11:14:20,"transaction":add_tr,"request":{"customerId":17,"amount":500},"response":[{"transactionId":"62","customerId":"17","amount":"500.00","date":"24.07.2020"}]}
+{"date":24.07.2020.11:15:02,"transaction":login,"request":{"name":"Sid","pw":"Sid"},"response":{"customerId":"17"}}
+{"date":24.07.2020.11:18:10,"transaction":get_tr,"request":{"customerId":17,"transactionId":62},"response":[{"transactionId":"62","customerId":"17","amount":"500.00","date":"24.07.2020"}]}

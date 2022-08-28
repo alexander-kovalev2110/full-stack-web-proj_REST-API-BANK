@@ -1,6 +1,6 @@
 import serv_data from "./serv_data"
 
-export const Config = (index, customerId) => {      // Setting config for axios function (see apiModule)
+const Config = (index, customerId) => {              // Setting config for axios function (see apiModule)
     const domen = 'http://127.0.0.1:8000'
 
     const { method, db, input1, input2 } = serv_data[index]

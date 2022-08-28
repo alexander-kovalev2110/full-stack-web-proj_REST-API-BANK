@@ -1,6 +1,5 @@
 # Project – “full-stack-web-proj_REST-API-BANK”
 
---------------------------------------------------
 
 PHP-test.pdf 			- Project description - RESTFULL API BANK   
 'back-end' folder		- Back-end source code (PHP, Symfony, mySQL)   

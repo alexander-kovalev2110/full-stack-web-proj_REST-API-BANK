@@ -1,10 +1,27 @@
-# Project – “full-stack-web-proj_REST-API-BANK”
+# RESTFULL API BANK - fullstack web-project
 
+Project description  -  PHP-test.pdf
 
-PHP-test.pdf 			- Project description - RESTFULL API BANK   
-'back-end' folder		- Back-end source code (PHP, Symfony, mySQL)   
-'front-end' folder		- Front-end source code - SPA, 4 variants: 
-'gui-api-react' folder		        -  (HTML+CSS, JS, BOOTSTRAP, React)
-'gui-api-react-hook' folder		    -  (HTML+CSS, JS, BOOTSTRAP, React-hook)
-'gui-api-react-redux' folder		-  (HTML+CSS, JS, BOOTSTRAP, React-Redux)
-'gui-api-vue' folder		        -  (HTML+CSS, JS, BOOTSTRAP, Vue-Vuex)
+## Front-end - 4 SPA JS implementation versions:
+
+### gui-api-react
+
+React - class-cmponents - state 
+
+### gui-api-react-hook
+
+React-hook - functional-cmponents 
+
+### gui-api-react-redux
+
+React/Redux - store-actions-reducers 
+
+### gui-api-vue
+
+Vue.js/Vuex
+
+## Back-end - 2 implementation versions:
+
+### PHP/Symfony/mySQL
+
+### Node.js/Express/MongoDB

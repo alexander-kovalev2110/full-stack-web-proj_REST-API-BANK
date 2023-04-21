@@ -22,6 +22,11 @@ Vue.js/Vuex
 
 ## Back-end - 2 implementation versions:
 
-### PHP/Symfony/mySQL
+### nodejs-express-mongodb
 
-### Node.js/Express/MongoDB
+Node.js/Express/MongoDB
+
+### php-symfony-mysql
+
+PHP/Symfony/mySQL
+

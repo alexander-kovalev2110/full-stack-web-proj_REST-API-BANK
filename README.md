@@ -1,8 +1,8 @@
-# RESTFULL API BANK - fullstack web-project
+# REST API BANK - full stack web-project
 
 Project description  -  PHP-test.pdf
 
-## Front-end - 4 SPA JS implementation versions:
+## Front-end - 4 SPA JS implementation variants:
 
 ### gui-api-react
 
@@ -20,7 +20,7 @@ React/Redux - store-actions-reducers
 
 Vue.js/Vuex
 
-## Back-end - 2 implementation versions:
+## Back-end - 2 implementation variants:
 
 ### nodejs-express-mongodb
 

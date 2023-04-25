@@ -1,20 +1,20 @@
-import mongoose from 'mongoose'
+import { Schema, model } from 'mongoose'
 
-const customerSchema = new mongoose.Schema({
+const customerSchema = new Schema({
     name: {type: String, required: true},
     pw: {type: String, maxLength: 8, required: true}
 })
 
-const transactionSchema = new mongoose.Schema({
+const transactionSchema = new Schema({
     amount: {type: Number, required: true},
     date: {type: Date, default: Date.now},
     customer: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Customer',
         required: true
     }
 })
 
 // Mongoose models to perform CRUD
-export const Customer = mongoose.model('Customer', customerSchema)
-export const Transaction = mongoose.model('Transaction', transactionSchema)
+export const Customer = model('Customer', customerSchema)
+export const Transaction = model('Transaction', transactionSchema)

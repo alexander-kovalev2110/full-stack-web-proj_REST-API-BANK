@@ -1,6 +1,12 @@
 # REST API BANK - full stack web-project
 
-Project description  -  PHP-test.pdf
+### Project description 
+
+PHP-test.pdf
+
+### Swagger-OpenAPI
+
+Swagger UI
 
 ## Front-end - 4 SPA JS implementation variants:
 

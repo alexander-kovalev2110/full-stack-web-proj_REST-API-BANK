@@ -8,7 +8,7 @@ servers:
     description: Dev server
     
 paths:
-  /customers:
+  /customer/{name}/{pw}:
     get:
       summary: Customer Login
       tags:
@@ -36,12 +36,9 @@ paths:
       tags:
         - Customers
       operationId: createCustomer
-      requestBody:
-        required: true
-        content:
-          aplication/json:
-            schema:
-              $ref: "#/components/schemas/InitialCastomer"
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/pw'
       responses:
         '200':
           description: Successful customer creation
@@ -56,18 +53,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
   
-  /transactions:
+  /transaction/{customerId}/{amount}:
     post:
       summary: Create transaction
       tags:
         - Transactions
       operationId: createTransaction
-      requestBody:
-        required: true
-        content:
-          aplication/json:
-            schema:
-              $ref: "#/components/schemas/InitialTransaction"
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+        - $ref: '#/components/parameters/amount'
       responses:
         '200':
           description: Successful transaction creation
@@ -82,15 +76,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /transaction:
     get:
       summary: Find transactions by filter
       tags:
         - Transactions
       operationId: findTransactionByFilter
       parameters:
-        - $ref: '#/components/parameters/amount'
+        - $ref: '#/components/parameters/customerId-filter'
+        - $ref: '#/components/parameters/amount-filter'
         - $ref: '#/components/parameters/date'
-        - $ref: '#/components/parameters/customerId'
       responses:
         '200':
           description: Successful search for transactions
@@ -107,7 +102,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
         
-  /transactions/{transaction-id}:
+  /transaction/{transactionId}:
     get:
       summary: Get transaction by id
       tags:
@@ -128,37 +123,7 @@ paths:
             aplcation/json:
               schema:
                 $ref: "#/components/schemas/Error"
-                
-    patch:
-      summary: Update transaction by id
-      tags:
-        - Transactions
-      operationId: updateTransactionById
-      parameters:
-        - $ref: '#/components/parameters/transactionId'
-      requestBody:
-        description: mutable amount
-        required: true
-        content:
-          application/json:
-            schema:
-              properties:
-                amount:
-                  type: number
-      responses:
-        '200':
-          description: Transaction found
-          content:
-            aplcation/json:
-              schema:
-                $ref: "#/components/schemas/Transaction"
-        '400':
-          description: Transaction not found 
-          content:
-            aplcation/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-                
+
     delete:
       summary: Delete transaction by id
       tags:
@@ -175,22 +140,32 @@ paths:
             aplcation/json:
               schema:
                 $ref: "#/components/schemas/Error"
-                
+
+  /transaction/{transactionId}/{amount}:
+    patch:
+      summary: Update transaction by id
+      tags:
+        - Transactions
+      operationId: updateTransactionById
+      parameters:
+        - $ref: '#/components/parameters/transactionId'
+        - $ref: '#/components/parameters/amount'
+      responses:
+        '200':
+          description: Transaction found
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        '400':
+          description: Transaction not found
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
-    InitialCastomer:
-      type: object
-      required: 
-        - name
-        - pw
-      properties:
-        name:
-          type: string
-          example: Alex
-        pw:
-          type: string
-          example: 1234Abcd
-
     Customer:
       type: object
       properties:
@@ -203,20 +178,7 @@ components:
         pw:
           type: string
           example: 1234Abcd
- 
-    InitialTransaction:
-      type: object
-      required: 
-        - customerId
-        - amount
-      properties:
-        customerId:
-          type: integer
-          example: 1 
-        amount:  
-          type: number
-          example: 10.55
- 
+
     Transaction:      
       type: object
       properties:
@@ -243,7 +205,7 @@ components:
   parameters:
     name:
       name: name
-      in: query
+      in: path
       required: true
       description: Customer name
       schema:
@@ -252,18 +214,27 @@ components:
     
     pw:  
       name: pw
-      in: query
+      in: path
       required: true
       description: Customer password
       schema:
         type: string
         example: 1234Abcd
-  
+
+    customerId:
+      name: customerId
+      in: path
+      description: Customer Id.
+      required: true
+      schema:
+        type: integer
+        example: 1
+
     amount:
       name: amount
-      in: query
-      description: Filter transactions by amount.
-      required: false
+      in: path
+      description: Transaction amount.
+      required: true
       schema:
         type: number
         example: 10.55
@@ -277,7 +248,7 @@ components:
         type: string
         example: 2023-07-01T15:00:00+01
     
-    customerId:
+    customerId-filter:
       name: customerId
       in: query
       description: Filter transactions by customerId.
@@ -285,12 +256,21 @@ components:
       schema:
         type: integer
         example: 1 
-        
+
+    amount-filter:
+      name: amount
+      in: query
+      description: Filter transactions by amount.
+      required: false
+      schema:
+        type: number
+        example: 10.55
+
     transactionId:
-      name: transaction-id
+      name: transactionId
       in: path
       required: true
-      description: Transactio id
+      description: Transaction Id
       schema:
         type: integer
         example: 1 

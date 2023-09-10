@@ -6,6 +6,8 @@
       <sourceFolder url="file://$MODULE_DIR$/back-end/tests" isTestSource="true" packagePrefix="App\Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/back-end/php-symfony-mysql/migrations" isTestSource="false" packagePrefix="DoctrineMigrations" />
+      <sourceFolder url="file://$MODULE_DIR$/back-end/php-symfony-mysql/src" isTestSource="false" packagePrefix="App" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

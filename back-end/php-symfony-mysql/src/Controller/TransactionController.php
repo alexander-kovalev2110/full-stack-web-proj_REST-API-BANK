@@ -25,7 +25,7 @@ class TransactionController extends AbstractController
         $service = new TransactionService($this->entityManager);
         $result = $service->createServ($customerId, $amount);
 
-        $cod = ($result['transactionId'] ?? null) ? 200 : 400;
+        $cod = isset($result['errMessage']) ? 400 : 200;
         return new JsonResponse($result, $cod);
     }
 
@@ -36,7 +36,7 @@ class TransactionController extends AbstractController
         $service = new TransactionService($this->entityManager);
         $result = $service->getServ($transactionId);
 
-        $cod = ($result['transactionId'] ?? null) ? 200 : 400;
+        $cod = isset($result['errMessage']) ? 400 : 200;
         return new JsonResponse($result, $cod);
     }
 
@@ -47,7 +47,7 @@ class TransactionController extends AbstractController
         $service = new TransactionService($this->entityManager);
         $result = $service->updateServ($transactionId, $amount);
 
-        $cod = ($result['transactionId'] ?? null) ? 200 : 400;
+        $cod = isset($result['errMessage']) ? 400 : 200;
         return new JsonResponse($result, $cod);
     }
 
@@ -58,7 +58,7 @@ class TransactionController extends AbstractController
         $service = new TransactionService($this->entityManager);
         $result = $service->deleteServ($transactionId);
 
-        $cod = ($result['errMessage'] ?? null) ? 200 : 400;
+        $cod = isset($result['errMessage']) ? 400 : 200;
         return new JsonResponse($result, $cod);
     }
 
@@ -66,7 +66,7 @@ class TransactionController extends AbstractController
     #[Route('/transaction/', name: 'get_transaction_by_filter', methods: ['GET'])]
     public function getTransactionByFilter(Request $request): Response
     {
-        $customerId = $request->query->get('customer');
+        $customerId = $request->query->get('customerId');
         $amount = $request->query->get('amount');
         $date = $request->query->get('date');
 
@@ -78,7 +78,7 @@ class TransactionController extends AbstractController
         $service = new TransactionService($this->entityManager);
         $result = $service->getByFilterServ($search);
 
-        $cod = ($result['transactions'] ?? null) ? 200 : 400;
+        $cod = isset($result['transactions']) ? 200 : 400;
         return new JsonResponse($result, $cod);
     }
 }

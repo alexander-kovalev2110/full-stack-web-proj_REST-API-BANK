@@ -20,6 +20,10 @@ class TransactionService {
         $customer = $this->entityManager->getRepository(Customer::class)
             ->findOneBy(['id' => $customerId]);
 
+        if (!$customer) {
+            return ['errMessage' => 'Customer is not available.'];
+        }
+
         $transaction = new Transaction();
 
         $transaction->setAmount($amount);
@@ -47,9 +51,12 @@ class TransactionService {
             ->findOneBy(['id' => $transactionId]);
 
         if ($transaction) {
-            return ['transactionId' => $transaction->getId(),
+            return [
+                'transactionId' => $transaction->getId(),
                 'amount' => $transaction->getAmount(),
-                'date' => $transaction->getDate()->format("Y-m-d")];
+                'date' => $transaction->getDate()->format("Y-m-d"),
+                'customerId' => $transaction->getCustomer()->getId()
+            ];
         }
         else {
             return ['errMessage' => 'Transaction is not available.'];
@@ -66,9 +73,12 @@ class TransactionService {
             $transaction->setAmount($amount);            // Updating transaction (amount)
             $this->entityManager->flush();               // Saving $transaction
 
-            return ['transactionId' => $transaction->getId(),
+            return [
+                'transactionId' => $transaction->getId(),
                 'amount' => $transaction->getAmount(),
-                'date' => $transaction->getDate()->format("Y-m-d")];
+                'date' => $transaction->getDate()->format("Y-m-d"),
+                'customerId' => $transaction->getCustomer()->getId()
+            ];
         } else {
             return ['errMessage' => 'Transaction is not available for updating.'];
         }
@@ -84,8 +94,7 @@ class TransactionService {
             $this->entityManager->remove($transaction);       // Deleting transaction
             $this->entityManager->flush();                    // Saving deleting
 
-            return ['transactions' => [],
-                'message' => 'success'];
+            return ['transactions' => []];
         }
         else {
             return ['errMessage' => 'Transaction is not available for deleting.'];
@@ -98,20 +107,16 @@ class TransactionService {
         // Getting transactions from Transaction DB for response
         $transactions = $this->entityManager->getRepository(Transaction::class)->findBy($search);
 
-        if ($transactions) {
             $transForResponse = [];
             foreach($transactions as $i => $tran) {
                 $transForResponse[$i] = [
                     'transactionId' => $tran->getId(),
                     'amount' => $tran->getAmount(),
-                    'date' => $tran->getDate()->format("Y-m-d")
+                    'date' => $tran->getDate()->format("Y-m-d"),
+                    'customerId' => $tran->getCustomer()->getId()
                 ];
 
             };
             return ['transactions' => $transForResponse];
-        }
-        else {
-            return ['errMessage' => 'Transactions are not available.'];
-        }
     }
 }

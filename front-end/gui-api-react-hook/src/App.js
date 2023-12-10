@@ -1,69 +1,49 @@
 import React, { useState } from 'react'
-import Menu from './Menu'
-import Form from './Form'
-import Info from './Info'
-import Table from "./Table";
-import Pagehend from "./Pagehend";
-import Config from './services/config'
-import { PAGE1 } from './services/serv_data'
-import axios from 'axios'
+import { Routes,  Route } from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import TransPage from './pages/TransPage'
+import AlertDialog from "./components/AlertDialog"
 
 const App = () => {
-    const [index, setIndex] = useState(0)               // Menu item index
+    //---- States to control <AlertDialog> modal window ---------------
+    const [alertOpen, setAlertOpen] =  useState(false)      // to open/close <AlertDialog> window
+    const [errMessage, setErrMessage] = useState("")        // message text for <AlertDialog>
+
+    const openAlert = (message) => {
+        setAlertOpen(true)
+        setErrMessage(message)
+    }
+    const closeAlert = () => {
+        setAlertOpen(false)
+    }
+    //---------- Component States -------------------
     const [customerId, setCustomer] = useState(null)    // Customer authorization result
-    const [transactions, setTrans] = useState([])       // Transactions received from the server
-    const [message, setMessage] = useState('')          // error message
-    const [offset, setOffset] = useState(0)             // Page offset on the screen
-    const [page, setPage] = useState(PAGE1)                      // Page size
+    const [transactions, setTrans] = useState([])       // Transactions received from server
+    const [offset, setOffset] = useState(0)             // Page offset on transactions table
 
-    const onClick = (index) => setIndex(index)          // Menu command processing - form output
-
-    const onSubmit = () => {                            // request/response handling
-        const config = Config(index, customerId)        // Setting config for axios
-
-        setTrans([])            // Reset states
-        setMessage('')
-        setOffset(0)
-
-        axios(config)
-            .then((res) => {
-                if ('customerId' in res.data) { setCustomer(res.data.customerId) }
-                if ('transactions' in res.data) { setTrans(res.data.transactions) }
-                if ('message' in res.data) { setMessage(res.data.message) }
-            })
-            .catch((err) => {
-                if (err.response.status > 400) { setMessage(err.message) }
-                else { setMessage(err.response.data.message) }
-            })
+    const resetCustomer = (customer) => {   // State reset on Customer change
+        setCustomer(customer)
+        resetTrans([])
     }
 
-    const pageNext = () => {                      // Next page
-        setOffset(((offset + page) < transactions.length)? (offset + page): offset)
-    }
-
-    const pagePrevious = () => {                  // Previous page
-        setOffset(((offset - page) >= 0)? (offset - page): offset)
-    }
-
-    const pageSet = (page) => {                   // Page size selection
-        setPage(page)
+    const resetTrans = (transactions) => {  // State reset on Transaction change
+        setTrans(transactions)
         setOffset(0)
     }
+    //-----------------------------------------------
 
     return (
-        <div className="row">
-            <div className="column" id="wc1">
-                <Menu onClick={onClick} customerId={customerId} />
-            </div>
-            <div className="column" id="wc2">
-                <Form index={index} onSubmit={onSubmit} />
-                <Info customerId={customerId} message={message} />
-            </div>
-            <div className="column" id="wc3">
-                <Table db={transactions} offset={offset} page={page} />
-                <Pagehend pageNext={pageNext} pagePrevious={pagePrevious}
-                          pageSet={pageSet} page={page} />
-            </div>
+        <div>
+            <Routes>
+                <Route path="/" element={<HomePage customerId={customerId} setCustomer={resetCustomer}
+                                                 openAlert={openAlert}/>} />
+                <Route path="/trans" element={<TransPage customerId={customerId} setCustomer={resetCustomer}
+                                                 transactions={transactions} setTrans={resetTrans}
+                                                 offset={offset} setOffset={setOffset}
+                                                 openAlert={openAlert}/>} />
+            </Routes>
+
+            <AlertDialog open={alertOpen} errMessage={errMessage} closeAlert={closeAlert} />
         </div>
     )
 }

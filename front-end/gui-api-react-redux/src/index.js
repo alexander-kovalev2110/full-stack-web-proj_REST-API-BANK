@@ -1,24 +1,25 @@
-// External imports
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { createStore, applyMiddleware } from 'redux'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import { applyMiddleware } from 'redux'
+import { legacy_createStore as createStore} from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
-
-// Local imports
-import App from './App'
 import rootReducer from './store/reducers'
-
-// Assets
-import './gui_api.css'
+import './index.css'
+import App from './App'
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
 
-ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
-    document.getElementById('root'))
+ReactDOM.createRoot(document.getElementById("root")).render(
+    <React.StrictMode>
+        <Provider store={store}>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </Provider>
+    </React.StrictMode>
+)
 
 export default store

@@ -1,24 +1,18 @@
 import React from 'react'
-import Menu from './Menu'
-import Form from './Form'
-import Info from './Info'
-import Table from './Table'
-import Pagehand from './Pagehand'
+import { Routes,  Route } from 'react-router-dom'
+import { HomePage } from "./pages/HomePage"
+import TransPage from './pages/TransPage'
+import AlertDialog from "./components/AlertDialog"
 
-export const App = () => {
+const App = () => {
     return (
-        <div className="row">
-            <div className="column" id="wc1">
-                <Menu />
-            </div>
-            <div className="column" id="wc2">
-                <Form />
-                <Info />
-            </div>
-            <div className="column" id="wc3">
-                <Table />
-                <Pagehand />
-            </div>
+        <div>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/trans" element={<TransPage />} />
+            </Routes>
+
+            <AlertDialog />
         </div>
     )
 }

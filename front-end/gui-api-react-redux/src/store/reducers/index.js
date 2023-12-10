@@ -1,12 +1,14 @@
 import  { combineReducers } from 'redux'
-import indexReducer from './indexReducer'
-import pageReducer from "./pageReducer"
-import apiReducer from "./apiReducer"
+import custReducer from "./custReducer"
+import alertReducer from "./alertReducer"
+import transReducer from "./transReducer"
+import modalWindReducer from "./modalWindReducer"
 
 const rootReducer = combineReducers({
-    indexRed: indexReducer,
-    apiRed: apiReducer,
-    pageRed: pageReducer
+    alertRed: alertReducer,
+    custRed: custReducer,
+    transRed: transReducer,
+    modalWindRed: modalWindReducer
 })
 
 export default rootReducer

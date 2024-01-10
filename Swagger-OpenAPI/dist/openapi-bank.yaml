@@ -1,0 +1,276 @@
+openapi: 3.0.3
+info:
+  title: REST-API-BANK
+  description: Full stack web project
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Dev server
+    
+paths:
+  /customer/{name}/{pw}:
+    get:
+      summary: Customer Login
+      tags:
+        - Customers
+      operationId: getCustomerByNameAndPw
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/pw'
+      responses:
+        '200':
+          description: Successful response to Login
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        '400':
+          description: Customer is not found
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+            
+    post:
+      summary: Create customer
+      tags:
+        - Customers
+      operationId: createCustomer
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/pw'
+      responses:
+        '200':
+          description: Successful customer creation
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        '400':
+          description: Bad Request. Invalid customer data provided 
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  
+  /transaction/{customerId}/{amount}:
+    post:
+      summary: Create transaction
+      tags:
+        - Transactions
+      operationId: createTransaction
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+        - $ref: '#/components/parameters/amount'
+      responses:
+        '200':
+          description: Successful transaction creation
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        '400':
+          description: Bad Request. Invalid transaction data provided 
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /transaction:
+    get:
+      summary: Find transactions by filter
+      tags:
+        - Transactions
+      operationId: findTransactionByFilter
+      parameters:
+        - $ref: '#/components/parameters/customerId-filter'
+        - $ref: '#/components/parameters/amount-filter'
+        - $ref: '#/components/parameters/date'
+      responses:
+        '200':
+          description: Successful search for transactions
+          content:
+            aplcation/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"  
+        '400':
+          description: Transaction not found 
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        
+  /transaction/{transactionId}:
+    get:
+      summary: Get transaction by id
+      tags:
+        - Transactions
+      operationId: getTransactionById
+      parameters:
+        - $ref: '#/components/parameters/transactionId'
+      responses:
+        '200':
+          description: Transaction found
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        '400':
+          description: Transaction not found 
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      summary: Delete transaction by id
+      tags:
+        - Transactions
+      operationId: deleteTransactionById
+      parameters:
+        - $ref: '#/components/parameters/transactionId'
+      responses:
+        '200':
+          description: Transaction deleted
+        '400':
+          description: Transaction not found 
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /transaction/{transactionId}/{amount}:
+    patch:
+      summary: Update transaction by id
+      tags:
+        - Transactions
+      operationId: updateTransactionById
+      parameters:
+        - $ref: '#/components/parameters/transactionId'
+        - $ref: '#/components/parameters/amount'
+      responses:
+        '200':
+          description: Transaction found
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        '400':
+          description: Transaction not found
+          content:
+            aplcation/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        customerId:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Alex
+        pw:
+          type: string
+          example: 1234Abcd
+
+    Transaction:      
+      type: object
+      properties:
+        transactionId:
+          type: integer
+          example: 1
+        amount:
+          type: number
+          example: 10.55
+        date:
+          type: string
+          example: 2023-07-01T15:00:00+01
+        customerId:
+          type: integer
+          example: 1
+
+    Error:
+      type: object
+      properties:
+        errMessage:
+          type: string
+          example: Error message text
+
+  parameters:
+    name:
+      name: name
+      in: path
+      required: true
+      description: Customer name
+      schema:
+        type: string
+        example: Alex
+    
+    pw:  
+      name: pw
+      in: path
+      required: true
+      description: Customer password
+      schema:
+        type: string
+        example: 1234Abcd
+
+    customerId:
+      name: customerId
+      in: path
+      description: Customer Id.
+      required: true
+      schema:
+        type: integer
+        example: 1
+
+    amount:
+      name: amount
+      in: path
+      description: Transaction amount.
+      required: true
+      schema:
+        type: number
+        example: 10.55
+    
+    date:
+      name: date
+      in: query
+      description: Filter transactions by date.
+      required: false
+      schema:
+        type: string
+        example: 2023-07-01T15:00:00+01
+    
+    customerId-filter:
+      name: customerId
+      in: query
+      description: Filter transactions by customerId.
+      required: false
+      schema:
+        type: integer
+        example: 1 
+
+    amount-filter:
+      name: amount
+      in: query
+      description: Filter transactions by amount.
+      required: false
+      schema:
+        type: number
+        example: 10.55
+
+    transactionId:
+      name: transactionId
+      in: path
+      required: true
+      description: Transaction Id
+      schema:
+        type: integer
+        example: 1 

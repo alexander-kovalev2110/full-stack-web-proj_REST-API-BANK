@@ -4,19 +4,23 @@
 
 ### Swagger-OpenAPI - Swagger UI
 
-## Front-end - 4 SPA JS implementation variants:
-
-### gui-api-react
-
-React - class-cmponents - state 
+## Front-end - 5 SPA JS implementation variants:
 
 ### gui-api-react-hook
 
 React-hook - functional-cmponents 
 
-### gui-api-react-redux
+### gui-api-react-redux-ts
 
-React/Redux - store-actions-reducers 
+React/Redux/ts - store-actions-reducers-typescript 
+
+### gui-api-react-redux-ts-rtk
+
+React/Redux/ts/rtk - store-actions-reducers-typescript-redux toolkit
+
+### gui-api-react-redux-rtk-gql
+
+React/Redux/rtk/gql - store-actions-reducers-redux toolkit/GraphQL
 
 ### gui-api-vue
 

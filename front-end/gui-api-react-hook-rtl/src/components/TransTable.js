@@ -1,5 +1,5 @@
-import React from 'react'
-import Box from '@mui/material/Box'
+import React from "react"
+import Box from "@mui/material/Box"
 import { Paper } from "@mui/material"
 import { Table } from "@mui/material"
 import { TableBody } from "@mui/material"
@@ -8,8 +8,8 @@ import { TableContainer } from "@mui/material"
 import { TableHead } from "@mui/material"
 import { TableRow } from "@mui/material"
 import { Toolbar } from "@mui/material"
-import { Button } from '@mui/material'
-import { Stack } from '@mui/material'
+import { Button } from "@mui/material"
+import { Stack } from "@mui/material"
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 
@@ -44,13 +44,13 @@ const TransTable = (props) => {
             </TableContainer>
 
             <Stack direction="row" spacing={2} ml={2} mt={2}>
-                <Button disabled={!((offset - page) > 0)}
-                        variant="outlined" startIcon={<NavigateBeforeIcon />}
-                        onClick={() => setOffset(offset - page)}>
+                <Button variant="outlined" startIcon={<NavigateBeforeIcon />}
+                        disabled={!((offset - page) >= 0)}
+                        onClick={() => {setOffset(offset - page)}}>
                     Previous
                 </Button>
-                <Button disabled={!((offset + page) < transactions.length)}
-                        variant="outlined" startIcon={<NavigateNextIcon />}
+                <Button variant="outlined" startIcon={<NavigateNextIcon />}
+                        disabled={!((offset + page) < transactions.length)}
                         onClick={() => setOffset(offset + page)}>
                     Next
                 </Button>

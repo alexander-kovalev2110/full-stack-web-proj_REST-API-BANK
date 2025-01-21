@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import Box from '@mui/material/Box'
-import { AppBar } from '@mui/material'
-import { Toolbar } from '@mui/material'
-import { Typography } from '@mui/material'
-import { Button } from '@mui/material'
+import { useState } from "react"
+import Box from "@mui/material/Box"
+import { AppBar } from "@mui/material"
+import { Toolbar } from "@mui/material"
+import { Typography } from "@mui/material"
+import { Button } from "@mui/material"
 import LoginIcon from "@mui/icons-material/Login"
-import LoginDialog from '../components/LoginDialog'
+
+import LoginDialog from "../components/LoginDialog"
 
 const NavBar = (props) => {
     const {customerId, setCustomer, openAlert} = props
@@ -21,11 +22,11 @@ const NavBar = (props) => {
                         REST-API-BANK
                     </Typography>
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        {(customerId)? `Customer ${customerId}` : ''}
+                        {(customerId)? `Customer ${customerId}` : ""}
                     </Typography>
                     <Button component="label" variant="outlined" startIcon={<LoginIcon />}
                             color="inherit" onClick={() => setLoginOpen(true)}>
-                        Sign in
+                        Log in
                     </Button>
                 </Toolbar>
             </AppBar>

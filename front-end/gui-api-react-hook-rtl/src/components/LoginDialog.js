@@ -1,4 +1,5 @@
-import React from 'react'
+import React from "react"
+
 import { Dialog } from "@mui/material"
 import { DialogTitle } from "@mui/material"
 import { IconButton } from "@mui/material"
@@ -9,6 +10,7 @@ import { DialogContent } from "@mui/material"
 import { TextField } from "@mui/material"
 import { DialogActions } from "@mui/material"
 import { Button } from "@mui/material"
+
 import axios from "axios"
 
 const LoginDialog = (props) => {
@@ -37,7 +39,7 @@ const LoginDialog = (props) => {
                     aria-label="close"
                     onClick={closeDialog}
                     sx={{
-                        position: 'absolute',
+                        position: "absolute",
                         right: 8,
                         top: 8,
                         color: (theme) => theme.palette.grey[700]
@@ -68,11 +70,11 @@ const LoginDialog = (props) => {
             </DialogContent>
             <DialogActions>
                 <Button component="label" variant="outlined" startIcon={<PersonIcon />}
-                        onClick={() => requestCustomer('GET')}>
+                        onClick={() => requestCustomer("GET")}>
                     Log in
                 </Button>
                 <Button component="label" variant="outlined" startIcon={<PersonAddIcon />}
-                        onClick={() => requestCustomer('POST')}>
+                        onClick={() => requestCustomer("POST")}>
                     Sign up
                 </Button>
             </DialogActions>

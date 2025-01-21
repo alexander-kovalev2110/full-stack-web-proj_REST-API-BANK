@@ -1,10 +1,11 @@
-import React, { useEffect } from "react"
-import Box from "@mui/material/Box"
-import NavBar from "../components/NavBar"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
+import Box from "@mui/material/Box"
+import NavBar from "../components/NavBar"
+
 export const HomePage = (props) => {
-    const { customerId, setCustomer,  openAlert} = props
+    const { customerId, setCustomer, openAlert} = props
     let navigate = useNavigate()
 
     useEffect(() => {

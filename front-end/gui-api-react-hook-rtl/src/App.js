@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { Routes,  Route } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import TransPage from './pages/TransPage'
+import React, { useState } from "react"
+import { Routes,  Route } from "react-router-dom"
+import HomePage from "./pages/HomePage"
+import TransPage from "./pages/TransPage"
 import AlertDialog from "./components/AlertDialog"
 
 const App = () => {
@@ -35,12 +35,16 @@ const App = () => {
     return (
         <div>
             <Routes>
-                <Route path="/" element={<HomePage customerId={customerId} setCustomer={resetCustomer}
-                                                 openAlert={openAlert}/>} />
-                <Route path="/trans" element={<TransPage customerId={customerId} setCustomer={resetCustomer}
-                                                 transactions={transactions} setTrans={resetTrans}
-                                                 offset={offset} setOffset={setOffset}
-                                                 openAlert={openAlert}/>} />
+                <Route path="/" element={<HomePage 
+                        customerId={customerId} setCustomer={resetCustomer}
+                        openAlert={openAlert}/>} 
+                />
+                <Route path="/trans" element={<TransPage 
+                        customerId={customerId} setCustomer={resetCustomer}
+                        transactions={transactions} setTrans={resetTrans}
+                        offset={offset} setOffset={setOffset}
+                        openAlert={openAlert}/>} 
+                />
             </Routes>
 
             <AlertDialog open={alertOpen} errMessage={errMessage} closeAlert={closeAlert} />

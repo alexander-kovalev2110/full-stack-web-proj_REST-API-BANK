@@ -15,15 +15,15 @@ const typeDefs = gql`
 
   type Query {
     getCustomer(name: String!, pw: String!): Customer
-    getTransaction(transactionId: String!): [ Transaction ]
+    getTransaction(customerId: Int!, transactionId: String!): [ Transaction ]
     getTransByFiltr(customerId: Int!, amount: String, date: String): [ Transaction ]
   }
 
   type Mutation {
     addCustomer(name: String!, pw: String!): Customer
     addTransaction(customerId: Int!, amount: String!): [Transaction]
-    updTransaction(transactionId: String!, amount: String!): [Transaction]
-    delTransaction(transactionId: String!): [Transaction]
+    updTransaction(customerId: Int!, transactionId: String!, amount: String!): [Transaction]
+    delTransaction(customerId: Int!, transactionId: String!): [Transaction]
   }
 `
 
@@ -39,9 +39,9 @@ const resolvers = {
       }
     },
 
-    getTransaction: async (_, { transactionId }) => {
+    getTransaction: async (_, { customerId, transactionId }) => {
       try {
-        const res = await axios.get(`http://127.0.0.1:8000/transaction/${transactionId}`)
+        const res = await axios.get(`http://127.0.0.1:8000/transaction/${customerId}/${transactionId}`)
         return res.data.transactions
       } catch (error) {
         throw new Error('Transaction is not available.')
@@ -50,7 +50,7 @@ const resolvers = {
 
     getTransByFiltr: async (_, { customerId, amount, date }) => {
       try {
-        const res = await axios.get(`http://127.0.0.1:8000/transaction/?customerId=${customerId}/&amount=${amount}&date=${date}`)
+        const res = await axios.get(`http://127.0.0.1:8000/transaction/${customerId}/?amount=${amount}&date=${date}`)
         return res.data.transactions
       } catch (error) {
         throw new Error('Transaction is not available.')
@@ -77,18 +77,18 @@ const resolvers = {
       }
     },
     
-    updTransaction: async (_, { transactionId, amount }) => {
+    updTransaction: async (_, { customerId, transactionId, amount }) => {
       try {
-        const res = await axios.patch(`http://127.0.0.1:8000/transaction/${transactionId}/${amount}`)
+        const res = await axios.patch(`http://127.0.0.1:8000/transaction/${customerId}/${transactionId}/${amount}`)
         return res.data.transactions
       } catch (error) {
         throw new Error('Transaction is not available.')
       }
     },
     
-    delTransaction: async (_, { transactionId }) => {
+    delTransaction: async (_, { customerId, transactionId }) => {
       try {
-        const res = await axios.delete(`http://127.0.0.1:8000/transaction/${transactionId}`)
+        const res = await axios.delete(`http://127.0.0.1:8000/transaction/${customerId}/${transactionId}`)
         return res.data.transactions
       } catch (error) {
         throw new Error('Transaction is not available.')

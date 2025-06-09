@@ -32,10 +32,10 @@ export const fetchTrans = createAsyncThunk(
     // Data for request to Transaction DB (method, url)
     const config: ConfigArrType = {
         [Command.AddTrans]: { method: 'POST', url: `${domen}/${customerId}/${amount}` },
-        [Command.GetTrans]: { method: 'GET', url: `${domen}/${transactionId}` },
-        [Command.GetTransByFilter]: { method: 'GET', url: `${domen}/?customerId=${customerId}/&amount=${amount}&date=${date}` },
-        [Command.UpdateTrans]: { method: 'PATCH', url: `${domen}/${transactionId}/${amount}` },
-        [Command.delTrans]:  { method: 'DELETE', url: `${domen}/${transactionId}` }
+        [Command.GetTrans]: { method: 'GET', url: `${domen}/${customerId}/${transactionId}` },
+        [Command.GetTransByFilter]: { method: 'GET', url: `${domen}/${customerId}/?amount=${amount}&date=${date}` },
+        [Command.UpdateTrans]: { method: 'PATCH', url: `${domen}/${customerId}/${transactionId}/${amount}` },
+        [Command.delTrans]:  { method: 'DELETE', url: `${domen}/${customerId}/${transactionId}` }
     }
 
     try {
@@ -83,8 +83,8 @@ export const transSlice = createSlice({
         state.nextDisabled = !(page < action.payload.length)
         state.previousDisabled = true
       },
-      resetTrans: (state) => {
-        state = initialState
+      resetTrans: () => {
+        return initialState;
       },
       previousPage: (state) => {
         state.offset = state.offset - page

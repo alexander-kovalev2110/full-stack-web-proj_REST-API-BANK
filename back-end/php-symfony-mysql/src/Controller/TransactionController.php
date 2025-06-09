@@ -30,43 +30,42 @@ class TransactionController extends AbstractController
     }
 
     // Getting the transaction
-    #[Route('/transaction/{transactionId}', name: 'get_transaction', methods: ['GET'])]
-    public function getTransaction(int $transactionId): Response
+    #[Route('/transaction/{customerId}/{transactionId}', name: 'get_transaction', methods: ['GET'])]
+    public function getTransaction(int $customerId, int $transactionId): Response
     {
         $service = new TransactionService($this->entityManager);
-        $result = $service->getServ($transactionId);
+        $result = $service->getServ($customerId, $transactionId);
 
         $cod = isset($result['errMessage']) ? 400 : 200;
         return new JsonResponse($result, $cod);
     }
 
     // Updating a transaction
-    #[Route('/transaction/{transactionId}/{amount}', name: 'update_transaction', methods: ['PATCH'])]
-    public function updateTransaction(int $transactionId, float $amount): Response
+    #[Route('/transaction/{customerId}/{transactionId}/{amount}', name: 'update_transaction', methods: ['PATCH'])]
+    public function updateTransaction(int $customerId, int $transactionId, float $amount): Response
     {
         $service = new TransactionService($this->entityManager);
-        $result = $service->updateServ($transactionId, $amount);
+        $result = $service->updateServ($customerId, $transactionId, $amount);
 
         $cod = isset($result['errMessage']) ? 400 : 200;
         return new JsonResponse($result, $cod);
     }
 
     // Deleting the transaction
-    #[Route('/transaction/{transactionId}', name: 'delete_transaction', methods: ['DELETE'])]
-    public function deleteTransaction(int $transactionId): Response
+    #[Route('/transaction/{customerId}/{transactionId}', name: 'delete_transaction', methods: ['DELETE'])]
+    public function deleteTransaction(int $customerId, int $transactionId): Response
     {
         $service = new TransactionService($this->entityManager);
-        $result = $service->deleteServ($transactionId);
+        $result = $service->deleteServ($customerId, $transactionId);
 
         $cod = isset($result['errMessage']) ? 400 : 200;
         return new JsonResponse($result, $cod);
     }
 
     // Getting the transaction by filter
-    #[Route('/transaction/', name: 'get_transaction_by_filter', methods: ['GET'])]
-    public function getTransactionByFilter(Request $request): Response
+    #[Route('/transaction/{customerId}', name: 'get_transaction_by_filter', methods: ['GET'])]
+    public function getTransactionByFilter(int $customerId, Request $request): Response
     {
-        $customerId = $request->query->get('customerId');
         $amount = $request->query->get('amount');
         $date = $request->query->get('date');
 

@@ -89,7 +89,7 @@ export const TransDialog = () => {
 
         switch (command) {
             case Command.getTr:
-                getTransaction({ variables: { transactionId } })
+                getTransaction({ variables: { customerId, transactionId } })
                 break;
 
             case Command.getTrByFil:
@@ -101,11 +101,11 @@ export const TransDialog = () => {
                 break;
 
             case Command.updTr:
-                updTransaction({ variables: { transactionId, amount } })
+                updTransaction({ variables: { customerId, transactionId, amount } })
                 break;
 
             case Command.delTr:
-                delTransaction({ variables: { transactionId } })
+                delTransaction({ variables: { customerId, transactionId } })
                 break;
         }
     }

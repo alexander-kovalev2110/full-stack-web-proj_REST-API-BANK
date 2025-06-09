@@ -34,61 +34,71 @@ class TransactionService {
         $this->entityManager->persist($transaction);
         $this->entityManager->flush();
 
-        if ($transaction->getId()) {
-            return ['transactionId' => $transaction->getId(),
-                'amount' => $transaction->getAmount(),
-                'date' => $transaction->getDate()->format("Y-m-d")];
-        }
-        else {
-            return ['errMessage' => 'Transaction is not available.'];
-        }
+        return [
+            'transactions' => [
+                [
+                    'transactionId' => $transaction->getId(),
+                    'amount' => $transaction->getAmount(),
+                    'date' => $transaction->getDate()->format("Y-m-d"),
+                    'customerId' => $transaction->getCustomer()->getId()
+                ]
+            ]
+        ];
     }
 
-    public function getServ(int $transactionId): array
+    public function getServ(int $customerId, int $transactionId): array
     {
         // Getting transaction from Transaction DB
         $transaction = $this->entityManager->getRepository(Transaction::class)
-            ->findOneBy(['id' => $transactionId]);
+            ->findOneBy(['customer' => $customerId, 'id' => $transactionId]);
 
         if ($transaction) {
-            return [
-                'transactionId' => $transaction->getId(),
-                'amount' => $transaction->getAmount(),
-                'date' => $transaction->getDate()->format("Y-m-d"),
-                'customerId' => $transaction->getCustomer()->getId()
-            ];
+        return [
+            'transactions' => [
+                [
+                    'transactionId' => $transaction->getId(),
+                    'amount' => $transaction->getAmount(),
+                    'date' => $transaction->getDate()->format("Y-m-d"),
+                    'customerId' => $transaction->getCustomer()->getId()
+                ]
+            ]
+        ];
         }
         else {
             return ['errMessage' => 'Transaction is not available.'];
         }
     }
 
-    public function updateServ(int $transactionId, float $amount): array
+    public function updateServ(int $customerId, int $transactionId, float $amount): array
     {
         // Getting transaction from Transaction DB
         $transaction = $this->entityManager->getRepository(Transaction::class)
-            ->findOneBy(['id' => $transactionId]);
+            ->findOneBy(['customer' => $customerId, 'id' => $transactionId]);
 
         if ($transaction) {
             $transaction->setAmount($amount);            // Updating transaction (amount)
             $this->entityManager->flush();               // Saving $transaction
 
-            return [
-                'transactionId' => $transaction->getId(),
-                'amount' => $transaction->getAmount(),
-                'date' => $transaction->getDate()->format("Y-m-d"),
-                'customerId' => $transaction->getCustomer()->getId()
-            ];
+        return [
+            'transactions' => [
+                [
+                    'transactionId' => $transaction->getId(),
+                    'amount' => $transaction->getAmount(),
+                    'date' => $transaction->getDate()->format("Y-m-d"),
+                    'customerId' => $transaction->getCustomer()->getId()
+                ]
+            ]
+        ];
         } else {
             return ['errMessage' => 'Transaction is not available for updating.'];
         }
     }
 
-    public function deleteServ(int $transactionId): array
+    public function deleteServ(int $customerId, int $transactionId): array
     {
         // Getting transaction from Transaction DB
         $transaction = $this->entityManager->getRepository(Transaction::class)
-            ->findOneBy(['id' => $transactionId]);
+            ->findOneBy(['customer' => $customerId, 'id' => $transactionId]);
 
         if ($transaction) {
             $this->entityManager->remove($transaction);       // Deleting transaction

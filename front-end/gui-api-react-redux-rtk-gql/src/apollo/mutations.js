@@ -20,8 +20,8 @@ mutation addTransaction($customerId: Int!, $amount: String!) {
 `
 
 export const UPD_TRANSACTION = gql`
-mutation updTransaction($transactionId: String!, $amount: String!) {
-    updTransaction(transactionId: $transactionId, amount: $amount) {
+mutation updTransaction($customerId: Int!, $transactionId: String!, $amount: String!) {
+    updTransaction(customerId: $customerId, transactionId: $transactionId, amount: $amount) {
         transactionId
         amount
         date
@@ -30,8 +30,8 @@ mutation updTransaction($transactionId: String!, $amount: String!) {
 `
 
 export const DEL_TRANSACTION = gql`
-mutation delTransaction($transactionId: String!) {
-    delTransaction(transactionId: $transactionId) {
+mutation delTransaction($customerId: Int!, $transactionId: String!) {
+    delTransaction(customerId: $customerId, transactionId: $transactionId) {
         transactionId
         amount
         date

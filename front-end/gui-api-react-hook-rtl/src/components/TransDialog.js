@@ -31,10 +31,10 @@ const TransDialog = (props) => {
         const domen = "http://127.0.0.1:8000/transaction"
         const config = {
             [Command.addTr] : { method: "POST", url: `${domen}/${customerId}/${amount}` },
-            [Command.getTr] : { method: "GET", url: `${domen}/${transactionId}` },
-            [Command.getTrByFil] : { method: "GET", url: `${domen}/?customerId=${customerId}/&amount=${amount}&date=${date}` },
-            [Command.updTr] : { method: "PATCH", url: `${domen}/${transactionId}/${amount}` },
-            [Command.delTr] : { method: "DELETE", url: `${domen}/${transactionId}` } 
+            [Command.getTr] : { method: "GET", url: `${domen}/${customerId}/${transactionId}` },
+            [Command.getTrByFil] : { method: "GET", url: `${domen}/${customerId}/?amount=${amount}&date=${date}` },
+            [Command.updTr] : { method: "PATCH", url: `${domen}/${customerId}/${transactionId}/${amount}` },
+            [Command.delTr] : { method: "DELETE", url: `${domen}/${customerId}/${transactionId}` } 
         }
 
         try {

@@ -10,8 +10,8 @@ query getCustomer($name: String!, $pw: String!) {
 `;
 
 export const GET_TRANSACTION = gql`
-query getTransaction($transactionId: String!) {
-    getTransaction(transactionId: $transactionId) {
+query getTransaction($customerId: Int!, $transactionId: String!) {
+    getTransaction(customerId: $customerId, transactionId: $transactionId) {
         transactionId
         amount
         date

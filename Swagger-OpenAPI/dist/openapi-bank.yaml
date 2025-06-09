@@ -76,7 +76,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /transaction:
+  /transaction/{customerId}/:
     get:
       summary: Find transactions by filter
       tags:
@@ -102,13 +102,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
         
-  /transaction/{transactionId}:
+  /transaction/{customerId}/{transactionId}:
     get:
       summary: Get transaction by id
       tags:
         - Transactions
       operationId: getTransactionById
       parameters:
+        - $ref: '#/components/parameters/customerId'
         - $ref: '#/components/parameters/transactionId'
       responses:
         '200':
@@ -130,6 +131,7 @@ paths:
         - Transactions
       operationId: deleteTransactionById
       parameters:
+        - $ref: '#/components/parameters/customerId'
         - $ref: '#/components/parameters/transactionId'
       responses:
         '200':
@@ -141,13 +143,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /transaction/{transactionId}/{amount}:
+  /transaction/{customerId}/{transactionId}/{amount}:
     patch:
       summary: Update transaction by id
       tags:
         - Transactions
       operationId: updateTransactionById
       parameters:
+        - $ref: '#/components/parameters/customerId'
         - $ref: '#/components/parameters/transactionId'
         - $ref: '#/components/parameters/amount'
       responses:
@@ -250,9 +253,9 @@ components:
     
     customerId-filter:
       name: customerId
-      in: query
+      in: path
       description: Filter transactions by customerId.
-      required: false
+      required: true
       schema:
         type: integer
         example: 1 

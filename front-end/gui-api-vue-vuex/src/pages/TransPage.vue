@@ -1,44 +1,54 @@
 <template>
-  <!-- <v-card> -->
-    <v-app>
+  <v-app>
 
-      <v-app-bar>
-        <NavBar />
-      </v-app-bar>
+    <v-app-bar app>
+      <NavBar />
+    </v-app-bar>
 
-      <v-navigation-drawer
-              v-model="drawer"
-              location="left"
-      >
-        <v-list v-for="(com, index) in commands" :key="index">
-          <v-list-item  @click="store.commit('openTransDialog'), 
-                                store.commit('setCommand', com)"
-          >{{ com }}</v-list-item>
-        </v-list>
-      </v-navigation-drawer>
+    <v-navigation-drawer
+      v-model="drawer"
+      location="left"
+      app
+      width="240"
+      permanent
+    >
+      <v-list density="compact">
+        <v-list-item
+          v-for="(command, index) in transactionCommands"
+          :key="index"
+          density="compact"
+          @click="() => {
+            store.commit('openTrans');
+            store.commit('setCommand', command);
+          }"
+        >
+          {{ command }}
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-      <v-main class="d-flex" style="min-height: 300px;">
-        <TransTable />
-      </v-main>
+    <v-main class="d-flex" app>
+      <TransTable />
+    </v-main>
 
-    </v-app> 
-  <!-- </v-card> -->
+    <TransDialog />
 
-  <TransDialog />
+  </v-app> 
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import NavBar from "@/components/NavBar.vue"
 import TransTable from "@/components/TransTable.vue"
 import TransDialog from "@/components/TransDialog.vue"
 import store from '../store'
-const drawer = true
+const drawer = ref(true)
 
-const commands = [
-                    'Add Transaction',
-                    'Get Transaction',
-                    'Get Transaction by Filter',
-                    'Update Transaction',
-                    'Delete Transaction'
-                  ]
+const transactionCommands = [
+  'Add Transaction',
+  'Get Transaction',
+  'Get Transaction by Filter',
+  'Update Transaction',
+  'Delete Transaction'
+]
 </script>

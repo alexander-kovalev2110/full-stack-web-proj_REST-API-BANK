@@ -1,14 +1,13 @@
 import { createStore } from "vuex"
-// import { indexModule } from "@/store/indexModule"
+
+import { alertModule } from "@/store/alertModule"
 import { customerModule } from "@/store/customerModule"
 import { transactionModule } from "@/store/transactionModule"
-import { pageModule } from "@/store/pageModule"
 
 export default createStore({
     modules: {
-        // indexMod: indexModule,
+        alertMod: alertModule,
         customerMod: customerModule,
         transMod: transactionModule,
-        pageMod: pageModule
     }
 })

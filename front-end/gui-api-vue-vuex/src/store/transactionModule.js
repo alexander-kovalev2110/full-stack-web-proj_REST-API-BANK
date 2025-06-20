@@ -1,35 +1,60 @@
 import store from "../store"
 import axios from "axios"
 
-export const transactionModule = {
-    state: {
-        command: '',
-        transDialog: false,
-        transactions: []
-    },
+const page = 5
 
-    getters: {
-        getTrans: state => {
-            return state.transactions
-        },
-        // getTransDialog: state => {
-        //     return state.transDialog
-        // }
-    },
+const initialState = () => ({
+  command: '',
+  transOpen: false,
+  transactions: [],
+  tabAr: [],
+  offset: 0,
+  previousDisabled: true,
+  nextDisabled: true
+})
+
+export const transactionModule = {
+ state: initialState(),
 
     mutations: {
+        openTrans: (state) => {
+            state.transOpen = true
+        },
+        closeTrans: (state) => {
+            state.transOpen = false
+        },
         setCommand: (state, command) => {
             state.command = command
         },
         setTrans: (state, transactions) => {
             state.transactions = transactions
+            state.tabAr = transactions.filter((el, index) =>
+                                    ((index >= 0) && (index < page)))
+            state.nextDisabled = !(page < transactions.length)
+            state.previousDisabled = true
         },
-        openTransDialog: (state) => {
-            state.transDialog = true
+        resetTrans: (state) => {
+            const newState = initialState()
+            Object.keys(newState).forEach(key => {
+                state[key] = newState[key]
+            })    
         },
-        closeTransDialog: (state) => {
-            state.transDialog = false
-        }
+        previousPage: (state) => {
+            const previousOffset = state.offset - page
+            state.offset = previousOffset
+            state.tabAr = state.transactions.filter((el, index) =>
+                        ((index >= previousOffset) && (index < previousOffset + page)))
+            state.nextDisabled = !((previousOffset + page) < state.transactions.length),
+            state.previousDisabled = !(previousOffset > 0)
+        },
+        nextPage: (state) => {
+            const nextOffset = state.offset + page
+            state.offset = nextOffset
+            state.tabAr = state.transactions.filter((el, index) =>
+                        ((index >= nextOffset) && (index < nextOffset + page)))
+            state.nextDisabled = !((nextOffset + page) < state.transactions.length),
+            state.previousDisabled = !(nextOffset > 0)
+        },
     },
 
     actions: {
@@ -48,15 +73,11 @@ export const transactionModule = {
             conf['Delete Transaction'] = { method: 'DELETE', url: `${domen}/${customerId}/${transactionId}` }
         
             try {
-                const res = await axios(conf[command])
-                console.log("res", res.data)           
+                const res = await axios(conf[command])        
                 commit('setTrans', res.data.transactions)
-                // commit('pageMod/setTable', res.data.transactions)
-                // console.log("table", store.state.pageMod.tabAr) 
             } catch (err) {
-                console.log()
-                if (err.response.status > 400) { console.log(err.message) }
-                else { console.log(err.response.data.message) }
+                if (err.response.status > 400) { commit('openAlert', err.message) }
+                else { commit('openAlert', err.response.data.errMessage) }
             }
         }
     }

@@ -1,18 +1,18 @@
 
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
-  // transpileDependencies: true,
-  pwa: {
+  transpileDependencies: true,
+    pwa: {
     name: 'My App',
-    shortname: 'App',
     themeColor: '#4DBA87',
-    start_url: '.',
-    displY: 'standalone',
-    msTileColor: '#000000',
-    appleMobileWebAppCapable: 'yes',
-    appleMobileWebAppStatusBarStyle: 'black',
-
-
-    }
+    appleMobileWebAppCapable: 'no',
+    manifestOptions: {
+      icons: [] // отключает генерацию иконок
+    },
+    workboxOptions: {
+      skipWaiting: true,
+    },
+    injectManifest: false // не встраивать PWA в сборку
+  }
   }
 )

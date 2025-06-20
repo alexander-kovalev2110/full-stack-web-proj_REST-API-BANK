@@ -1,16 +1,15 @@
 import { createApp } from 'vue'
 
-// Vuetify
+import '@mdi/font/css/materialdesignicons.css' // import css icons
+
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-import './index.css'
 import store from '@/store'
 import router from "./router"
 import App from './App.vue'
-import './registerServiceWorker'
 
 const vuetify = createVuetify({
     components,
@@ -18,3 +17,5 @@ const vuetify = createVuetify({
 })
 
 createApp(App).use(store).use(vuetify).use(router).mount('#app')
+
+router.push('/')

@@ -1,18 +1,28 @@
 <template>
     <v-dialog
-        v-model="$store.state.transMod.transDialog"
+        v-model="store.state.transMod.transOpen"
         width="auto"
     >
-        <v-card width="400">
+
+        <v-card width="400" class="position-relative">
+        <!-- Close icon -->
+            <v-btn
+                icon="mdi-close"
+                class="close-button"
+                @click="store.commit('closeTrans')"
+                variant="text"
+            />
+
             <v-card-text>
-                <v-row v-for="(inp, index) in inpData[$store.state.transMod.command]" :key="index">
+                <v-row v-for="(inp, index) in inpData[store.state.transMod.command]" :key="index">
                     <v-col cols="12">
                         <v-text-field :id="inp.id" :label="inp.label" :type="inp.type"></v-text-field>
                     </v-col>
                 </v-row>
             </v-card-text>
             <v-card-actions>
-                <v-btn color="primary" block @click="transRequest">Submit</v-btn>
+                <v-btn color="primary" variant="outlined" prepend-icon="mdi-send"
+                    @click="transRequest">Submit</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -61,7 +71,16 @@ const transRequest = () => {
             default:
         }
 
-        store.commit('closeTransDialog'),
+        store.commit('closeTrans'),
         store.dispatch('fetchTrans', payload)
     }
 </script>
+<style scoped>
+.close-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #616161;
+  z-index: 1;
+}
+</style>

@@ -14,7 +14,7 @@ export const fetchCust = createAsyncThunk(
         const url = `http://127.0.0.1:8000/customer/${name}/${pw}`
 
         const res: AxiosResponse<Customer> = await axios({method: method, url: url})
-        store.dispatch(authorCustomer(res.data.customerId))
+        store.dispatch(setCustomer(res.data.customerId))
         store.dispatch(resetTrans())
     } catch (err: any) {
         if (err.response.status > 400) store.dispatch(openAlert(err.message))
@@ -30,12 +30,12 @@ export const custSlice = createSlice({
     name: 'cust',
     initialState,
     reducers: {
-        authorCustomer: (state, action: PayloadAction<CustomerId>) => {
+        setCustomer: (state, action: PayloadAction<CustomerId>) => {
             state.customerId = action.payload  
         },
     }
   })
 
-  export const { authorCustomer } = custSlice.actions
+export const { setCustomer } = custSlice.actions
 
-  export default custSlice.reducer
+export default custSlice.reducer

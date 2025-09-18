@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-class Customer
+class Customer implements UserInterface, PasswordAuthenticatedUserInterface
+// class Customer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,7 +19,7 @@ class Customer
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[ORM\Column(type: 'string', length: 8)]
+    #[ORM\Column(name: 'pw', type: 'string', length: 255)]
     private $pw;
 
     public function getId(): ?int
@@ -36,15 +39,30 @@ class Customer
         return $this;
     }
 
-    public function getPw(): ?string
+    public function getPassword(): ?string
     {
         return $this->pw;
     }
 
-    public function setPw(string $pw): self
+    public function setPassword(string $password): self
     {
-        $this->pw = $pw;
+        $this->pw = $password;
 
         return $this;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->name;
+    }
+
+    public function getRoles(): array
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function eraseCredentials(): void
+    {
+        // если храните plainPassword — обнуляйте его здесь
     }
 }

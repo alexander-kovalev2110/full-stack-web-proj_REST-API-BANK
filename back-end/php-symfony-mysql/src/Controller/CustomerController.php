@@ -2,41 +2,33 @@
 
 namespace App\Controller;
 
-//use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\CustomerService;
 
 class CustomerController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
+    public function __construct(
+        private readonly CustomerService $customerService
+        ) {}
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    // Customer create
     #[Route('/customer/{name}/{pw}', name: 'create_customer', methods: ['POST'])]
-    public function createCustomer(string $name, string $pw): Response
+    public function createCustomer(string $name, string $pw): JsonResponse
     {
-        $service = new CustomerService($this->entityManager);
-        $result = $service->createServ($name, $pw);
-
-        $cod = ($result['customerId'] ?? null) ? 200 : 400;
-        return new JsonResponse($result, $cod);
+        $result =  $this->customerService->createServ($name, $pw);
+        $status = isset($result['customerId']) ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
+        
+        return new JsonResponse($result, $status);
     }
 
-    // Customer login
     #[Route('/customer/{name}/{pw}', name: 'login_customer', methods: ['GET'])]
-    public function loginCustomer(string $name, string $pw): Response
+    public function loginCustomer(string $name, string $pw): JsonResponse
     {
-        $service = new CustomerService($this->entityManager);
-        $result = $service->loginServ($name, $pw);
-
-        $cod = ($result['customerId'] ?? null) ? 200 : 400;
-        return new JsonResponse($result, $cod);
+        $result = $this->customerService->loginServ($name, $pw);
+        $status = isset($result['customerId']) ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
+        
+        return new JsonResponse($result, $status);
     }
 }

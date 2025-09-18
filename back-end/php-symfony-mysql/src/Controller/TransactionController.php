@@ -7,77 +7,64 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\TransactionService;
 
 class TransactionController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
+    public function __construct(
+        private readonly TransactionService $transactionService
+    ) {}
 
-    public function __construct(EntityManagerInterface $entityManager)
+     private function createResponse(array $result): JsonResponse
     {
-        $this->entityManager = $entityManager;
+        $status = isset($result['errMessage']) ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK;
+        return new JsonResponse($result, $status);
     }
 
-    // Creating a transaction
     #[Route('/transaction/{customerId}/{amount}', name: 'add_transaction', methods: ['POST'])]
-    public function createTransaction(int $customerId, float $amount): Response
+    public function createTransaction(int $customerId, float $amount): JsonResponse
     {
-        $service = new TransactionService($this->entityManager);
-        $result = $service->createServ($customerId, $amount);
-
-        $cod = isset($result['errMessage']) ? 400 : 200;
-        return new JsonResponse($result, $cod);
+        $result = $this->transactionService->createServ($customerId, $amount);
+        return $this->createResponse($result);
     }
 
-    // Getting the transaction
     #[Route('/transaction/{customerId}/{transactionId}', name: 'get_transaction', methods: ['GET'])]
-    public function getTransaction(int $customerId, int $transactionId): Response
+    public function getTransaction(int $customerId, int $transactionId): JsonResponse
     {
-        $service = new TransactionService($this->entityManager);
-        $result = $service->getServ($customerId, $transactionId);
-
-        $cod = isset($result['errMessage']) ? 400 : 200;
-        return new JsonResponse($result, $cod);
+        $result = $this->transactionService->getServ($transactionId);
+        return $this->createResponse($result);
     }
 
-    // Updating a transaction
     #[Route('/transaction/{customerId}/{transactionId}/{amount}', name: 'update_transaction', methods: ['PATCH'])]
-    public function updateTransaction(int $customerId, int $transactionId, float $amount): Response
+    public function updateTransaction(int $customerId, int $transactionId, float $amount): JsonResponse
     {
-        $service = new TransactionService($this->entityManager);
-        $result = $service->updateServ($customerId, $transactionId, $amount);
-
-        $cod = isset($result['errMessage']) ? 400 : 200;
-        return new JsonResponse($result, $cod);
+        $result = $this->transactionService->updateServ($transactionId, $amount);
+        return $this->createResponse($result);
     }
 
-    // Deleting the transaction
     #[Route('/transaction/{customerId}/{transactionId}', name: 'delete_transaction', methods: ['DELETE'])]
-    public function deleteTransaction(int $customerId, int $transactionId): Response
+    public function deleteTransaction(int $customerId, int $transactionId): JsonResponse
     {
-        $service = new TransactionService($this->entityManager);
-        $result = $service->deleteServ($customerId, $transactionId);
-
-        $cod = isset($result['errMessage']) ? 400 : 200;
-        return new JsonResponse($result, $cod);
+        $result = $this->transactionService->deleteServ($transactionId);
+        return $this->createResponse($result);
     }
 
-    // Getting the transaction by filter
     #[Route('/transaction/{customerId}', name: 'get_transaction_by_filter', methods: ['GET'])]
-    public function getTransactionByFilter(int $customerId, Request $request): Response
+    public function getTransactionByFilter(int $customerId, Request $request): JsonResponse
     {
-        $amount = $request->query->get('amount');
-        $date = $request->query->get('date');
+        $search = ['customer' => $customerId];
+        
+        if ($amount = $request->query->get('amount')) {
+            $search['amount'] = $amount;
+        }
+        
+        if ($date = $request->query->get('date')) {
+            $search['date'] = \DateTime::createFromFormat('Y-m-d', $date);
+        }
 
-        $search = [];
-        if ($customerId) $search['customer'] = $customerId;
-        if ($amount) $search['amount'] = $amount;
-        if ($date) $search['date'] = \DateTime::createFromFormat('Y-m-d', $date);
+        $result = $this->transactionService->getByFilterServ($search);
+        $status = isset($result['transactions']) ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
 
-        $service = new TransactionService($this->entityManager);
-        $result = $service->getByFilterServ($search);
-
-        $cod = isset($result['transactions']) ? 200 : 400;
-        return new JsonResponse($result, $cod);
-    }
+        return new JsonResponse($result, $status);
+    }     
 }

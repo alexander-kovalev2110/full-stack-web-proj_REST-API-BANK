@@ -10,9 +10,9 @@ use App\Repository\TransactionRepository;
 class TransactionService 
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly CustomerRepository $customerRepository,
-        private readonly TransactionRepository $transactionRepository
+        private readonly EntityManagerInterface $em,
+        private readonly CustomerRepository $customerRepo,
+        private readonly TransactionRepository $transactionRepo
     ){}
 
     private function formatTransaction(Transaction $transaction): array
@@ -25,9 +25,13 @@ class TransactionService
         ];
     }
 
-    public function createServ(int $customerId, float $amount): array
+    public function create(int $customerId, float $amount): array
     {
-        $customer = $this->customerRepository->find($customerId);
+        if ($customerId <= 0 || $amount < 0) {
+            return ['errMessage' => 'Invalid customerId or amount'];
+        }
+
+        $customer = $this->customerRepo->find($customerId);
 
         if (!$customer) {
             return ['errMessage' => 'Customer not found.'];
@@ -38,63 +42,81 @@ class TransactionService
             ->setAmount($amount)
             ->setDate(new \DateTime());
 
-        $this->entityManager->persist($transaction);
-        $this->entityManager->flush();
+        $this->em->persist($transaction);
+        $this->em->flush();
 
         return [
             'transactions' => [$this->formatTransaction($transaction)]
         ];
     }
 
-    public function getServ(int $transactionId): array
+    public function get(int $customerId, int $transactionId,): array
     {
-        $transaction = $this->transactionRepository->find($transactionId);
+        $transactions = $this->transactionRepo->findBy([
+            'customer' => $customerId,
+            'id' => $transactionId
+        ]);
 
-        if (!$transaction) {
+        if (!$transactions) {
             return ['errMessage' => 'Transaction not found.'];
         }
 
         return [
-            'transactions' => [$this->formatTransaction($transaction)]
+            'transactions' => [$this->formatTransaction($transactions[0])]
         ];
     }
 
-    public function updateServ(int $transactionId, float $amount): array
+    public function update(int $customerId, int $transactionId, float $amount): array
     {
-        $transaction = $this->transactionRepository->find($transactionId);
+        if ($customerId <= 0 || $amount < 0) {
+            return ['errMessage' => 'Invalid customerId or amount'];
+        }
+        
+        $transactions = $this->transactionRepo->findBy([
+            'customer' => $customerId,
+            'id' => $transactionId
+        ]);
 
-        if (!$transaction) {
+        if (!$transactions) {
             return ['errMessage' => 'Transaction not found for updating.'];
         }
 
+        $transaction = $transactions[0];
+
         $transaction->setAmount($amount);
-        $this->entityManager->flush();
+        $this->em->flush();
 
         return [
             'transactions' => [$this->formatTransaction($transaction)]
         ];
     }
 
-    public function deleteServ(int $transactionId): array
+    public function delete(int $customerId, int $transactionId): array
     {
-        $transaction = $this->transactionRepository->find($transactionId);
+        // $transaction = $this->transactionRepo->find($customerId, $transactionId);
+        $transactions = $this->transactionRepo->findBy([
+            'customer' => $customerId,
+            'id' => $transactionId
+        ]);
 
-        if (!$transaction) {
+        if (!$transactions) {
             return ['errMessage' => 'Transaction not found for deletion.'];
         }
 
-        $this->entityManager->remove($transaction);
-        $this->entityManager->flush();
+        $transaction = $transactions[0];
+
+        $this->em->remove($transaction);
+        $this->em->flush();
 
         return ['transactions' => []];
     }
 
-    public function getByFilterServ(array $search): array
+    public function getByFilter(array $search): array
     {
-        $transactions = $this->transactionRepository->findBy($search);
+        $transactions = $this->transactionRepo->findBy($search);
 
         $transactionsFormatted = array_map(
-            fn($transaction) => $this->formatTransaction($transaction),
+            fn(Transaction $t) => $this->formatTransaction($t),
             $transactions
         );
 

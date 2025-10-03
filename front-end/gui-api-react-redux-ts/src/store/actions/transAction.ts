@@ -1,7 +1,7 @@
 import store from "../../index"
 import { BaseAction, Command, Transaction, Transactions } from '../interfaces'
 import { openAlert } from "./alertAction"
-import axios, { AxiosResponse } from "axios"
+import axios, { AxiosResponse, AxiosRequestConfig  } from "axios"
 
 export enum TransActionType {
     SET_COMMAND = 'SET_COMMAND',
@@ -48,13 +48,8 @@ export type Query = {
     date: Date
 }
 
-type Config = {
-    method: string,
-    url: string
-}
-
 type ConfigArrType = {
-    [key in Command]: Config
+    [key in Command]: AxiosRequestConfig
 }
 
 export const fetchTrans = async (payload: Query) => {
@@ -65,13 +60,41 @@ export const fetchTrans = async (payload: Query) => {
 
     const domen = 'http://127.0.0.1:8000/transaction'
 
-    // Data for interacting with Transaction DB (method, url)
     const config: ConfigArrType = {
-        [Command.AddTrans]: { method: 'POST', url: `${domen}/${customerId}/${amount}` },
-        [Command.GetTrans]: { method: 'GET', url: `${domen}/${customerId}/${transactionId}` },
-        [Command.GetTransByFilter]: { method: 'GET', url: `${domen}/${customerId}/?amount=${amount}&date=${date}` },
-        [Command.UpdateTrans]: { method: 'PATCH', url: `${domen}/${customerId}/${transactionId}/${amount}` },
-        [Command.delTrans]:  { method: 'DELETE', url: `${domen}/${customerId}/${transactionId}` }
+        [Command.AddTrans]: { 
+            method: 'POST', 
+            url: `${domen}`, 
+            data: {
+                customerId: customerId, 
+                amount: amount
+            } 
+        },
+        [Command.GetTrans]: { 
+            method: 'GET', 
+            url: `${domen}/${customerId}/${transactionId}` 
+        },
+        [Command.GetTransByFilter]: { 
+            method: 'GET', 
+            url: `${domen}`, 
+            params: {
+                customerId: customerId,
+                amount: amount,
+                date: date
+            } 
+        },
+        [Command.UpdateTrans]: { 
+            method: 'PATCH', 
+            url: `${domen}`, 
+            data: {
+                customerId: customerId, 
+                transactionId: transactionId, 
+                amount: amount
+            } 
+        },
+        [Command.delTrans]: { 
+            method: 'DELETE', 
+            url: `${domen}/${customerId}/${transactionId}` 
+        }
     }
 
     try {
@@ -80,7 +103,7 @@ export const fetchTrans = async (payload: Query) => {
         store.dispatch(setTable())      
     }
     catch (err: any) {
-        if (err.response.status > 400) { store.dispatch(openAlert(err.message)) }
+        if (err.response.status >= 500) { store.dispatch(openAlert(err.message)) }
         else { store.dispatch(openAlert(err.response.data.errMessage)) }
     }
 }

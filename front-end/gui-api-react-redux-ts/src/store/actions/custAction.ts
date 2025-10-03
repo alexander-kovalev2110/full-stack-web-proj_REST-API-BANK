@@ -19,14 +19,19 @@ export const fetchCust = async (authorKind: AuthorKind,
                                 name: string, 
                                 pw: string
 ) => {
-    const method = (authorKind === 'Login')? 'GET' : 'POST'      // Login / Signup
-    const url = `http://127.0.0.1:8000/customer/${name}/${pw}`
+    const url = (authorKind === 'Login')
+        ? 'http://127.0.0.1:8000/customer/login'        // endpoint LexikJWTAuthenticationBundle
+        : 'http://127.0.0.1:8000/customer/register'; 
+
+    const payload = { name: name, password: pw }
+
     try {
-        const res: AxiosResponse<Customer> = await axios({method: method, url: url})
+        const res: AxiosResponse<any> = await axios.post(url, payload)
+
         store.dispatch(authorCustomer(res.data.customerId))
         store.dispatch(resetTrans())
     } catch (err: any) {
-        if (err.response.status > 400) { store.dispatch(openAlert(err.message)) }
+        if (err.response.status >= 500) { store.dispatch(openAlert(err.message)) }
         else { store.dispatch(openAlert(err.response.data.errMessage)) }
     }    
 }

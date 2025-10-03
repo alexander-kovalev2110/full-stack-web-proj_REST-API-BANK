@@ -21,38 +21,49 @@ class TransactionController extends AbstractController
         return new JsonResponse($result, $status);
     }
 
-    #[Route('/transaction/{customerId}/{amount}', name: 'add_transaction', methods: ['POST'])]
-    public function createTransaction(int $customerId, float $amount): JsonResponse
+    #[Route('/transaction', name: 'add_transaction', methods: ['POST'])]
+    public function createTransaction(Request $request)
     {
-        $result = $this->transactionService->createServ($customerId, $amount);
+        $data = json_decode($request->getContent(), true) ?? [];
+
+        $customerId = (int) $data['customerId'];
+        $amount = (float) $data['amount'];
+
+        $result = $this->transactionService->create($customerId, $amount);
         return $this->createResponse($result);
     }
 
     #[Route('/transaction/{customerId}/{transactionId}', name: 'get_transaction', methods: ['GET'])]
-    public function getTransaction(int $customerId, int $transactionId): JsonResponse
+    public function getTransaction(int $customerId, int $transactionId)
     {
-        $result = $this->transactionService->getServ($transactionId);
+        $result = $this->transactionService->get($customerId, $transactionId);
         return $this->createResponse($result);
     }
 
-    #[Route('/transaction/{customerId}/{transactionId}/{amount}', name: 'update_transaction', methods: ['PATCH'])]
-    public function updateTransaction(int $customerId, int $transactionId, float $amount): JsonResponse
+    #[Route('/transaction', name: 'update_transaction', methods: ['PATCH'])]
+    public function updateTransaction(Request $request)
     {
-        $result = $this->transactionService->updateServ($transactionId, $amount);
+        $data = json_decode($request->getContent(), true) ?? [];
+
+        $customerId = (int) $data['customerId'];
+        $transactionId = (int) $data['transactionId'];
+        $amount = (float) $data['amount'];
+
+        $result = $this->transactionService->update($customerId, $transactionId, $amount);
         return $this->createResponse($result);
     }
 
     #[Route('/transaction/{customerId}/{transactionId}', name: 'delete_transaction', methods: ['DELETE'])]
-    public function deleteTransaction(int $customerId, int $transactionId): JsonResponse
+    public function deleteTransaction(int $customerId, int $transactionId)
     {
-        $result = $this->transactionService->deleteServ($transactionId);
+        $result = $this->transactionService->delete($customerId, $transactionId);
         return $this->createResponse($result);
     }
 
-    #[Route('/transaction/{customerId}', name: 'get_transaction_by_filter', methods: ['GET'])]
-    public function getTransactionByFilter(int $customerId, Request $request): JsonResponse
+    #[Route('/transaction', name: 'get_transaction_by_filter', methods: ['GET'])]
+    public function getTransactionByFilter(Request $request)
     {
-        $search = ['customer' => $customerId];
+        $search = ['customer' => $request->query->get('customerId')];
         
         if ($amount = $request->query->get('amount')) {
             $search['amount'] = $amount;
@@ -62,9 +73,7 @@ class TransactionController extends AbstractController
             $search['date'] = \DateTime::createFromFormat('Y-m-d', $date);
         }
 
-        $result = $this->transactionService->getByFilterServ($search);
-        $status = isset($result['transactions']) ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
-
-        return new JsonResponse($result, $status);
+        $result = $this->transactionService->getByFilter($search);
+        return $this->createResponse($result);
     }     
 }

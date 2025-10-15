@@ -6,13 +6,15 @@ use App\Entity\Customer;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 class CustomerService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly CustomerRepository $customerRepo
+        private readonly CustomerRepository $customerRepo,
+        private readonly JWTTokenManagerInterface $jwtManager,
     ){}
 
     public function create(string $name, string $pw): array
@@ -30,7 +32,14 @@ class CustomerService
         $this->em->persist($customer);
         $this->em->flush();
 
-        return ['customerId' => $customer->getId()];
+        // Create a token with custom data
+        $token = $this->jwtManager->createFromPayload($customer, [
+            'customerId' => $customer->getId(),
+        ]);
+   
+        return [
+            'token' => $token
+        ];
     }
 
     public function login(string $name, string $pw): array
@@ -45,6 +54,13 @@ class CustomerService
             return ['errMessage' => 'Invalid password.'];
         }
 
-        return ['customerId' => $customer->getId()];
+        // Create a token with custom data
+        $token = $this->jwtManager->createFromPayload($customer, [
+            'customerId' => $customer->getId(),
+        ]);
+   
+        return [
+            'token' => $token
+        ];
     }
 }

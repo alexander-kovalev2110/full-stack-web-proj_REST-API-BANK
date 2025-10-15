@@ -14,9 +14,9 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     private $name;
 
     #[ORM\Column(name: 'pw', type: 'string', length: 255)]
@@ -27,7 +27,13 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getName(): ?string
+    // 🔹 добавим alias для удобства, чтобы код с `$this->getUser()->getCustomerId()` не ломался
+    public function getCustomerId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
     {
         return $this->name;
     }
@@ -35,11 +41,10 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(string $name): self
     {
         $this->name = $name;
-
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->pw;
     }
@@ -47,7 +52,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): self
     {
         $this->pw = $password;
-
         return $this;
     }
 

@@ -28,7 +28,7 @@ class CustomerController extends AbstractController
         }
 
         $result =  $this->customerService->create($name, $pw);
-        $status = isset($result['customerId']) ? Response::HTTP_CREATED : Response::HTTP_CONFLICT;
+        $status = isset($result['errMessage']) ? Response::HTTP_CONFLICT : Response::HTTP_CREATED;
         
         return new JsonResponse($result, $status);
     }

@@ -93,7 +93,6 @@ class TransactionService
 
     public function delete(int $customerId, int $transactionId): array
     {
-        // $transaction = $this->transactionRepo->find($customerId, $transactionId);
         $transactions = $this->transactionRepo->findBy([
             'customer' => $customerId,
             'id' => $transactionId

@@ -56,7 +56,7 @@ export const fetchTrans = async (payload: Query) => {
     const { transactionId, amount, date } = payload
 
     const command: Command = store.getState().trans.command as Command
-    const customerId = store.getState().cust.customerId
+    const token = store.getState().cust.token
 
     const domen = 'http://127.0.0.1:8000/transaction'
 
@@ -65,19 +65,17 @@ export const fetchTrans = async (payload: Query) => {
             method: 'POST', 
             url: `${domen}`, 
             data: {
-                customerId: customerId, 
                 amount: amount
             } 
         },
         [Command.GetTrans]: { 
             method: 'GET', 
-            url: `${domen}/${customerId}/${transactionId}` 
+            url: `${domen}/${transactionId}` 
         },
         [Command.GetTransByFilter]: { 
             method: 'GET', 
             url: `${domen}`, 
             params: {
-                customerId: customerId,
                 amount: amount,
                 date: date
             } 
@@ -86,23 +84,29 @@ export const fetchTrans = async (payload: Query) => {
             method: 'PATCH', 
             url: `${domen}`, 
             data: {
-                customerId: customerId, 
                 transactionId: transactionId, 
                 amount: amount
             } 
         },
         [Command.delTrans]: { 
             method: 'DELETE', 
-            url: `${domen}/${customerId}/${transactionId}` 
+            url: `${domen}/${transactionId}` 
         }
     }
 
     try {
-        const res: AxiosResponse<Transactions> = await axios(config[command])
+        const res: AxiosResponse<Transactions> = await axios({
+            ...config[command], 
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
         store.dispatch(setTrans(res.data.transactions))
         store.dispatch(setTable())      
     }
     catch (err: any) {
+        // console.log('err', err)
         if (err.response.status >= 500) { store.dispatch(openAlert(err.message)) }
         else { store.dispatch(openAlert(err.response.data.errMessage)) }
     }

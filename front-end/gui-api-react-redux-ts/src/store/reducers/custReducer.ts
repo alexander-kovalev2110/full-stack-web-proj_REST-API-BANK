@@ -1,12 +1,14 @@
-import { CustomerId } from '../interfaces'
+import { CustomerId, Token } from '../interfaces'
 import { CustAction, CustActionType } from '../actions/custAction'
 
 type CustState = {
-    customerId: CustomerId
+    customerId: CustomerId,
+    token: Token
 }
 
 const initialState: CustState = {
-    customerId: null
+    customerId: null,
+    token: null
 }
 
 export const cust = (
@@ -16,6 +18,9 @@ export const cust = (
     switch (action.type) {
         case CustActionType.AUTHOR_CUSTOMER:
             return { ...state, customerId: action.payload }
+
+        case CustActionType.SET_TOKEN:
+            return { ...state, token: action.payload }
 
         default:
             return state

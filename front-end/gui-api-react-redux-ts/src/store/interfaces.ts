@@ -16,6 +16,8 @@ export type Customer = {            // Type of response
 
 export type CustomerId = number | null | undefined
 
+export type Token = string | null | undefined
+
 // Types for exchange with "Trunsction" DB
 export type Transactions = {        // Type of response
     transactions: Transaction[]

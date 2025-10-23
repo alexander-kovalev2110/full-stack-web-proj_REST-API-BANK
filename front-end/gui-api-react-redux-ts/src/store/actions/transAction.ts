@@ -61,37 +61,11 @@ export const fetchTrans = async (payload: Query) => {
     const domen = 'http://127.0.0.1:8000/transaction'
 
     const config: ConfigArrType = {
-        [Command.AddTrans]: { 
-            method: 'POST', 
-            url: `${domen}`, 
-            data: {
-                amount: amount
-            } 
-        },
-        [Command.GetTrans]: { 
-            method: 'GET', 
-            url: `${domen}/${transactionId}` 
-        },
-        [Command.GetTransByFilter]: { 
-            method: 'GET', 
-            url: `${domen}`, 
-            params: {
-                amount: amount,
-                date: date
-            } 
-        },
-        [Command.UpdateTrans]: { 
-            method: 'PATCH', 
-            url: `${domen}`, 
-            data: {
-                transactionId: transactionId, 
-                amount: amount
-            } 
-        },
-        [Command.delTrans]: { 
-            method: 'DELETE', 
-            url: `${domen}/${transactionId}` 
-        }
+        [Command.AddTrans]: { method: 'POST', url: `${domen}`, data: { amount } },
+        [Command.GetTrans]: { method: 'GET', url: `${domen}/${transactionId}` },
+        [Command.GetTransByFilter]: { method: 'GET', url: `${domen}`, params: { amount, date } },
+        [Command.UpdateTrans]: { method: 'PATCH', url: `${domen}`, data: { transactionId, amount } },
+        [Command.delTrans]: { method: 'DELETE', url: `${domen}/${transactionId}` }
     }
 
     try {
@@ -106,8 +80,7 @@ export const fetchTrans = async (payload: Query) => {
         store.dispatch(setTable())      
     }
     catch (err: any) {
-        // console.log('err', err)
         if (err.response.status >= 500) { store.dispatch(openAlert(err.message)) }
-        else { store.dispatch(openAlert(err.response.data.errMessage)) }
+        else { store.dispatch(openAlert(err.response.data.error)) }
     }
 }

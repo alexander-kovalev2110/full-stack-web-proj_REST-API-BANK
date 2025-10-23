@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\DTO\CustomerRequest;
 use App\Service\CustomerService;
+use App\Service\ValidatorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class CustomerController extends AbstractController
 {
     public function __construct(
-        private readonly CustomerService $customerService
+        private readonly CustomerService $customerService,
+        private readonly ValidatorService $validatorService,
     ) {}
 
     #[Route('/customer/register', name: 'create_customer', methods: ['POST'])]
@@ -20,17 +23,19 @@ class CustomerController extends AbstractController
     {
         $data = json_decode($request->getContent(), true) ?? [];
 
-        $name = $data['name'] ?? null;
-        $pw   = $data['password'] ?? null;
+        $dto = new CustomerRequest();
+        $dto->name = $data['name'] ?? null;
+        $dto->password = $data['password'] ?? null;
 
-        if (!$name || !$pw) {
-            return new JsonResponse(['errMessage' => 'Name and password are required'], Response::HTTP_BAD_REQUEST);
-        }
+        $this->validatorService->validate($dto);
 
-        $result =  $this->customerService->create($name, $pw);
-        $status = isset($result['errMessage']) ? Response::HTTP_CONFLICT : Response::HTTP_CREATED;
-        
-        return new JsonResponse($result, $status);
+        $token = $this->customerService->create($dto->name, $dto->password);
+
+        return $this->json(
+            ['token' => $token],
+            // ['success' => true, 'token' => $token],
+            Response::HTTP_CREATED
+        );
     }
 
     #[Route('/customer/login', name: 'login_customer', methods: ['POST'])]
@@ -38,16 +43,18 @@ class CustomerController extends AbstractController
     {
         $data = json_decode($request->getContent(), true) ?? [];
 
-        $name = $data['name'] ?? null;
-        $pw   = $data['password'] ?? null;
+        $dto = new CustomerRequest();
+        $dto->name = $data['name'] ?? null;
+        $dto->password = $data['password'] ?? null;
 
-        if (!$name || !$pw) {
-            return new JsonResponse(['errMessage' => 'Name and password are required'], Response::HTTP_BAD_REQUEST);
-        }
+        $this->validatorService->validate($dto);
 
-        $result = $this->customerService->login($name, $pw);
-        $status = isset($result['errMessage']) ? Response::HTTP_UNAUTHORIZED : Response::HTTP_OK ;
+        $token = $this->customerService->login($dto->name, $dto->password);
 
-        return new JsonResponse($result, $status);
+        return $this->json(
+            ['token' => $token],
+            // ['success' => true, 'token' => $token],
+            Response::HTTP_OK
+        );
     }
 }

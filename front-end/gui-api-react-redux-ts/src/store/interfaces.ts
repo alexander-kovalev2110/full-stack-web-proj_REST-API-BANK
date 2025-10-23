@@ -10,23 +10,21 @@ export interface BaseAction<ActionTypes, Payload> {
 export type AuthorKind = 'Login' | 'Signup' | '' | undefined 
 
 // Types for exchange with "Customer" DB
+export type CustomerId = number | null | undefined
 export type Customer = {            // Type of response
     customerId: CustomerId
 }
 
-export type CustomerId = number | null | undefined
-
 export type Token = string | null | undefined
 
 // Types for exchange with "Trunsction" DB
-export type Transactions = {        // Type of response
-    transactions: Transaction[]
-}
-
 export type Transaction = {
     transactionId: number,
     amount: number,
     date: Date
+}
+export type Transactions = {        // Type of response
+    transactions: Transaction[]
 }
 
 // Types used when working with menu command

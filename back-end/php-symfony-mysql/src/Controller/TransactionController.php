@@ -17,7 +17,7 @@ class TransactionController extends AbstractController
 
      private function createResponse(array $result): JsonResponse
     {
-        $status = isset($result['errMessage']) ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK;
+        $status = isset($result['error']) ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK;
         return new JsonResponse($result, $status);
     }
 

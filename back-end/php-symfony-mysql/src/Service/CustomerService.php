@@ -5,8 +5,11 @@ namespace App\Service;
 use App\Entity\Customer;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class CustomerService
 {
@@ -15,12 +18,16 @@ class CustomerService
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly CustomerRepository $customerRepo,
         private readonly JWTTokenManagerInterface $jwtManager,
-    ){}
+    ) {}
 
-    public function create(string $name, string $pw): array
+    /**
+     * Регистрация нового клиента
+     */
+    public function create(string $name, string $pw): string
     {
+        // Проверка на существование
         if ($this->customerRepo->findOneBy(['name' => $name])) {
-            return ['errMessage' => 'Customer with this name already exists.'];
+            throw new ConflictHttpException('Customer with this name already exists.');
         }
 
         $customer = new Customer();
@@ -32,35 +39,29 @@ class CustomerService
         $this->em->persist($customer);
         $this->em->flush();
 
-        // Create a token with custom data
-        $token = $this->jwtManager->createFromPayload($customer, [
+        // Создание JWT токена с пользовательскими данными
+        return $this->jwtManager->createFromPayload($customer, [
             'customerId' => $customer->getId(),
         ]);
-   
-        return [
-            'token' => $token
-        ];
     }
 
-    public function login(string $name, string $pw): array
+    /**
+     * Аутентификация клиента
+     */
+    public function login(string $name, string $pw): string
     {
         $customer = $this->customerRepo->findOneBy(['name' => $name]);
 
         if (!$customer) {
-            return ['errMessage' => 'Customer not found.'];
+            throw new NotFoundHttpException('Customer not found.');
         }
 
         if (!$this->passwordHasher->isPasswordValid($customer, $pw)) {
-            return ['errMessage' => 'Invalid password.'];
+            throw new UnauthorizedHttpException('Bearer', 'Invalid password.');
         }
 
-        // Create a token with custom data
-        $token = $this->jwtManager->createFromPayload($customer, [
+        return $this->jwtManager->createFromPayload($customer, [
             'customerId' => $customer->getId(),
         ]);
-   
-        return [
-            'token' => $token
-        ];
     }
 }

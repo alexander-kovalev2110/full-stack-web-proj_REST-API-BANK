@@ -28,13 +28,13 @@ class TransactionService
     public function create(int $customerId, float $amount): array
     {
         if ($customerId <= 0 || $amount < 0) {
-            return ['errMessage' => 'Invalid customerId or amount'];
+            return ['error' => 'Invalid customerId or amount'];
         }
 
         $customer = $this->customerRepo->find($customerId);
 
         if (!$customer) {
-            return ['errMessage' => 'Customer not found.'];
+            return ['error' => 'Customer not found.'];
         }
 
         $transaction = (new Transaction())
@@ -58,7 +58,7 @@ class TransactionService
         ]);
 
         if (!$transactions) {
-            return ['errMessage' => 'Transaction not found.'];
+            return ['error' => 'Transaction not found.'];
         }
 
         return [
@@ -69,7 +69,7 @@ class TransactionService
     public function update(int $customerId, int $transactionId, float $amount): array
     {
         if ($customerId <= 0 || $amount < 0) {
-            return ['errMessage' => 'Invalid customerId or amount'];
+            return ['error' => 'Invalid customerId or amount'];
         }
         
         $transactions = $this->transactionRepo->findBy([
@@ -78,7 +78,7 @@ class TransactionService
         ]);
 
         if (!$transactions) {
-            return ['errMessage' => 'Transaction not found for updating.'];
+            return ['error' => 'Transaction not found for updating.'];
         }
 
         $transaction = $transactions[0];
@@ -99,7 +99,7 @@ class TransactionService
         ]);
 
         if (!$transactions) {
-            return ['errMessage' => 'Transaction not found for deletion.'];
+            return ['error' => 'Transaction not found for deletion.'];
         }
 
         $transaction = $transactions[0];

@@ -1,72 +1,55 @@
-import { BaseAction, AuthorKind, Token, CustomerId } from '../interfaces'
+// src/store/actions/custAction.ts
+
+import axios from 'axios'
 import { jwtDecode, JwtPayload } from 'jwt-decode'
-import { openAlert } from "./alertAction"
-import axios, { AxiosResponse } from "axios"
-import { resetTrans } from "./transAction"
-import store from '../../index'
+import { openAlert } from './alertAction'
+import { resetTrans } from './transAction'
+import { BaseAction, AuthorKind, Token, CustomerId } from '../interfaces'
 
 export enum CustActionType {
-    AUTHOR_CUSTOMER = 'AUTHOR_CUSTOMER',
-    SET_TOKEN = 'SET_TOKEN'
+  SET_CUSTOMER = 'SET_CUSTOMER',
+  SET_TOKEN = 'SET_TOKEN'
 }
 
 export type CustAction =
-  | BaseAction<CustActionType.AUTHOR_CUSTOMER, CustomerId>
+  | BaseAction<CustActionType.SET_CUSTOMER, CustomerId>
   | BaseAction<CustActionType.SET_TOKEN, Token>
 
+export const setCustomer = (payload: CustomerId) => ({
+  type: CustActionType.SET_CUSTOMER,
+  payload
+})
+
+export const setToken = (payload: Token) => ({
+  type: CustActionType.SET_TOKEN,
+  payload
+})
+
+// type for thunk
 interface MyTokenPayload extends JwtPayload {
-  customerId: number;
+  customerId: number
 }
 
-export const authorCustomer = (payload: CustomerId): CustAction  => ({
-    type: CustActionType.AUTHOR_CUSTOMER,
-    payload
-})
+// Аsync thunk-action
+export const fetchCust = (authorKind: AuthorKind, name: string, pw: string) => 
+  async (dispatch: any) => {
+    const domen = 'http://127.0.0.1:8000/customer'
+    const url = authorKind === 'Login' ? `${domen}/login` : `${domen}/register`
 
-export const setToken  = (payload: Token): CustAction => ({
-    type: CustActionType.SET_TOKEN,
-    payload
-})
+    try {
+      const res = await axios.post(url, { name, password: pw })
 
-export const fetchCust = async (
-  authorKind: AuthorKind,
-  name: string,
-  pw: string
-) => {
-  const domen = 'http://127.0.0.1:8000/customer'
-  const url =
-    authorKind === 'Login'
-      ? `${domen}/login`
-      : `${domen}/register`
+      const token: string = res.data?.token
+      if (!token) throw new Error('Token missing')
 
-  const payload = { name, password: pw }
+      const decoded = jwtDecode<MyTokenPayload>(token)
+      if (!decoded.customerId) throw new Error('Token missing customerId')
 
-  try {
-    const res: AxiosResponse<any> = await axios.post(url, payload)
-
-    // Check if the token is in the response
-    if (!res.data || !res.data.token) {
-      store.dispatch(openAlert('Unexpected response format from server'))
-      return;
-    }
-
-    const token: string = res.data.token;
-    const tokenPayload = jwtDecode<MyTokenPayload>(token)
-
-    // Check that the customerId is in the token.
-    if (!tokenPayload.customerId) {
-      store.dispatch(openAlert('Token does not contain customerId'))
-      return;
-    }
-
-    store.dispatch(authorCustomer(tokenPayload.customerId))
-    store.dispatch(setToken(token))
-    store.dispatch(resetTrans())
-  } catch (err: any) {
-    if (err.response?.status >= 500) {
-      store.dispatch(openAlert('Server error: ' + err.message))
-    } else {
-      store.dispatch(openAlert(err.response?.data?.error || 'Authorization error'))
+      dispatch(setCustomer(decoded.customerId))
+      dispatch(setToken(token))
+      dispatch(resetTrans())
+    } catch (err: any) {
+      dispatch(openAlert(err.response?.data?.error || err.message))
     }
   }
-};
+

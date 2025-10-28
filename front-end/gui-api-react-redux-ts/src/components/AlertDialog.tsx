@@ -2,7 +2,7 @@ import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux'
 import { Snackbar } from "@mui/material"
 import { Alert } from "@mui/material"
 import { closeAlert } from "../store/actions/alertAction"
-import { RootState } from "../store/reducers/index"
+import { RootState } from "../store"
 
 // Displaying operating messages - success or error (severity)
 const AlertDialog: React.FC = () => {

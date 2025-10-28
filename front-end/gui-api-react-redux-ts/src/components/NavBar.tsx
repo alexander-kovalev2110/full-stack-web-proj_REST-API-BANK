@@ -9,7 +9,7 @@ import { Button } from '@mui/material'
 import LoginIcon from "@mui/icons-material/Login"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
 import AuthorDialog from "./AuthorDialog"
-import { RootState } from "../store/reducers/index"
+import { RootState } from "../store"
 import { openAuthor } from "../store/actions/modalWindAction"
 
 const NavBar: React.FC = () => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux"
-import { RootState } from "../store/reducers/index"
+import { RootState } from "../store"
 import Box from '@mui/material/Box'
 import { Paper } from "@mui/material"
 import { Table } from "@mui/material"

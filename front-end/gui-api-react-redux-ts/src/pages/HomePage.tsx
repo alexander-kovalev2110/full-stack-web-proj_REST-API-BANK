@@ -3,7 +3,7 @@ import { useSelector, TypedUseSelectorHook } from "react-redux"
 import Box from "@mui/material/Box"
 import NavBar from "../components/NavBar"
 import { useNavigate } from "react-router-dom"
-import { RootState } from "../store/reducers/index"
+import { RootState } from "../store"
 
 const HomePage: React.FC = () => {
     const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector

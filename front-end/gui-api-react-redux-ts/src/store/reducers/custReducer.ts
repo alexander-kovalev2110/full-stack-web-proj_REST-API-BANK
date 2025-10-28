@@ -16,7 +16,7 @@ export const cust = (
             action: CustAction
 ): CustState => {
     switch (action.type) {
-        case CustActionType.AUTHOR_CUSTOMER:
+        case CustActionType.SET_CUSTOMER:
             return { ...state, customerId: action.payload }
 
         case CustActionType.SET_TOKEN:

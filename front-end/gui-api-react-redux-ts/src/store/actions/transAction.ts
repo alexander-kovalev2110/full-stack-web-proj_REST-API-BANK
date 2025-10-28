@@ -1,7 +1,7 @@
-import store from "../../index"
+import axios, { AxiosResponse, AxiosRequestConfig } from "axios"
 import { BaseAction, Command, Transaction, Transactions } from '../interfaces'
 import { openAlert } from "./alertAction"
-import axios, { AxiosResponse, AxiosRequestConfig  } from "axios"
+import { AppDispatch, RootState } from "../index"
 
 export enum TransActionType {
     SET_COMMAND = 'SET_COMMAND',
@@ -12,11 +12,12 @@ export enum TransActionType {
     PREVIOUS_PAGE = 'PREVIOUS_PAGE'
 }
 
-type TransPayload = Command | Transaction[]| undefined
+type TransPayload = Command | Transaction[] | undefined
 
 export type TransAction = BaseAction<TransActionType, TransPayload>
 
-export const setCommand = (payload:  Command): TransAction => ({
+// 🔹 Простые action creators
+export const setCommand = (payload: Command): TransAction => ({
     type: TransActionType.SET_COMMAND,
     payload
 })
@@ -43,44 +44,46 @@ export const nextPage = (): TransAction => ({
 })
 
 export type Query = {
-    transactionId: number,
-    amount: number,
-    date: Date
+    transactionId?: number
+    amount?: number
+    date?: Date
 }
 
 type ConfigArrType = {
     [key in Command]: AxiosRequestConfig
 }
 
-export const fetchTrans = async (payload: Query) => {
-    const { transactionId, amount, date } = payload
+// 🔹 Thunk-action
+export const fetchTrans = (payload: Query) => 
+    async (dispatch: AppDispatch, getState: () => RootState) => {
+        const { transactionId, amount, date } = payload
+        const state = getState()
+        const command: Command = state.trans.command as Command
+        const token = state.cust.token
+        const domen = 'http://127.0.0.1:8000/transaction'
 
-    const command: Command = store.getState().trans.command as Command
-    const token = store.getState().cust.token
+        const config: ConfigArrType = {
+            [Command.AddTrans]: { method: 'POST', url: `${domen}`, data: { amount } },
+            [Command.GetTrans]: { method: 'GET', url: `${domen}/${transactionId}` },
+            [Command.GetTransByFilter]: { method: 'GET', url: `${domen}`, params: { amount, date } },
+            [Command.UpdateTrans]: { method: 'PATCH', url: `${domen}`, data: { transactionId, amount } },
+            [Command.delTrans]: { method: 'DELETE', url: `${domen}/${transactionId}` }
+        }
 
-    const domen = 'http://127.0.0.1:8000/transaction'
+        try {
+            const res: AxiosResponse<Transactions> = await axios({
+                ...config[command],
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
 
-    const config: ConfigArrType = {
-        [Command.AddTrans]: { method: 'POST', url: `${domen}`, data: { amount } },
-        [Command.GetTrans]: { method: 'GET', url: `${domen}/${transactionId}` },
-        [Command.GetTransByFilter]: { method: 'GET', url: `${domen}`, params: { amount, date } },
-        [Command.UpdateTrans]: { method: 'PATCH', url: `${domen}`, data: { transactionId, amount } },
-        [Command.delTrans]: { method: 'DELETE', url: `${domen}/${transactionId}` }
+            dispatch(setTrans(res.data.transactions))
+            dispatch(setTable())
+        }
+        catch (err: any) {
+            const status = err?.response?.status
+            const msg = status >= 500 ? err.message : err?.response?.data?.error
+            dispatch(openAlert(msg))
+        }
     }
-
-    try {
-        const res: AxiosResponse<Transactions> = await axios({
-            ...config[command], 
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        store.dispatch(setTrans(res.data.transactions))
-        store.dispatch(setTable())      
-    }
-    catch (err: any) {
-        if (err.response.status >= 500) { store.dispatch(openAlert(err.message)) }
-        else { store.dispatch(openAlert(err.response.data.error)) }
-    }
-}

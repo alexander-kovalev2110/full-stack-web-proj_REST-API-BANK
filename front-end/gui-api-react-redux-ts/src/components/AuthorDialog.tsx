@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
+import React, { useRef } from "react"
+import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux"
 import {
   Dialog,
   DialogTitle,
@@ -8,38 +8,32 @@ import {
   TextField,
   Button,
   IconButton,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import LoginIcon from "@mui/icons-material/Login";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+} from "@mui/material"
+import CloseIcon from "@mui/icons-material/Close"
+import LoginIcon from "@mui/icons-material/Login"
+import PersonAddIcon from "@mui/icons-material/PersonAdd"
 
-import { closeAuthor } from "../store/actions/modalWindAction";
-import { fetchCust } from "../store/actions/custAction";
-import { AuthorKind } from "../store/interfaces";
-import { RootState } from "../store/reducers";
+import { closeAuthor } from "../store/actions/modalWindAction"
+import { fetchCust } from "../store/actions/custAction"
+import { AuthorKind } from "../store/interfaces"
+import { RootState } from "../store"
 
 const AuthorDialog: React.FC = () => {
   const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector;
   const { authorOpen, authorKind } = useTypeSelector(
     (state) => state.modalWind
   );
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch<any>()
 
   const nameRef = useRef<HTMLInputElement>(null)
   const pwRef = useRef<HTMLInputElement>(null)
-
-//   const handleClose = () => {
-//     // снимаем фокус с активного элемента, чтобы ARIA warning не появлялся
-//     (document.activeElement as HTMLElement | null)?.blur();
-//     dispatch(closeAuthor());
-//   };
 
   const handleRequest = (kind: AuthorKind) => {
     const name = nameRef.current?.value || ""
     const pw = pwRef.current?.value || ""
 
     dispatch(closeAuthor())
-    dispatch(() => fetchCust(kind, name, pw))
+    dispatch(fetchCust(kind, name, pw))
   };
 
   return (
@@ -98,7 +92,7 @@ const AuthorDialog: React.FC = () => {
         )}
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default AuthorDialog;
+export default AuthorDialog

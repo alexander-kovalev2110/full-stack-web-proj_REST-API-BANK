@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText'
 import TransDialog from "../components/TransDialog"
 import TransTable from "../components/TransTable"
 import NavBar from "../components/NavBar"
-import { RootState } from "../store/reducers/index"
+import { RootState } from "../store"
 import { setCommand } from "../store/actions/transAction"
 import { openTrans } from "../store/actions/modalWindAction"
 import { Command } from '../store/interfaces'

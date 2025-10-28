@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react"
 import {
   Dialog,
   DialogTitle,
@@ -7,45 +7,35 @@ import {
   TextField,
   DialogActions,
   Button
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import SendIcon from "@mui/icons-material/Send";
-import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
-import { RootState } from "../store/reducers";
-import { fetchTrans } from "../store/actions/transAction";
-import { closeTrans } from "../store/actions/modalWindAction";
-import { Command } from "../store/interfaces";
+} from "@mui/material"
+import CloseIcon from "@mui/icons-material/Close"
+import SendIcon from "@mui/icons-material/Send"
+import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux"
+import { RootState } from "../store"
+import { fetchTrans } from "../store/actions/transAction"
+import { closeTrans } from "../store/actions/modalWindAction"
+import { Command } from "../store/interfaces"
 
 const TransDialog: React.FC = () => {
-  const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector;
-  const dispatch = useDispatch<any>();
-  const { transOpen } = useTypeSelector((state) => state.modalWind);
-  const command = useTypeSelector((state) => state.trans.command as Command);
+  const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector
+  const dispatch = useDispatch<any>()
+  const { transOpen } = useTypeSelector((state) => state.modalWind)
+  const command = useTypeSelector((state) => state.trans.command as Command)
 
-  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
   const handleClose = () => {
-    (document.activeElement as HTMLElement | null)?.blur();
-    dispatch(closeTrans());
+    dispatch(closeTrans())
   };
 
   const handleRequest = () => {
-    const payload: any = {};
+    const payload: any = {}
     Object.entries(inputRefs.current).forEach(([key, el]) => {
-      payload[key] = el?.value || "";
+      payload[key] = el?.value || ""
     });
-    // dispatch(fetchTrans(payload)); // ✅ thunk напрямую
-    // dispatch(() => fetchTrans(payload))
-    fetchTrans(payload)
-    handleClose();
+    dispatch(fetchTrans(payload)) // thunk 
+    handleClose()
   };
-
-  useEffect(() => {
-    if (transOpen) {
-      const firstInput = Object.values(inputRefs.current)[0];
-      setTimeout(() => firstInput?.focus(), 100);
-    }
-  }, [transOpen]);
 
   const inpData: Record<Command | "", { id: string; label: string; type: string }[]> = {
     [Command.AddTrans]: [{ id: "amount", label: "Amount", type: "number" }],
@@ -89,7 +79,7 @@ const TransDialog: React.FC = () => {
             fullWidth
             variant="standard"
             inputRef={(el) => (inputRefs.current[field.id] = el)}
-            autoFocus={idx === 0} // первый — в фокус
+            autoFocus={idx === 0}
           />
         ))}
       </DialogContent>
@@ -100,7 +90,7 @@ const TransDialog: React.FC = () => {
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default TransDialog;
+export default TransDialog

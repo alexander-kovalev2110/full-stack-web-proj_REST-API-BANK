@@ -1,6 +1,4 @@
 import React from 'react'
-import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux"
-import { RootState, AppDispatch } from "../store"
 import Box from '@mui/material/Box'
 import { Paper } from "@mui/material"
 import { Table } from "@mui/material"
@@ -15,12 +13,11 @@ import { Stack } from '@mui/material'
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 import { nextPage, previousPage } from "../store/actions/transAction"
+import { useAppDispatch, useAppSelector } from "../store/hooks"
 
 const TransTable: React.FC = () => {
-    const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector
-    const  { tabAr, previousDisabled, nextDisabled } = useTypeSelector(state => state.trans)
-
-    const dispatch = useDispatch()
+    const  { tabAr, previousDisabled, nextDisabled } = useAppSelector(state => state.trans)
+    const dispatch = useAppDispatch()
 
     return (
         <Box component="main" sx={{ flexGrow: 1, p: 2 }}>

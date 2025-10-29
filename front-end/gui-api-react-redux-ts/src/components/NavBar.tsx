@@ -1,5 +1,4 @@
 import React from 'react'
-import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux'
 import Box from '@mui/material/Box'
 import { AppBar } from '@mui/material'
 import { Toolbar } from '@mui/material'
@@ -9,14 +8,12 @@ import { Button } from '@mui/material'
 import LoginIcon from "@mui/icons-material/Login"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
 import AuthorDialog from "./AuthorDialog"
-import { RootState, AppDispatch } from "../store"
 import { openAuthor } from "../store/actions/modalWindAction"
+import { useAppDispatch, useAppSelector } from "../store/hooks"
 
 const NavBar: React.FC = () => {
-    const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector
-    const { customerId } = useTypeSelector(state => state.cust)
-
-    const dispatch = useDispatch()
+    const { customerId } = useAppSelector(state => state.cust)
+    const dispatch = useAppDispatch()
 
     return (
         <Box>

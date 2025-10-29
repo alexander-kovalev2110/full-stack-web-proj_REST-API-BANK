@@ -1,6 +1,5 @@
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux"
 import { Drawer, Toolbar} from "@mui/material"
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
@@ -10,17 +9,15 @@ import ListItemText from '@mui/material/ListItemText'
 import TransDialog from "../components/TransDialog"
 import TransTable from "../components/TransTable"
 import NavBar from "../components/NavBar"
-import { RootState, AppDispatch } from "../store"
 import { setCommand } from "../store/actions/transAction"
 import { openTrans } from "../store/actions/modalWindAction"
 import { Command } from '../store/interfaces'
+import { useAppDispatch, useAppSelector } from "../store/hooks"
 
 const drawerWidth = 240
 
 const TransPage: React.FC = () => {
-    const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector
-    const {customerId} = useTypeSelector(state => state.cust)
-    const useAppDispatch: () => AppDispatch = useDispatch
+    const {customerId} = useAppSelector(state => state.cust)
     const dispatch = useAppDispatch()
 
     let navigate = useNavigate()

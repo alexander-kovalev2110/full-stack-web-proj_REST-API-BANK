@@ -1,14 +1,11 @@
-import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux'
 import { Snackbar } from "@mui/material"
 import { Alert } from "@mui/material"
 import { closeAlert } from "../store/actions/alertAction"
-import { RootState, AppDispatch } from "../store"
+import { useAppDispatch, useAppSelector } from "../store/hooks"
 
 // Displaying operating messages - success or error (severity)
 const AlertDialog: React.FC = () => {
-    const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector
-    const { alertOpen, errMessage } = useTypeSelector(state => state.alert)
-    const useAppDispatch: () => AppDispatch = useDispatch
+    const { alertOpen, errMessage } = useAppSelector(state => state.alert)
     const dispatch = useAppDispatch()
 
     return (

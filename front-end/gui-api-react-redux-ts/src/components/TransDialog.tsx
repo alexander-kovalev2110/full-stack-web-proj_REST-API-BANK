@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react"
+import React, { useRef } from "react"
 import {
   Dialog,
   DialogTitle,
@@ -10,17 +10,16 @@ import {
 } from "@mui/material"
 import CloseIcon from "@mui/icons-material/Close"
 import SendIcon from "@mui/icons-material/Send"
-import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux"
-import { RootState } from "../store"
+
+import { useAppDispatch, useAppSelector } from "../store/hooks"
 import { fetchTrans } from "../store/actions/transAction"
 import { closeTrans } from "../store/actions/modalWindAction"
 import { Command } from "../store/interfaces"
 
 const TransDialog: React.FC = () => {
-  const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector
-  const dispatch = useDispatch<any>()
-  const { transOpen } = useTypeSelector((state) => state.modalWind)
-  const command = useTypeSelector((state) => state.trans.command as Command)
+  const { transOpen } = useAppSelector(state => state.modalWind)
+  const command = useAppSelector(state => state.trans.command as Command)
+  const dispatch = useAppDispatch()
 
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
@@ -31,8 +30,8 @@ const TransDialog: React.FC = () => {
   const handleRequest = () => {
     const payload: any = {}
     Object.entries(inputRefs.current).forEach(([key, el]) => {
-      payload[key] = el?.value || ""
-    });
+      payload[key] = el?.value || ""    })
+      
     dispatch(fetchTrans(payload)) // thunk 
     handleClose()
   };
@@ -55,6 +54,7 @@ const TransDialog: React.FC = () => {
   return (
     <Dialog open={transOpen} onClose={handleClose} maxWidth="xs" fullWidth>
       <DialogTitle>
+        Transaction Request
         <IconButton
           aria-label="close"
           onClick={handleClose}

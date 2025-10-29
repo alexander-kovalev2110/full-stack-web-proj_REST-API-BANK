@@ -1,5 +1,4 @@
 import React, { useRef } from "react"
-import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux"
 import {
   Dialog,
   DialogTitle,
@@ -13,17 +12,15 @@ import CloseIcon from "@mui/icons-material/Close"
 import LoginIcon from "@mui/icons-material/Login"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
 
+import { openAlert } from "../store/actions/alertAction"
 import { closeAuthor } from "../store/actions/modalWindAction"
-import { fetchCust } from "../store/actions/custAction"
+import { fetchCust, authorType } from "../store/actions/custAction"
+import { useAppDispatch, useAppSelector } from "../store/hooks"
 import { AuthorKind } from "../store/interfaces"
-import { RootState } from "../store"
 
 const AuthorDialog: React.FC = () => {
-  const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector;
-  const { authorOpen, authorKind } = useTypeSelector(
-    (state) => state.modalWind
-  );
-  const dispatch = useDispatch<any>()
+  const { authorOpen, authorKind } = useAppSelector(state => state.modalWind)
+  const dispatch = useAppDispatch()
 
   const nameRef = useRef<HTMLInputElement>(null)
   const pwRef = useRef<HTMLInputElement>(null)
@@ -32,13 +29,20 @@ const AuthorDialog: React.FC = () => {
     const name = nameRef.current?.value || ""
     const pw = pwRef.current?.value || ""
 
+  if (!name || !pw) {
+    dispatch(openAlert("Name and password are required"))
+    return
+  }
+
     dispatch(closeAuthor())
-    dispatch(fetchCust(kind, name, pw))
+    const payload:authorType = {kind, name, pw}
+    dispatch(fetchCust(payload))
   };
 
   return (
     <Dialog open={authorOpen} onClose={() => dispatch(closeAuthor())} maxWidth="xs" fullWidth>
       <DialogTitle>
+        Authorization
         <IconButton
           aria-label="close"
           onClick={() => dispatch(closeAuthor())}
@@ -73,23 +77,13 @@ const AuthorDialog: React.FC = () => {
       </DialogContent>
 
       <DialogActions>
-        {authorKind === "Login" ? (
-          <Button
-            variant="outlined"
-            startIcon={<LoginIcon />}
-            onClick={() => handleRequest(authorKind)}
-          >
-            Log in
-          </Button>
-        ) : (
-          <Button
-            variant="outlined"
-            startIcon={<PersonAddIcon />}
-            onClick={() => handleRequest(authorKind)}
-          >
-            Sign up
-          </Button>
-        )}
+        <Button
+          variant="outlined"
+          startIcon={authorKind === "Login" ? <LoginIcon /> : <PersonAddIcon />}
+          onClick={() => handleRequest(authorKind)}
+        >
+          {authorKind === "Login" ? "Log in" : "Sign up"}
+        </Button>
       </DialogActions>
     </Dialog>
   )

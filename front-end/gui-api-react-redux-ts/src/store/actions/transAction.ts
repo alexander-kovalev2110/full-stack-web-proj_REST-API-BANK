@@ -16,7 +16,7 @@ type TransPayload = Command | Transaction[] | undefined
 
 export type TransAction = BaseAction<TransActionType, TransPayload>
 
-// 🔹 Простые action creators
+// Simple action creators
 export const setCommand = (payload: Command): TransAction => ({
     type: TransActionType.SET_COMMAND,
     payload
@@ -49,13 +49,11 @@ export type Query = {
     date?: Date
 }
 
-type ConfigArrType = {
-    [key in Command]: AxiosRequestConfig
-}
+type ConfigArrType = { [key in Command]: AxiosRequestConfig }
 
-// 🔹 Thunk-action
+// Thunk-action
 export const fetchTrans = (payload: Query) => 
-    async (dispatch: AppDispatch, getState: () => RootState) => {
+    async (dispatch: AppDispatch, getState: () => RootState): Promise<void> => {
         const { transactionId, amount, date } = payload
         const state = getState()
         const command: Command = state.trans.command as Command
@@ -77,6 +75,10 @@ export const fetchTrans = (payload: Query) =>
                     Authorization: `Bearer ${token}`
                 }
             })
+
+            if (!res.data?.transactions) {
+                throw new Error("Invalid response from server")
+            }
 
             dispatch(setTrans(res.data.transactions))
             dispatch(setTable())

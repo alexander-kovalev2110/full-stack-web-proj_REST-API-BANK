@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText'
 import TransDialog from "../components/TransDialog"
 import TransTable from "../components/TransTable"
 import NavBar from "../components/NavBar"
-import { RootState } from "../store"
+import { RootState, AppDispatch } from "../store"
 import { setCommand } from "../store/actions/transAction"
 import { openTrans } from "../store/actions/modalWindAction"
 import { Command } from '../store/interfaces'
@@ -19,7 +19,9 @@ const drawerWidth = 240
 
 const TransPage: React.FC = () => {
     const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector
-    const  {customerId} = useTypeSelector(state => state.cust)
+    const {customerId} = useTypeSelector(state => state.cust)
+    const useAppDispatch: () => AppDispatch = useDispatch
+    const dispatch = useAppDispatch()
 
     let navigate = useNavigate()
     
@@ -28,9 +30,7 @@ const TransPage: React.FC = () => {
             navigate('/')              // Go to page <HomePage>
         }
     }, [customerId])
-    
-    const dispatch = useDispatch()
-    
+
     const menuHandler = (command: Command) => {
         dispatch(setCommand(command))
         dispatch(openTrans())

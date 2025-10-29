@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import { jwtDecode, JwtPayload } from 'jwt-decode'
+import { AppDispatch } from '../index'
 import { openAlert } from './alertAction'
 import { resetTrans } from './transAction'
 import { BaseAction, AuthorKind, Token, CustomerId } from '../interfaces'
@@ -30,20 +31,27 @@ interface MyTokenPayload extends JwtPayload {
   customerId: number
 }
 
+export type authorType = {
+    kind: AuthorKind
+    name: string
+    pw: string
+}
+
 // Аsync thunk-action
-export const fetchCust = (authorKind: AuthorKind, name: string, pw: string) => 
-  async (dispatch: any) => {
+export const fetchCust = (payload: authorType) => 
+  async (dispatch: AppDispatch): Promise<void> => {
+    const { kind, name, pw } = payload
     const domen = 'http://127.0.0.1:8000/customer'
-    const url = authorKind === 'Login' ? `${domen}/login` : `${domen}/register`
+    const url = kind === 'Login' ? `${domen}/login` : `${domen}/register`
 
     try {
       const res = await axios.post(url, { name, password: pw })
 
       const token: string = res.data?.token
-      if (!token) throw new Error('Token missing')
-
       const decoded = jwtDecode<MyTokenPayload>(token)
-      if (!decoded.customerId) throw new Error('Token missing customerId')
+
+      if (!token || !decoded.customerId) 
+        throw new Error('Invalid token payload')
 
       dispatch(setCustomer(decoded.customerId))
       dispatch(setToken(token))
@@ -52,4 +60,3 @@ export const fetchCust = (authorKind: AuthorKind, name: string, pw: string) =>
       dispatch(openAlert(err.response?.data?.error || err.message))
     }
   }
-

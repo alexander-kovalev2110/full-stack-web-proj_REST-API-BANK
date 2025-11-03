@@ -1,5 +1,4 @@
-import { Snackbar } from "@mui/material"
-import { Alert } from "@mui/material"
+import { Snackbar, Alert } from "@mui/material"
 import { useAppSelector, useAppDispatch } from '../store/hook'
 import { closeAlert } from '../store/alertSlice'
 

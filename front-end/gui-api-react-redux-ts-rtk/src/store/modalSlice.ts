@@ -10,7 +10,7 @@ type ModalState = {
 const initialState: ModalState = {
     authorOpen: false,
     transOpen: false,
-    authorKind: ''
+    authorKind: 'Login'
 }
 export const modalSlice = createSlice({
   name: 'modal',

@@ -1,16 +1,20 @@
-import React from 'react'
+import { useRef } from "react"
+
 import { Dialog } from "@mui/material"
 import { DialogTitle } from "@mui/material"
 import { IconButton } from "@mui/material"
-import CloseIcon from "@mui/icons-material/Close"
-import LoginIcon from "@mui/icons-material/Login"
-import PersonAddIcon from "@mui/icons-material/PersonAdd"
 import { DialogContent } from "@mui/material"
 import { TextField } from "@mui/material"
 import { DialogActions } from "@mui/material"
 import { Button } from "@mui/material"
+
+import CloseIcon from "@mui/icons-material/Close"
+import LoginIcon from "@mui/icons-material/Login"
+import PersonAddIcon from "@mui/icons-material/PersonAdd"
+
 import { closeAuthor } from "../store/modalSlice"
-import { fetchCust } from "../store/custSlice"
+import { openAlert } from "../store/alertSlice"
+import { fetchCust } from "../store/cust"
 import { useAppSelector, useAppDispatch } from '../store/hook'
 import { AuthorKind } from '../store/interfaces'
 
@@ -18,23 +22,28 @@ const AuthorDialog: React.FC = () => {
     const { authorOpen, authorKind } = useAppSelector(state => state.modal)
     const dispatch = useAppDispatch()
 
+    const nameRef = useRef<HTMLInputElement>(null)
+    const pwRef = useRef<HTMLInputElement>(null)
+
     // Request to the Customer DB
-    const requestCustomer = (authorKind: AuthorKind) => { 
-        let el: HTMLInputElement | null
-        el = document.getElementById("name") as HTMLInputElement
-        const name: string = el.value
-        
-        el = document.getElementById("pw") as HTMLInputElement
-        const pw: string = el.value
+    const handleRequest = (authorKind: AuthorKind) => { 
+        const name = nameRef.current?.value || ""
+        const pw = pwRef.current?.value || ""
+
+        if (!name || !pw) {
+            dispatch(openAlert("Name and password are required"))
+            return
+        }
 
         dispatch(closeAuthor())
-        dispatch(fetchCust({authorKind, name, pw}))
+        dispatch(fetchCust({ authorKind, name, pw }))
     }
 
     return (
         <Dialog open={authorOpen} maxWidth="xs" fullWidth={true}
                 onClose={() => dispatch(closeAuthor())}>
             <DialogTitle>
+                Authorization
                 <IconButton
                     aria-label="close"
                     onClick={() => dispatch(closeAuthor())}
@@ -48,20 +57,19 @@ const AuthorDialog: React.FC = () => {
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
+
             <DialogContent>
                 <TextField
+                    inputRef={nameRef}
                     margin="dense"
-                    id="name"
                     label="Name"
                     type="text"
                     fullWidth
                     variant="standard"
                 />
-            </DialogContent>
-            <DialogContent>
                 <TextField
+                    inputRef={pwRef}
                     margin="dense"
-                    id="pw"
                     label="Password"
                     type="password"
                     fullWidth
@@ -69,19 +77,13 @@ const AuthorDialog: React.FC = () => {
                 />
             </DialogContent>
             <DialogActions>
-                {
-                    (authorKind === 'Login')? (
-                            <Button component="label" variant="outlined" startIcon={<LoginIcon />}
-                                onClick={() => requestCustomer(authorKind)}>
-                                Log in
-                            </Button>
-                    ) : (
-                        <Button component="label" variant="outlined" startIcon={<PersonAddIcon />}
-                            onClick={() => requestCustomer(authorKind)}>
-                            Sign up
-                        </Button>
-                    )
-                }
+                <Button
+                    variant="outlined"
+                    startIcon={authorKind === "Login" ? <LoginIcon /> : <PersonAddIcon />}
+                    onClick={() => handleRequest(authorKind)}
+                >
+                   {authorKind === "Login" ? "Log in" : "Sign up"}
+                </Button>
             </DialogActions>
         </Dialog>
     )

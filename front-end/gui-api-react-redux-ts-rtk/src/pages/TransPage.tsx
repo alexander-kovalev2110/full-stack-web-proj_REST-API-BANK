@@ -9,7 +9,7 @@ import ListItemText from '@mui/material/ListItemText'
 import TransDialog from "../components/TransDialog"
 import TransTable from "../components/TransTable"
 import NavBar from "../components/NavBar"
-import { setCommand } from "../store/transSlice"
+import { setCommand } from "../store/trans"
 import { openTrans } from "../store/modalSlice"
 import { Command } from '../store/interfaces'
 import { useAppSelector, useAppDispatch } from '../store/hook'

@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import alertSlice from './alertSlice'
-import custSlice from './custSlice'
+import custSlice from './cust/custSlice'
 import modalSlice from './modalSlice'
-import transSlice from './transSlice'
+import transSlice from './trans/transSlice'
 
 export const store = configureStore({
   reducer: {

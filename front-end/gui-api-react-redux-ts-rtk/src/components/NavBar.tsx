@@ -1,4 +1,3 @@
-import React from 'react'
 import Box from '@mui/material/Box'
 import { AppBar } from '@mui/material'
 import { Toolbar } from '@mui/material'
@@ -7,6 +6,7 @@ import { Stack } from '@mui/material'
 import { Button } from '@mui/material'
 import LoginIcon from "@mui/icons-material/Login"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
+
 import AuthorDialog from "./AuthorDialog"
 import { openAuthor } from "../store/modalSlice"
 import { useAppSelector, useAppDispatch } from '../store/hook'

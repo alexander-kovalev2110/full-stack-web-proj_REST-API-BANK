@@ -1,4 +1,3 @@
-import React from 'react'
 import Box from '@mui/material/Box'
 import { Paper } from "@mui/material"
 import { Table } from "@mui/material"
@@ -12,7 +11,8 @@ import { Button } from '@mui/material'
 import { Stack } from '@mui/material'
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
-import { nextPage, previousPage } from "../store/transSlice"
+
+import { nextPage, previousPage } from "../store/trans"
 import { useAppSelector, useAppDispatch } from "../store/hook"
 
 const TransTable: React.FC = () => {

@@ -1,0 +1,32 @@
+import React from "react";
+import { Dialog, Box, CircularProgress, Typography } from "@mui/material";
+import { useAppSelector } from "../store/hook";
+
+const LoadingDialog: React.FC = () => {
+  const { loadingOpen } = useAppSelector((state) => state.modal);
+
+  return (
+    <Dialog
+      open={loadingOpen}
+      PaperProps={{
+        sx: {
+          p: 4,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          borderRadius: "8px",
+        },
+      }}
+    >
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <CircularProgress size={60} />
+        <Typography mt={2} variant="h6">
+          Processing your request...
+        </Typography>
+      </Box>
+    </Dialog>
+  );
+};
+
+export default LoadingDialog;

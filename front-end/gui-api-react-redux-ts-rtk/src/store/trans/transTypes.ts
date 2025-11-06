@@ -1,3 +1,4 @@
+// src/store/trans/transTypes.ts
 import { Command, } from "../interfaces"
 import { AxiosRequestConfig } from "axios"
 

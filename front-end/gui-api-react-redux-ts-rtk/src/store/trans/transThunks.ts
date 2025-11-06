@@ -1,8 +1,9 @@
-// src/store/transThunks.ts
+// src/store/trans/transThunks.ts
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import axios, { AxiosResponse } from "axios"
 import { RootState } from '../../store'
 import { openAlert } from "../alertSlice"
+import { openLoading, closeLoading } from "../modalSlice"
 import { setTrans } from './transSlice'
 import { Query, ConfigArrType, Transactions } from "./transTypes"
 import { Command } from '../interfaces'
@@ -32,6 +33,10 @@ export const fetchTrans = createAsyncThunk<
     }
 
     try {
+      dispatch(openLoading()); // Show spinner
+      // 👇 Delay for 2 seconds for debugging
+      // await new Promise(resolve => setTimeout(resolve, 2000))
+
       const res: AxiosResponse<Transactions> = await axios({
         ...config[command],
         headers: { Authorization: `Bearer ${token}` }
@@ -43,6 +48,8 @@ export const fetchTrans = createAsyncThunk<
       const status = err?.response?.status
       const msg = status >= 500 ? err.message : err?.response?.data?.error
       dispatch(openAlert(msg))
+    } finally {
+      dispatch(closeLoading()); // Hide spinner
     }
   }
 )

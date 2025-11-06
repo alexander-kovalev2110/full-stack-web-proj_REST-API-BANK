@@ -23,7 +23,7 @@ const TransDialog: React.FC = () => {
   const { transOpen } = useAppSelector((state) => state.modal)
   const { command } = useAppSelector((state) => state.trans)
 
-  // Универсальный контейнер для рефов
+  // Container for refs
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
   const handleClose = () => dispatch(closeTrans())
@@ -31,34 +31,34 @@ const TransDialog: React.FC = () => {
   const handleRequest = () => {
     const payload: Partial<Query> = {}
  
-  Object.entries(inputRefs.current).forEach(([key, el]) => {
-    const v = el?.value
-    if (!v) return
+    Object.entries(inputRefs.current).forEach(([key, el]) => {
+      const v = el?.value
+      if (!v) return
 
-    if (key === "transactionId") {
-      const n = Number(v)
-      if (!Number.isNaN(n)) payload.transactionId = n
-      return
-    }
+      if (key === "transactionId") {
+        const n = Number(v)
+        if (!Number.isNaN(n)) payload.transactionId = n
+        return
+      }
 
-    if (key === "amount") {
-      const n = Number(v)
-      if (!Number.isNaN(n)) payload.amount = n
-      return
-    }
+      if (key === "amount") {
+        const n = Number(v)
+        if (!Number.isNaN(n)) payload.amount = n
+        return
+      }
 
-    if (key === "date") {
-      const d = new Date(v) 
-      if (!isNaN(d.getTime())) payload.date = d
-      return
-    }
-  })
+      if (key === "date") {
+        const d = new Date(v) 
+        if (!isNaN(d.getTime())) payload.date = d
+        return
+      }
+    })
 
-    dispatch(fetchTrans(payload as Query))
     handleClose()
+    dispatch(fetchTrans(payload as Query))
   }
 
-  // ДData for dynamic field rendering
+  // Data for dynamic field rendering
   const inpData: Record<Command | "", { id: string; label: string; type: string }[]> = {
     [Command.AddTrans]: [{ id: "amount", label: "Amount", type: "number" }],
     [Command.GetTrans]: [{ id: "transactionId", label: "Transaction ID", type: "number" }],

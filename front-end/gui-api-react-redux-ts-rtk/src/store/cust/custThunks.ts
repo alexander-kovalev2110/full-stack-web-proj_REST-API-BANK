@@ -4,6 +4,7 @@ import axios from "axios"
 import { jwtDecode } from "jwt-decode"
 import { CustData, MyTokenPayload } from "./custTypes"
 import { setCustomer, setToken } from "./custSlice"
+import { openLoading, closeLoading } from "../modalSlice"
 import { openAlert } from "../alertSlice"
 import { resetTrans } from "../trans"
 
@@ -11,10 +12,14 @@ import { resetTrans } from "../trans"
 export const fetchCust = createAsyncThunk(
   "cust/fetch",
   async (custData: CustData, { dispatch }) => {
+    const { authorKind, name, pw } = custData
+    const domen = "http://127.0.0.1:8000/customer"
+    const url = authorKind === "Login" ? `${domen}/login` : `${domen}/register`
+      
     try {
-      const { authorKind, name, pw } = custData
-      const domen = "http://127.0.0.1:8000/customer"
-      const url = authorKind === "Login" ? `${domen}/login` : `${domen}/register`
+      dispatch(openLoading()); // Show spinner
+      // 👇 Delay for 2 seconds for debugging
+      // await new Promise(resolve => setTimeout(resolve, 2000))
 
       const res = await axios.post(url, { name, password: pw })
       const token: string = res.data?.token
@@ -27,9 +32,10 @@ export const fetchCust = createAsyncThunk(
 
       return token
     } catch (err: any) {
-        console.log("err", err)
       const message = err.response?.data?.error || err.message
       dispatch(openAlert(message))
+    } finally {
+      dispatch(closeLoading()); // Hide spinner
     }
   }
 )

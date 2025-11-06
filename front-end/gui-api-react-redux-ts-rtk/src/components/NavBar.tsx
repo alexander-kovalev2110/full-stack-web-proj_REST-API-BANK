@@ -4,10 +4,12 @@ import { Toolbar } from '@mui/material'
 import { Typography } from '@mui/material'
 import { Stack } from '@mui/material'
 import { Button } from '@mui/material'
+
 import LoginIcon from "@mui/icons-material/Login"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
 
 import AuthorDialog from "./AuthorDialog"
+import LoadingDialog from "./LoadingDialog"
 import { openAuthor } from "../store/modalSlice"
 import { useAppSelector, useAppDispatch } from '../store/hook'
 
@@ -39,6 +41,8 @@ const NavBar: React.FC = () => {
             </AppBar>
 
             <AuthorDialog />
+            <LoadingDialog />
+
         </Box>
     )
 }

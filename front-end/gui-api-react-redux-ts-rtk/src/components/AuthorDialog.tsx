@@ -40,7 +40,7 @@ const AuthorDialog: React.FC = () => {
     }
 
     return (
-        <Dialog open={authorOpen} maxWidth="xs" fullWidth={true}
+        <Dialog open={authorOpen} maxWidth="xs" fullWidth
                 onClose={() => dispatch(closeAuthor())}>
             <DialogTitle>
                 Authorization
@@ -76,6 +76,7 @@ const AuthorDialog: React.FC = () => {
                     variant="standard"
                 />
             </DialogContent>
+            
             <DialogActions>
                 <Button
                     variant="outlined"

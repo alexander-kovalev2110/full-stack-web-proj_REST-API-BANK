@@ -1,3 +1,4 @@
+// src/store/trans/transSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { Transaction, TransState, PAGE_SIZE } from "./transTypes"
 import { command } from "../interfaces"

@@ -5,6 +5,7 @@ import { AuthorKind } from '../interfaces'
 // Types for exchange with "Customer" DB
 export type CustomerId = number | null
 export type Token = string | null
+export type UserName = string | null
 
 export type CustData = {            // Type of request
     authorKind: AuthorKind,
@@ -14,9 +15,11 @@ export type CustData = {            // Type of request
 
 export type CustState = {            // Type of response
     customerId: CustomerId,
+    username: UserName,
     token: Token
 }
 
 export interface MyTokenPayload extends JwtPayload {
   customerId: number
+  username: string
 }

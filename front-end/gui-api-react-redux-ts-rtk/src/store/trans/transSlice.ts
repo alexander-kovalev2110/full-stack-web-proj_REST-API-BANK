@@ -37,7 +37,7 @@ export const transSlice = createSlice({
       state.offset += PAGE_SIZE
       state.tabAr = state.transactions.slice(state.offset, state.offset + PAGE_SIZE)
       state.nextDisabled = !((state.offset + PAGE_SIZE) < state.transactions.length)
-      state.previousDisabled = state.offset > 0
+      state.previousDisabled = !(state.offset > 0)
     }
   }
 })

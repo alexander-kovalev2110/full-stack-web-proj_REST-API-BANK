@@ -4,6 +4,7 @@ import { CustState } from './custTypes'
 
 const initialState: CustState = {
   customerId: null,
+  username: null,
   token: null,
 }
 
@@ -14,6 +15,9 @@ export const custSlice = createSlice({
     setCustomer: (state, action: PayloadAction<number>) => {
       state.customerId = action.payload
     },
+    setName: (state, action: PayloadAction<string>) => {
+      state.username= action.payload
+    },
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload
     },
@@ -21,5 +25,5 @@ export const custSlice = createSlice({
   },
 })
 
-export const { setCustomer, setToken, resetCust } = custSlice.actions
+export const { setCustomer, setName, setToken, resetCust } = custSlice.actions
 export default custSlice.reducer

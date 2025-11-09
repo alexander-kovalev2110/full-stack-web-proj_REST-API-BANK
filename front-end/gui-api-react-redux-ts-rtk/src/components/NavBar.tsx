@@ -14,7 +14,7 @@ import { openAuthor } from "../store/modalSlice"
 import { useAppSelector, useAppDispatch } from '../store/hook'
 
 const NavBar: React.FC = () => {
-    const { customerId } = useAppSelector(state => state.cust)
+    const { username } = useAppSelector(state => state.cust)
     const dispatch = useAppDispatch()
 
     return (
@@ -25,7 +25,8 @@ const NavBar: React.FC = () => {
                         REST-API-BANK
                     </Typography>
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        { (customerId)? `Customer ${customerId}` : '' }
+                        { (username)? `${username}` : '' }
+                        {/* { (username)? `Customer: ${username}` : '' } */}
                     </Typography>
                     <Stack direction="row" spacing={1} >
                         <Button component="label" variant="outlined" startIcon={<LoginIcon />}

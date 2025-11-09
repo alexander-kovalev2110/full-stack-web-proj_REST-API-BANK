@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 import { jwtDecode } from "jwt-decode"
 import { CustData, MyTokenPayload } from "./custTypes"
-import { setCustomer, setToken } from "./custSlice"
+import { setCustomer, setName, setToken } from "./custSlice"
 import { openLoading, closeLoading } from "../modalSlice"
 import { openAlert } from "../alertSlice"
 import { resetTrans } from "../trans"
@@ -27,6 +27,7 @@ export const fetchCust = createAsyncThunk(
 
       // Saving the state
       dispatch(setCustomer(decoded.customerId))
+      dispatch(setName(decoded.username))
       dispatch(setToken(token))
       dispatch(resetTrans())
 

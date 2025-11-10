@@ -18,15 +18,15 @@ import { useAppSelector, useAppDispatch } from '../store/hook'
 const drawerWidth = 240
 
 const TransPage: React.FC = () => {
-    const  {customerId} = useAppSelector(state => state.cust)
+    const  {username} = useAppSelector(state => state.cust)
 
     let navigate = useNavigate()
     
     useEffect(() => {
-        if ( customerId === null ) {
+        if ( username === null ) {
             navigate('/')              // Go to page <HomePage>
         }
-    }, [customerId])
+    }, [username])
     
     const dispatch = useAppDispatch()
     

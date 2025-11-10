@@ -21,11 +21,11 @@ class CustomerService
     ) {}
 
     /**
-     * Регистрация нового клиента
+     * Registering a new client
      */
     public function create(string $name, string $pw): string
     {
-        // Проверка на существование
+        // Check for existence
         if ($this->customerRepo->findOneBy(['name' => $name])) {
             throw new ConflictHttpException('Customer with this name already exists.');
         }
@@ -39,14 +39,12 @@ class CustomerService
         $this->em->persist($customer);
         $this->em->flush();
 
-        // Создание JWT токена с пользовательскими данными
-        return $this->jwtManager->createFromPayload($customer, [
-            'customerId' => $customer->getId(),
-        ]);
+        // Generating a JWT token with user data
+        return $this->jwtManager->createFromPayload($customer, []);
     }
 
     /**
-     * Аутентификация клиента
+     * Client authentication
      */
     public function login(string $name, string $pw): string
     {
@@ -60,8 +58,6 @@ class CustomerService
             throw new UnauthorizedHttpException('Bearer', 'Invalid password.');
         }
 
-        return $this->jwtManager->createFromPayload($customer, [
-            'customerId' => $customer->getId(),
-        ]);
+        return $this->jwtManager->createFromPayload($customer, []);
     }
 }

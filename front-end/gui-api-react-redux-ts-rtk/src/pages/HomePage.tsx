@@ -5,14 +5,14 @@ import { useNavigate } from "react-router-dom"
 import { useAppSelector } from '../store/hook'
 
 const HomePage: React.FC = () => {
-    const  { customerId } = useAppSelector(state => state.cust)
+    const  { username } = useAppSelector(state => state.cust)
     let navigate = useNavigate()
 
     useEffect(() => {
-        if ( customerId !== null ) {        // Go to page <TransPage>
+        if ( username !== null ) {        // Go to page <TransPage>
             navigate('/trans')            
         }
-    }, [customerId])
+    }, [username])
 
     return (
         <Box sx={{ display: 'flex' }}>

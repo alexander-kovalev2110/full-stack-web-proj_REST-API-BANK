@@ -33,7 +33,6 @@ class CustomerController extends AbstractController
 
         return $this->json(
             ['token' => $token],
-            // ['success' => true, 'token' => $token],
             Response::HTTP_CREATED
         );
     }
@@ -53,7 +52,6 @@ class CustomerController extends AbstractController
 
         return $this->json(
             ['token' => $token],
-            // ['success' => true, 'token' => $token],
             Response::HTTP_OK
         );
     }

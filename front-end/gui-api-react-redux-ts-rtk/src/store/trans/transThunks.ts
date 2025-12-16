@@ -28,20 +28,18 @@ export const fetchTrans = createAsyncThunk<
       [Command.AddTrans]: { method: 'POST', url: `${domen}`, data: { amount } },
       [Command.GetTrans]: { method: 'GET', url: `${domen}/${transactionId}` },
       [Command.GetTransByFilter]: { method: 'GET', url: `${domen}`, params: { amount, date } },
-      [Command.UpdateTrans]: { method: 'PATCH', url: `${domen}`, data: { transactionId, amount } },
+      [Command.UpdateTrans]: { method: 'PATCH', url: `${domen}/${transactionId}`, data: { amount } },
       [Command.delTrans]: { method: 'DELETE', url: `${domen}/${transactionId}` }
     }
 
     try {
       dispatch(openLoading()); // Show spinner
-      // 👇 Delay for 2 seconds for debugging
-      // await new Promise(resolve => setTimeout(resolve, 2000))
 
       const res: AxiosResponse<Transactions> = await axios({
         ...config[command],
         headers: { Authorization: `Bearer ${token}` }
       })
-
+      
       dispatch(setTrans(res.data.transactions))
 
     } catch (err: any) {

@@ -17,7 +17,7 @@ export type Transactions = {      // Type of response
 export type Query = {
   transactionId?: number
   amount?: number
-  date?: Date
+  date?: string
 }
 
 // Mapping commands to axios configs

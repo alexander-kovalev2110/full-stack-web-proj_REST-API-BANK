@@ -26,7 +26,6 @@ const NavBar: React.FC = () => {
                     </Typography>
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
                         { (username)? `${username}` : '' }
-                        {/* { (username)? `Customer: ${username}` : '' } */}
                     </Typography>
                     <Stack direction="row" spacing={1} >
                         <Button component="label" variant="outlined" startIcon={<LoginIcon />}

@@ -2,99 +2,118 @@
 
 namespace App\Controller;
 
+use App\DTO\TransactionResponse;
+use App\DTO\TransactionListResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use App\DTO\AmountTransactionRequest;
+use App\DTO\FilterTransactionRequest;
 use App\Service\TransactionService;
+use App\Service\ValidatorService;
 
 class TransactionController extends AbstractController
 {
     public function __construct(
-        private readonly TransactionService $transactionService
+        private readonly TransactionService $transactionService,
+        private readonly ValidatorService $validator,
+        private readonly SerializerInterface $serializer
     ) {}
 
-     private function createResponse(array $result): JsonResponse
+    private function getCustomerId(): int
     {
-        $status = isset($result['error']) ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK;
-        return new JsonResponse($result, $status);
+        /** @var \App\Entity\Customer $user */
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('User not authenticated.');
+        }
+        return $user->getId();
+    }
+
+    private function createResponse(TransactionListResponse $response): JsonResponse
+    {
+        // return new JsonResponse($response, JsonResponse::HTTP_OK);
+        return new JsonResponse(
+            $this->serializer->serialize($response, 'json'),
+            Response::HTTP_OK,
+            [],
+            true 
+        );
     }
 
     #[Route('/transaction', name: 'add_transaction', methods: ['POST'])]
-    public function createTransaction(Request $request)
+    public function createTransaction(Request $request): JsonResponse
     {
-        /** @var Customer $user */
-        $user = $this->getUser();
-        $customerId = $user->getId();
-        
-        $data = json_decode($request->getContent(), true) ?? [];
+        $dto = $this->serializer->deserialize(
+            $request->getContent(), 
+            AmountTransactionRequest::class, 
+            'json'
+        );
 
-        $amount = (float) $data['amount'];
+        $errors = $this->validator->validate($dto);
 
-        $result = $this->transactionService->create($customerId, $amount);
+        $result = $this->transactionService->create(
+            $this->getCustomerId(),
+            $dto->amount
+        );
+
         return $this->createResponse($result);
     }
 
     #[Route('/transaction/{transactionId}', name: 'get_transaction', methods: ['GET'])]
-    public function getTransaction(int $transactionId)
+    public function getTransaction(int $transactionId): JsonResponse
     {
-        /** @var Customer $user */
-        $user = $this->getUser();
-        $customerId = $user->getId();
+        $response = $this->transactionService->get(
+            $this->getCustomerId(), 
+            $transactionId
+        );
 
-        $result = $this->transactionService->get($customerId, $transactionId);
-        return $this->createResponse($result);
+        return $this->createResponse($response);
     }
 
-    #[Route('/transaction', name: 'update_transaction', methods: ['PATCH'])]
-    public function updateTransaction(Request $request)
+    #[Route('/transaction/{transactionId}', name: 'update_transaction', methods: ['PATCH'])]
+    public function updateTransaction(int $transactionId, Request $request): JsonResponse
     {
-        /** @var Customer $user */
-        $user = $this->getUser(); 
-        $customerId = $user->getId();
-        
-        $data = json_decode($request->getContent(), true) ?? [];
+        $dto = $this->serializer->deserialize(
+            $request->getContent(), 
+            AmountTransactionRequest::class, 
+            'json'
+        );
 
-        $transactionId = (int) $data['transactionId'];
-        $amount = (float) $data['amount'];
+        $errors = $this->validator->validate($dto);
 
-        $result = $this->transactionService->update($customerId, $transactionId, $amount);
+        $result = $this->transactionService->update(
+            $this->getCustomerId(),
+            $transactionId, 
+            $dto->amount);
+            
         return $this->createResponse($result);
     }
 
     #[Route('/transaction/{transactionId}', name: 'delete_transaction', methods: ['DELETE'])]
-    public function deleteTransaction(int $transactionId)
+    public function deleteTransaction(int $transactionId): JsonResponse
     {
-        /** @var Customer $user */
-        $user = $this->getUser();
-        $customerId = $user->getId();
-        
-        $result = $this->transactionService->delete($customerId, $transactionId);
+        $result = $this->transactionService->delete($this->getCustomerId(), $transactionId);
         return $this->createResponse($result);
     }
 
     #[Route('/transaction', name: 'get_transaction_by_filter', methods: ['GET'])]
-    public function getTransactionByFilter(Request $request)
+    public function getTransactionByFilter(Request $request): JsonResponse
     {
-        /** @var Customer $user */
-        $user = $this->getUser(); 
+        // Convert QUERY → DTO
+        $dto = new FilterTransactionRequest(
+            amount: $request->query->get('amount'),
+            date: $request->query->get('date')
+        );
 
-        if (!$user) {
-            return $this->json(['error' => 'Unauthorized'], 401);
-        }
+        // DTO validation
+        $errors = $this->validator->validate($dto);
 
-        $search = ['customer' => $user->getId()];
+        $result = $this->transactionService->getByFilter($this->getCustomerId(), $dto);
 
-        if ($amount = $request->query->get('amount')) {
-            $search['amount'] = $amount;
-        }
-        
-        if ($date = $request->query->get('date')) {
-            $search['date'] = \DateTime::createFromFormat('Y-m-d', $date);
-        }
-
-        $result = $this->transactionService->getByFilter($search);
         return $this->createResponse($result);
-    }     
+    }
 }

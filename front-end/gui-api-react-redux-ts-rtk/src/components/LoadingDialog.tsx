@@ -8,7 +8,11 @@ const LoadingDialog: React.FC = () => {
   return (
     <Dialog
       open={loadingOpen}
-      PaperProps={{
+      disableEnforceFocus
+      disableAutoFocus
+      disableRestoreFocus
+      transitionDuration={0}
+        PaperProps={{
         sx: {
           p: 4,
           display: "flex",

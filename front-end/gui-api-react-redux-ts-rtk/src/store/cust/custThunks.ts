@@ -18,10 +18,9 @@ export const fetchCust = createAsyncThunk(
       
     try {
       dispatch(openLoading()); // Show spinner
-      // 👇 Delay for 2 seconds for debugging
-      // await new Promise(resolve => setTimeout(resolve, 2000))
 
       const res = await axios.post(url, { name, password: pw })
+
       const token: string = res.data?.token
       const decoded = jwtDecode<MyTokenPayload>(token)
 
@@ -32,6 +31,7 @@ export const fetchCust = createAsyncThunk(
 
       return token
     } catch (err: any) {
+      console.log("err> ", err)
       const message = err.response?.data?.error || err.message
       dispatch(openAlert(message))
     } finally {

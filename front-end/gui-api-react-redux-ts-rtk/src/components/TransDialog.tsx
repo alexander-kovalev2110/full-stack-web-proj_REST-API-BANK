@@ -48,10 +48,10 @@ const TransDialog: React.FC = () => {
       }
 
       if (key === "date") {
-        const d = new Date(v) 
-        if (!isNaN(d.getTime())) payload.date = d
-        return
+        payload.date = v;   // v in the format "YYYY-MM-DD"
+        return;
       }
+
     })
 
     handleClose()

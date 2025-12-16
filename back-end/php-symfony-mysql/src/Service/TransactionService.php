@@ -3,9 +3,14 @@
 namespace App\Service;
 
 use App\Entity\Transaction;
+use App\DTO\TransactionResponse;
+use App\DTO\TransactionListResponse;
+use App\DTO\FilterTransactionRequest;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CustomerRepository;
 use App\Repository\TransactionRepository;
+use App\DTO\TransactionRequest;
 
 class TransactionService 
 {
@@ -25,16 +30,12 @@ class TransactionService
         ];
     }
 
-    public function create(int $customerId, float $amount): array
+    public function create(int $customerId, float $amount): TransactionListResponse
     {
-        if ($customerId <= 0 || $amount < 0) {
-            return ['error' => 'Invalid customerId or amount'];
-        }
-
         $customer = $this->customerRepo->find($customerId);
 
         if (!$customer) {
-            return ['error' => 'Customer not found.'];
+            throw new NotFoundHttpException('Customer not found.');
         }
 
         $transaction = (new Transaction())
@@ -45,80 +46,105 @@ class TransactionService
         $this->em->persist($transaction);
         $this->em->flush();
 
-        return [
-            'transactions' => [$this->formatTransaction($transaction)]
-        ];
+        return new TransactionListResponse([
+            new TransactionResponse(
+                transactionId: $transaction->getId(),
+                amount: $transaction->getAmount(),
+                date: $transaction->getDate()->format('Y-m-d'),
+                customerId: $transaction->getCustomer()->getId()
+            )
+        ]);
     }
 
-    public function get(int $customerId, int $transactionId,): array
+    public function get(int $customerId, int $transactionId): TransactionListResponse
     {
-        $transactions = $this->transactionRepo->findBy([
+        $transaction = $this->transactionRepo->findOneBy([
             'customer' => $customerId,
             'id' => $transactionId
         ]);
 
-        if (!$transactions) {
-            return ['error' => 'Transaction not found.'];
+        if (!$transaction) {
+            throw new NotFoundHttpException('Transaction not found.');
         }
 
-        return [
-            'transactions' => [$this->formatTransaction($transactions[0])]
-        ];
+        return new TransactionListResponse([
+            new TransactionResponse(
+                transactionId: $transaction->getId(),
+                amount: $transaction->getAmount(),
+                date: $transaction->getDate()->format('Y-m-d'),
+                customerId: $transaction->getCustomer()->getId()
+            )
+        ]);
     }
 
-    public function update(int $customerId, int $transactionId, float $amount): array
+    public function update(int $customerId, int $transactionId, float $amount): TransactionListResponse
     {
-        if ($customerId <= 0 || $amount < 0) {
-            return ['error' => 'Invalid customerId or amount'];
-        }
-        
-        $transactions = $this->transactionRepo->findBy([
+        $transaction = $this->transactionRepo->findOneBy([
             'customer' => $customerId,
             'id' => $transactionId
         ]);
 
-        if (!$transactions) {
-            return ['error' => 'Transaction not found for updating.'];
+        if (!$transaction) {
+            throw new NotFoundHttpException('Transaction not found.');
         }
-
-        $transaction = $transactions[0];
 
         $transaction->setAmount($amount);
         $this->em->flush();
 
-        return [
-            'transactions' => [$this->formatTransaction($transaction)]
-        ];
+        return new TransactionListResponse([
+            new TransactionResponse(
+                transactionId: $transaction->getId(),
+                amount: $transaction->getAmount(),
+                date: $transaction->getDate()->format('Y-m-d'),
+                customerId: $transaction->getCustomer()->getId()
+            )
+        ]);
     }
 
-    public function delete(int $customerId, int $transactionId): array
+    public function delete(int $customerId, int $transactionId): TransactionListResponse
     {
-        $transactions = $this->transactionRepo->findBy([
+        $transaction = $this->transactionRepo->findOneBy([
             'customer' => $customerId,
             'id' => $transactionId
         ]);
 
-        if (!$transactions) {
-            return ['error' => 'Transaction not found for deletion.'];
+        if (!$transaction) {
+            throw new NotFoundHttpException('Transaction not found.');
         }
-
-        $transaction = $transactions[0];
 
         $this->em->remove($transaction);
         $this->em->flush();
 
-        return ['transactions' => []];
+        return new TransactionListResponse([
+        ]);
     }
 
-    public function getByFilter(array $search): array
-    {
-        $transactions = $this->transactionRepo->findBy($search);
+    public function getByFilter(int $customerId, FilterTransactionRequest $filter
+    ): TransactionListResponse
 
-        $transactionsFormatted = array_map(
-            fn(Transaction $t) => $this->formatTransaction($t),
+    {
+        $criteria = ['customer' => $customerId];
+
+        if ($filter->amount !== null) {
+            $criteria['amount'] = $filter->amount;
+        }
+
+        if ($filter->date !== null) {
+            $criteria['date'] = $filter->date;
+        }
+
+        $transactions = $this->transactionRepo->findBy($criteria);
+
+        $dtoList = array_map(
+            fn (Transaction $transaction) => new TransactionResponse(
+                transactionId: $transaction->getId(),
+                amount: $transaction->getAmount(),
+                date: $transaction->getDate()->format('Y-m-d'),
+                customerId: $transaction->getCustomer()->getId()
+            ),
             $transactions
         );
 
-        return ['transactions' => $transactionsFormatted];
+        return new TransactionListResponse($dtoList);
     }
 }

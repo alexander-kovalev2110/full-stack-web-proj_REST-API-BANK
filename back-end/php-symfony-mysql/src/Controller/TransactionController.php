@@ -35,13 +35,7 @@ class TransactionController extends AbstractController
 
     private function createResponse(TransactionListResponse $response): JsonResponse
     {
-        // return new JsonResponse($response, JsonResponse::HTTP_OK);
-        return new JsonResponse(
-            $this->serializer->serialize($response, 'json'),
-            Response::HTTP_OK,
-            [],
-            true 
-        );
+        return $this->json($response, Response::HTTP_OK);
     }
 
     #[Route('/transaction', name: 'add_transaction', methods: ['POST'])]
@@ -53,14 +47,14 @@ class TransactionController extends AbstractController
             'json'
         );
 
-        $errors = $this->validator->validate($dto);
+        $this->validator->validate($dto);
 
-        $result = $this->transactionService->create(
+        $response = $this->transactionService->create(
             $this->getCustomerId(),
             $dto->amount
         );
 
-        return $this->createResponse($result);
+        return $this->createResponse($response);
     }
 
     #[Route('/transaction/{transactionId}', name: 'get_transaction', methods: ['GET'])]
@@ -83,21 +77,21 @@ class TransactionController extends AbstractController
             'json'
         );
 
-        $errors = $this->validator->validate($dto);
+        $this->validator->validate($dto);
 
-        $result = $this->transactionService->update(
+        $response = $this->transactionService->update(
             $this->getCustomerId(),
             $transactionId, 
             $dto->amount);
             
-        return $this->createResponse($result);
+        return $this->createResponse($response);
     }
 
     #[Route('/transaction/{transactionId}', name: 'delete_transaction', methods: ['DELETE'])]
     public function deleteTransaction(int $transactionId): JsonResponse
     {
-        $result = $this->transactionService->delete($this->getCustomerId(), $transactionId);
-        return $this->createResponse($result);
+        $response = $this->transactionService->delete($this->getCustomerId(), $transactionId);
+        return $this->createResponse($response);
     }
 
     #[Route('/transaction', name: 'get_transaction_by_filter', methods: ['GET'])]
@@ -109,11 +103,10 @@ class TransactionController extends AbstractController
             date: $request->query->get('date')
         );
 
-        // DTO validation
-        $errors = $this->validator->validate($dto);
+        $this->validator->validate($dto);
 
-        $result = $this->transactionService->getByFilter($this->getCustomerId(), $dto);
+        $response = $this->transactionService->getByFilter($this->getCustomerId(), $dto);
 
-        return $this->createResponse($result);
+        return $this->createResponse($response);
     }
 }

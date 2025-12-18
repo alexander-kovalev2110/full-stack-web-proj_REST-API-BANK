@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CustomerRepository;
 use App\Repository\TransactionRepository;
 use App\DTO\TransactionRequest;
+use App\Service\TransactionMapper;
 
 class TransactionService 
 {
@@ -47,12 +48,7 @@ class TransactionService
         $this->em->flush();
 
         return new TransactionListResponse([
-            new TransactionResponse(
-                transactionId: $transaction->getId(),
-                amount: $transaction->getAmount(),
-                date: $transaction->getDate()->format('Y-m-d'),
-                customerId: $transaction->getCustomer()->getId()
-            )
+            TransactionMapper::fromEntity($transaction)
         ]);
     }
 
@@ -68,12 +64,7 @@ class TransactionService
         }
 
         return new TransactionListResponse([
-            new TransactionResponse(
-                transactionId: $transaction->getId(),
-                amount: $transaction->getAmount(),
-                date: $transaction->getDate()->format('Y-m-d'),
-                customerId: $transaction->getCustomer()->getId()
-            )
+            TransactionMapper::fromEntity($transaction)
         ]);
     }
 
@@ -91,13 +82,17 @@ class TransactionService
         $transaction->setAmount($amount);
         $this->em->flush();
 
+        // return new TransactionListResponse([
+        //     new TransactionResponse(
+        //         transactionId: $transaction->getId(),
+        //         amount: $transaction->getAmount(),
+        //         date: $transaction->getDate()->format('Y-m-d'),
+        //         customerId: $transaction->getCustomer()->getId()
+        //     )
+        // ]);
+
         return new TransactionListResponse([
-            new TransactionResponse(
-                transactionId: $transaction->getId(),
-                amount: $transaction->getAmount(),
-                date: $transaction->getDate()->format('Y-m-d'),
-                customerId: $transaction->getCustomer()->getId()
-            )
+            TransactionMapper::fromEntity($transaction)
         ]);
     }
 
@@ -135,16 +130,8 @@ class TransactionService
 
         $transactions = $this->transactionRepo->findBy($criteria);
 
-        $dtoList = array_map(
-            fn (Transaction $transaction) => new TransactionResponse(
-                transactionId: $transaction->getId(),
-                amount: $transaction->getAmount(),
-                date: $transaction->getDate()->format('Y-m-d'),
-                customerId: $transaction->getCustomer()->getId()
-            ),
-            $transactions
+        return new TransactionListResponse(
+            TransactionMapper::fromEntities($transactions)
         );
-
-        return new TransactionListResponse($dtoList);
     }
 }

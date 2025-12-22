@@ -19,9 +19,13 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
+    App\EventListener\ApiExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }    
+
     App\ArgumentResolver\FilterTransactionRequestResolver:
         tags: ['controller.argument_value_resolver']
 
-    # App\ArgumentResolver\CustomerValueResolver:
-    #     tags:
-    #         - { name: controller.argument_value_resolver, priority: 100 }
+    App\ArgumentResolver\CustomerValueResolver:
+        tags:
+            - { name: controller.argument_value_resolver, priority: 50 }

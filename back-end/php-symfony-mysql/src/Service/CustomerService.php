@@ -8,9 +8,9 @@ use App\DTO\LoginRequest;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use App\Domain\Exception\CustomerAlreadyExistsException;
+use App\Domain\Exception\CustomerNotFoundException;
+use App\Domain\Exception\InvalidCredentialsException;
 
 class CustomerService
 {
@@ -27,7 +27,7 @@ class CustomerService
     {
         // Check for existence
         if ($this->customerRepo->findOneBy(['name' => $dto->name])) {
-            throw new ConflictHttpException('Customer already exists.');
+            throw new CustomerAlreadyExistsException();
         }
 
         $customer = new Customer();
@@ -51,11 +51,11 @@ class CustomerService
         $customer = $this->customerRepo->findOneBy(['name' => $dto->name]);
 
         if (!$customer) {
-            throw new NotFoundHttpException('Customer not found.');
+            throw new CustomerNotFoundException();
         }
 
         if (!$this->passwordHasher->isPasswordValid($customer, $dto->password)) {
-            throw new UnauthorizedHttpException('', 'Invalid password.');
+            throw new InvalidCredentialsException();
         }
 
         return $customer;

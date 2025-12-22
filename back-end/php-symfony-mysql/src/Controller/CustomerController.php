@@ -24,11 +24,6 @@ class CustomerController extends AbstractController
         private readonly SerializerInterface $serializer,
     ) {}
 
-    private function createResponse(AuthResponse $response): JsonResponse
-    {
-        return new JsonResponse($response, JsonResponse::HTTP_OK);
-    }
-
     #[Route('/customer/register', name: 'create_customer', methods: ['POST'])]
     public function createCustomer(Request $request): JsonResponse
     {
@@ -45,7 +40,7 @@ class CustomerController extends AbstractController
         $customer = $this->customerService->create($dto);
         $token = $this->tokenService->createToken($customer);
 
-        return $this->createResponse(new AuthResponse(token: $token));
+        return $this->json(new AuthResponse($token), Response::HTTP_CREATED);
     }
 
     #[Route('/customer/login', name: 'login_customer', methods: ['POST'])]
@@ -63,6 +58,6 @@ class CustomerController extends AbstractController
         $customer = $this->customerService->login($dto);
         $token = $this->tokenService->createToken($customer);
 
-        return $this->createResponse(new AuthResponse(token: $token));
+        return $this->json(new AuthResponse($token), Response::HTTP_OK);
     }
 }

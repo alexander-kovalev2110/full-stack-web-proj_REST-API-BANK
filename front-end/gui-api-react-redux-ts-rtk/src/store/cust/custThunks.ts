@@ -31,7 +31,6 @@ export const fetchCust = createAsyncThunk(
 
       return token
     } catch (err: any) {
-      console.log("err> ", err)
       const message = err.response?.data?.error || err.message
       dispatch(openAlert(message))
     } finally {

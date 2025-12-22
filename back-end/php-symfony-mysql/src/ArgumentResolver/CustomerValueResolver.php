@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class CustomerValueResolver implements ArgumentValueResolverInterface
 {
@@ -14,7 +15,7 @@ class CustomerValueResolver implements ArgumentValueResolverInterface
 
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        // Резолвер должен работать только для аргументов типа Customer
+        // Resolver should only work for arguments of type Customer.
         return $argument->getType() === Customer::class;
     }
 
@@ -22,12 +23,14 @@ class CustomerValueResolver implements ArgumentValueResolverInterface
     {
         $user = $this->security->getUser();
 
-        if ($user instanceof Customer) {
-            yield $user;
-            return;
+        if (!$user) {
+            throw new AccessDeniedHttpException('User is not authenticated.');
         }
 
-        // если пользователь не Customer — резолвер ничего не возвращает
-        return;
+        if (!$user instanceof Customer) {
+            throw new AccessDeniedHttpException('Authenticated user is not a customer.');
+        }
+
+        yield $user;
     }
 }

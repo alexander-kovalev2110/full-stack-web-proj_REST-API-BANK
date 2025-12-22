@@ -16,8 +16,12 @@ class Transaction
     #[ORM\Column(type: 'float')]
     private $amount;
 
-    #[ORM\Column(type: 'date')]
-    private $date;
+    // #[ORM\Column(type: 'date')]
+    // private $date;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private ?\DateTimeImmutable $date = null;
+
 
     #[ORM\ManyToOne(targetEntity: Customer::class)]
     #[ORM\JoinColumn(nullable: false)]

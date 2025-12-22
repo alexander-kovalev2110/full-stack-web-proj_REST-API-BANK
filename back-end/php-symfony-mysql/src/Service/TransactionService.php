@@ -2,47 +2,29 @@
 
 namespace App\Service;
 
+use App\Entity\Customer;
 use App\Entity\Transaction;
 use App\DTO\TransactionResponse;
 use App\DTO\TransactionListResponse;
 use App\DTO\FilterTransactionRequest;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\CustomerRepository;
 use App\Repository\TransactionRepository;
-use App\DTO\TransactionRequest;
 use App\Service\TransactionMapper;
+use App\Domain\Exception\TransactionNotFoundException;
 
 class TransactionService 
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly CustomerRepository $customerRepo,
         private readonly TransactionRepository $transactionRepo
     ){}
 
-    private function formatTransaction(Transaction $transaction): array
+    public function createTransaction(Customer $customer, float $amount): TransactionListResponse
     {
-        return [
-            'transactionId' => $transaction->getId(),
-            'amount' => $transaction->getAmount(),
-            'date' => $transaction->getDate()->format("Y-m-d"),
-            'customerId' => $transaction->getCustomer()->getId()
-        ];
-    }
-
-    public function create(int $customerId, float $amount): TransactionListResponse
-    {
-        $customer = $this->customerRepo->find($customerId);
-
-        if (!$customer) {
-            throw new NotFoundHttpException('Customer not found.');
-        }
-
         $transaction = (new Transaction())
             ->setCustomer($customer)
             ->setAmount($amount)
-            ->setDate(new \DateTime());
+            ->setDate(new \DateTimeImmutable());
 
         $this->em->persist($transaction);
         $this->em->flush();
@@ -52,23 +34,23 @@ class TransactionService
         ]);
     }
 
-    public function get(int $customerId, int $transactionId): TransactionListResponse
+    public function getTransaction(int $customerId, int $transactionId): TransactionListResponse
     {
         $transaction = $this->transactionRepo->findOneBy([
-            'customer' => $customerId,
-            'id' => $transactionId
+            'customer' => $customerId, 
+            'id'       => $transactionId,
         ]);
 
         if (!$transaction) {
-            throw new NotFoundHttpException('Transaction not found.');
+            throw new TransactionNotFoundException();
         }
 
         return new TransactionListResponse([
-            TransactionMapper::fromEntity($transaction)
+            TransactionMapper::fromEntity($transaction),
         ]);
     }
 
-    public function update(int $customerId, int $transactionId, float $amount): TransactionListResponse
+    public function changeAmount(int $customerId, int $transactionId, float $amount): TransactionListResponse
     {
         $transaction = $this->transactionRepo->findOneBy([
             'customer' => $customerId,
@@ -76,27 +58,18 @@ class TransactionService
         ]);
 
         if (!$transaction) {
-            throw new NotFoundHttpException('Transaction not found.');
+            throw new TransactionNotFoundException();
         }
 
         $transaction->setAmount($amount);
         $this->em->flush();
 
-        // return new TransactionListResponse([
-        //     new TransactionResponse(
-        //         transactionId: $transaction->getId(),
-        //         amount: $transaction->getAmount(),
-        //         date: $transaction->getDate()->format('Y-m-d'),
-        //         customerId: $transaction->getCustomer()->getId()
-        //     )
-        // ]);
-
         return new TransactionListResponse([
             TransactionMapper::fromEntity($transaction)
         ]);
     }
 
-    public function delete(int $customerId, int $transactionId): TransactionListResponse
+    public function removeTransaction(int $customerId, int $transactionId): TransactionListResponse
     {
         $transaction = $this->transactionRepo->findOneBy([
             'customer' => $customerId,
@@ -104,7 +77,7 @@ class TransactionService
         ]);
 
         if (!$transaction) {
-            throw new NotFoundHttpException('Transaction not found.');
+            throw new TransactionNotFoundException();
         }
 
         $this->em->remove($transaction);
@@ -114,7 +87,7 @@ class TransactionService
         ]);
     }
 
-    public function getByFilter(int $customerId, FilterTransactionRequest $filter
+    public function getTransactionByFilter(int $customerId, FilterTransactionRequest $filter
     ): TransactionListResponse
 
     {

@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-use App\DTO\TransactionResponse;
-use App\DTO\TransactionListResponse;
+use App\Entity\Customer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -23,23 +21,8 @@ class TransactionController extends AbstractController
         private readonly SerializerInterface $serializer
     ) {}
 
-    private function getCustomerId(): int
-    {
-        /** @var \App\Entity\Customer $user */
-        $user = $this->getUser();
-        if (!$user) {
-            throw $this->createAccessDeniedException('User not authenticated.');
-        }
-        return $user->getId();
-    }
-
-    private function createResponse(TransactionListResponse $response): JsonResponse
-    {
-        return $this->json($response, Response::HTTP_OK);
-    }
-
     #[Route('/transaction', name: 'add_transaction', methods: ['POST'])]
-    public function createTransaction(Request $request): JsonResponse
+    public function createTransaction(Request $request, Customer $customer): JsonResponse
     {
         $dto = $this->serializer->deserialize(
             $request->getContent(), 
@@ -49,27 +32,28 @@ class TransactionController extends AbstractController
 
         $this->validator->validate($dto);
 
-        $response = $this->transactionService->create(
-            $this->getCustomerId(),
-            $dto->amount
+        return $this->json(
+            $this->transactionService->createTransaction(
+                $customer, 
+                $dto->amount
+            ), 
+            Response::HTTP_CREATED
         );
-
-        return $this->createResponse($response);
     }
 
     #[Route('/transaction/{transactionId}', name: 'get_transaction', methods: ['GET'])]
-    public function getTransaction(int $transactionId): JsonResponse
+    public function getTransaction(int $transactionId, Customer $customer): JsonResponse
     {
-        $response = $this->transactionService->get(
-            $this->getCustomerId(), 
-            $transactionId
+        return $this->json(
+            $this->transactionService->getTransaction(
+                $customer->getId(),
+                $transactionId
+            )
         );
-
-        return $this->createResponse($response);
     }
 
     #[Route('/transaction/{transactionId}', name: 'update_transaction', methods: ['PATCH'])]
-    public function updateTransaction(int $transactionId, Request $request): JsonResponse
+    public function updateTransaction(int $transactionId, Request $request, Customer $customer): JsonResponse
     {
         $dto = $this->serializer->deserialize(
             $request->getContent(), 
@@ -79,23 +63,28 @@ class TransactionController extends AbstractController
 
         $this->validator->validate($dto);
 
-        $response = $this->transactionService->update(
-            $this->getCustomerId(),
-            $transactionId, 
-            $dto->amount);
-            
-        return $this->createResponse($response);
+        return $this->json(
+            $this->transactionService->changeAmount(
+                $customer->getId(),
+                $transactionId,
+                $dto->amount
+            )
+        );
     }
 
     #[Route('/transaction/{transactionId}', name: 'delete_transaction', methods: ['DELETE'])]
-    public function deleteTransaction(int $transactionId): JsonResponse
+    public function deleteTransaction(int $transactionId, Customer $customer): JsonResponse
     {
-        $response = $this->transactionService->delete($this->getCustomerId(), $transactionId);
-        return $this->createResponse($response);
+        return $this->json(
+            $this->transactionService->removeTransaction(
+                $customer->getId(),
+                $transactionId
+            )
+        );
     }
 
     #[Route('/transaction', name: 'get_transaction_by_filter', methods: ['GET'])]
-    public function getTransactionByFilter(Request $request): JsonResponse
+    public function getTransactionByFilter(Request $request, Customer $customer): JsonResponse
     {
         // Convert QUERY → DTO
         $dto = new FilterTransactionRequest(
@@ -105,8 +94,11 @@ class TransactionController extends AbstractController
 
         $this->validator->validate($dto);
 
-        $response = $this->transactionService->getByFilter($this->getCustomerId(), $dto);
-
-        return $this->createResponse($response);
+        return $this->json(
+            $this->transactionService->getTransactionByFilter(
+                $customer->getId(),
+                $dto
+            )
+        );
     }
 }

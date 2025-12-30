@@ -13,7 +13,6 @@ import LoginIcon from "@mui/icons-material/Login"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
 
 import { closeAuthor } from "../store/modalSlice"
-import { openAlert } from "../store/alertSlice"
 import { fetchCust } from "../store/cust"
 import { useAppSelector, useAppDispatch } from '../store/hook'
 import { AuthorKind } from '../store/interfaces'
@@ -29,11 +28,6 @@ const AuthorDialog: React.FC = () => {
     const handleRequest = (authorKind: AuthorKind) => { 
         const name = nameRef.current?.value || ""
         const pw = pwRef.current?.value || ""
-
-        if (!name || !pw) {
-            dispatch(openAlert("Name and password are required"))
-            return
-        }
 
         dispatch(closeAuthor())
         dispatch(fetchCust({ authorKind, name, pw }))

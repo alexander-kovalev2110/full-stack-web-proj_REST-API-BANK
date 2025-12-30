@@ -1,6 +1,7 @@
 // store/cust/custSlice.ts
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { CustState } from './custTypes'
+import { createSlice } from "@reduxjs/toolkit"
+import { CustState } from "./custTypes"
+import { fetchCust } from "./custThunks"
 
 const initialState: CustState = {
   username: null,
@@ -11,15 +12,15 @@ export const custSlice = createSlice({
   name: "cust",
   initialState,
   reducers: {
-    setName: (state, action: PayloadAction<string>) => {
-      state.username= action.payload
-    },
-    setToken: (state, action: PayloadAction<string>) => {
-      state.token = action.payload
-    },
     resetCust: () => initialState,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchCust.fulfilled, (state, action) => {
+      state.username = action.payload.username
+      state.token = action.payload.token
+    })
   },
 })
 
-export const { setName, setToken, resetCust } = custSlice.actions
+export const { resetCust } = custSlice.actions
 export default custSlice.reducer

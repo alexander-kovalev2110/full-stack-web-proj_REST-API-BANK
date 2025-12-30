@@ -6,6 +6,7 @@ use App\Entity\Customer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use App\DTO\AmountTransactionRequest;
@@ -48,7 +49,7 @@ class TransactionController extends AbstractController
             $this->transactionService->getTransaction(
                 $customer->getId(),
                 $transactionId
-            )
+            ), Response::HTTP_OK
         );
     }
 
@@ -68,7 +69,7 @@ class TransactionController extends AbstractController
                 $customer->getId(),
                 $transactionId,
                 $dto->amount
-            )
+            ), Response::HTTP_OK
         );
     }
 
@@ -79,11 +80,11 @@ class TransactionController extends AbstractController
             $this->transactionService->removeTransaction(
                 $customer->getId(),
                 $transactionId
-            )
+            ), Response::HTTP_OK
         );
     }
 
-    #[Route('/transaction', name: 'get_transaction_by_filter', methods: ['GET'])]
+    #[Route('/transactions', name: 'get_transaction_by_filter', methods: ['GET'])]
     public function getTransactionByFilter(Request $request, Customer $customer): JsonResponse
     {
         // Convert QUERY → DTO
@@ -98,7 +99,7 @@ class TransactionController extends AbstractController
             $this->transactionService->getTransactionByFilter(
                 $customer->getId(),
                 $dto
-            )
+            ), Response::HTTP_OK
         );
     }
 }

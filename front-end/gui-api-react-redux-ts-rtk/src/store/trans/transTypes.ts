@@ -26,10 +26,6 @@ export type ConfigArrType = { [key in Command]: AxiosRequestConfig }
 export type TransState = {
   command: Command | ""
   transactions: Transaction[]
-  tabAr: Transaction[]
-  offset: number
-  previousDisabled: boolean
-  nextDisabled: boolean
 }
 
 export const PAGE_SIZE = 5

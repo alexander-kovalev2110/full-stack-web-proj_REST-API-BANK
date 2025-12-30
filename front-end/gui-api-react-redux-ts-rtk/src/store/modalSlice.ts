@@ -4,14 +4,12 @@ import { AuthorKind } from './interfaces'
 type ModalState = {
     authorOpen: boolean,
     transOpen: boolean,
-    loadingOpen: boolean,
     authorKind: AuthorKind          // 'Login' / 'Signup'
 }
 
 const initialState: ModalState = {
     authorOpen: false,
     transOpen: false,
-    loadingOpen: false,
     authorKind: 'Login'
 }
 export const modalSlice = createSlice({
@@ -25,10 +23,8 @@ export const modalSlice = createSlice({
     closeAuthor:  (state) => { state.authorOpen = false },
     openTrans: (state ) => { state.transOpen = true },
     closeTrans:  (state) => { state.transOpen = false },
-    openLoading: (state) => { state.loadingOpen = true; },
-    closeLoading: (state) => { state.loadingOpen = false; },
   }
 })
 
-export const { openAuthor, closeAuthor, openTrans, closeTrans, openLoading, closeLoading } = modalSlice.actions
+export const { openAuthor, closeAuthor, openTrans, closeTrans } = modalSlice.actions
 export default modalSlice.reducer

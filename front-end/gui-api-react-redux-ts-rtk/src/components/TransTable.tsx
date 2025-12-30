@@ -12,13 +12,20 @@ import { Stack } from '@mui/material'
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 
-import { nextPage, previousPage } from "../store/trans"
+import { nextPage, previousPage } from "../store/paginationSlice"
 import { useAppSelector, useAppDispatch } from "../store/hook"
 
-const TransTable: React.FC = () => {
-    const  { tabAr, previousDisabled, nextDisabled } = useAppSelector(state => state.trans)
+import {
+  selectPaginatedTransactions,
+  selectPaginationState,
+} from "../store/trans/transSelectors"
 
+const TransTable: React.FC = () => {
     const dispatch = useAppDispatch()
+
+    const tabAr = useAppSelector(selectPaginatedTransactions)
+    const { previousDisabled, nextDisabled } =
+        useAppSelector(selectPaginationState)
 
     return (
         <Box component="main" sx={{ flexGrow: 1, p: 2 }}>

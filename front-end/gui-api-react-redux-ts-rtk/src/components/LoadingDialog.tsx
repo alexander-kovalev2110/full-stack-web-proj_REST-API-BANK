@@ -3,11 +3,11 @@ import { Dialog, Box, CircularProgress, Typography } from "@mui/material";
 import { useAppSelector } from "../store/hook";
 
 const LoadingDialog: React.FC = () => {
-  const { loadingOpen } = useAppSelector((state) => state.modal);
+  const { loading } = useAppSelector(state => state.ui);
 
   return (
     <Dialog
-      open={loadingOpen}
+      open={loading}
       disableEnforceFocus
       disableAutoFocus
       disableRestoreFocus

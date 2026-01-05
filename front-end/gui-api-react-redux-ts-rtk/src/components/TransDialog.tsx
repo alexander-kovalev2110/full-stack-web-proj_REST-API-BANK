@@ -16,7 +16,7 @@ import { fetchTrans } from "../store/trans"
 import { closeTrans } from "../store/modalSlice"
 import { Command } from "../store/interfaces"
 import { useAppSelector, useAppDispatch } from "../store/hook"
-import type { Query } from "../store/trans/transTypes"
+import type { TransQuery } from "../store/trans/transTypes"
 
 const TransDialog: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -29,7 +29,9 @@ const TransDialog: React.FC = () => {
   const handleClose = () => dispatch(closeTrans())
 
   const handleRequest = () => {
-    const payload: Partial<Query> = {}
+    if (!command) return  
+
+    const payload: TransQuery = { command }
  
     Object.entries(inputRefs.current).forEach(([key, el]) => {
       const v = el?.value
@@ -55,11 +57,11 @@ const TransDialog: React.FC = () => {
     })
 
     handleClose()
-    dispatch(fetchTrans(payload as Query))
+    dispatch(fetchTrans(payload))
   }
 
   // Data for dynamic field rendering
-  const inpData: Record<Command | "", { id: string; label: string; type: string }[]> = {
+  const inpData: Record<Command, { id: string; label: string; type: string }[]> = {
     [Command.AddTrans]: [{ id: "amount", label: "Amount", type: "number" }],
     [Command.GetTrans]: [{ id: "transactionId", label: "Transaction ID", type: "number" }],
     [Command.GetTransByFilter]: [
@@ -71,7 +73,6 @@ const TransDialog: React.FC = () => {
       { id: "amount", label: "Amount", type: "number" }
     ],
     [Command.delTrans]: [{ id: "transactionId", label: "Transaction ID", type: "number" }],
-    [""]: []
   }
 
   return (
@@ -93,7 +94,7 @@ const TransDialog: React.FC = () => {
       </DialogTitle>
 
       <DialogContent>
-        {inpData[command].map((field, idx) => (
+        {command && inpData[command].map((field, idx) => (
           <TextField
             key={field.id}
             margin="dense"

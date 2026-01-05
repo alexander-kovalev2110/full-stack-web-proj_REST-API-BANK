@@ -8,11 +8,8 @@ export type CustData = {            // Type of request
     pw: string
 }
 
-export type AuthStatus = "idle" | "loading" | "authenticated" | "error"
-
 export type CustState = {
   username: string | null
-  token: string | null
 }
 
 export interface MyTokenPayload extends JwtPayload {

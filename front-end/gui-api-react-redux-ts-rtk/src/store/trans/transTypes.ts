@@ -9,12 +9,14 @@ export type Transaction = {
     date: Date
 }
 
-export type Transactions = {      // Type of response
+// Type of response
+export type Transactions = { 
     transactions: Transaction[]
 }
 
-// Input data for transaction search
-export type Query = {
+// Input data for transaction search  
+export type TransQuery = {
+  command: Command
   transactionId?: number
   amount?: number
   date?: string
@@ -23,9 +25,9 @@ export type Query = {
 // Mapping commands to axios configs
 export type ConfigArrType = { [key in Command]: AxiosRequestConfig }
 
+// Type of state
 export type TransState = {
-  command: Command | ""
+  command: Command | null
   transactions: Transaction[]
 }
 
-export const PAGE_SIZE = 5

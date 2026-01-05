@@ -4,8 +4,7 @@ import { CustState } from "./custTypes"
 import { fetchCust } from "./custThunks"
 
 const initialState: CustState = {
-  username: null,
-  token: null,
+  username: null
 }
 
 export const custSlice = createSlice({
@@ -17,7 +16,6 @@ export const custSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchCust.fulfilled, (state, action) => {
       state.username = action.payload.username
-      state.token = action.payload.token
     })
   },
 })

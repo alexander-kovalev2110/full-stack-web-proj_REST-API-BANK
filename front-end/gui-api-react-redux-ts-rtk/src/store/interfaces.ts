@@ -7,11 +7,10 @@ export interface BaseAction<ActionTypes, Payload> {
 }
 
 // Types of authorization (Navbar menu buttons)
-export type AuthorKind = 'Login' | 'Signup' 
-// export enum AuthorKind {
-//   Login = "Login",
-//   Register = "Signup",
-// }
+export enum AuthorKind {
+  Login = "Login",
+  Register = "Signup",
+}
 
 
 // Types used when working with menu command
@@ -22,5 +21,3 @@ export enum Command {
     UpdateTrans = 'Update Transaction',
     delTrans = 'Delete Transaction',
 }
-
-export type command = Command | ''

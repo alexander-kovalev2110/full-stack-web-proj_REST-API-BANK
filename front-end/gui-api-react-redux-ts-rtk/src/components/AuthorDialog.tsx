@@ -74,10 +74,10 @@ const AuthorDialog: React.FC = () => {
             <DialogActions>
                 <Button
                     variant="outlined"
-                    startIcon={authorKind === "Login" ? <LoginIcon /> : <PersonAddIcon />}
+                    startIcon={authorKind === AuthorKind.Login ? <LoginIcon /> : <PersonAddIcon />}
                     onClick={() => handleRequest(authorKind)}
                 >
-                   {authorKind === "Login" ? "Log in" : "Sign up"}
+                   {authorKind === AuthorKind.Login ? "Log in" : "Sign up"}
                 </Button>
             </DialogActions>
         </Dialog>

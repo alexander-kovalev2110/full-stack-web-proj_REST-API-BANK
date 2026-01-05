@@ -13,9 +13,9 @@ export const selectPaginatedTransactions = createSelector(
 )
 
 /**
- * ✅ Мемoизированный селектор
- * ✅ Возвращает стабильный объект
- * ✅ Убирает warning и лишние рендеры
+ * Memoized selector
+ * Returns a stable object
+ * Removes warnings and unnecessary renderings
  */
 export const selectPaginationState = createSelector(
   [
@@ -23,8 +23,8 @@ export const selectPaginationState = createSelector(
     (state: RootState) => state.pagination.pageSize,
     (state: RootState) => state.trans.transactions.length,
   ],
-  (page, pageSize, total) => ({
+  (page, pageSize, length) => ({
     previousDisabled: page === 0,
-    nextDisabled: (page + 1) * pageSize >= total,
+    nextDisabled: (page + 1) * pageSize >= length,
   })
 )

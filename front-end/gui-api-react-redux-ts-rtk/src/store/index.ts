@@ -5,6 +5,8 @@ import custSlice from './cust/custSlice'
 import modalSlice from './modalSlice'
 import transSlice from './trans/transSlice'
 
+import { authListenerMiddleware } from "./listeners/authListeners"
+
 export const store = configureStore({
   reducer: {
     ui: uiSlice,
@@ -12,7 +14,9 @@ export const store = configureStore({
     modal: modalSlice,
     trans: transSlice,
     pagination: paginationSlice
-  }
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().prepend(authListenerMiddleware.middleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>

@@ -2,10 +2,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { fetchTrans } from "./transThunks"
 import { TransState } from "./transTypes"
-import { command } from "../interfaces"
+import { Command } from "../interfaces"
 
 const initialState: TransState = {
-  command: "",
+  command: null,
   transactions: [],
 }
 
@@ -13,7 +13,7 @@ export const transSlice = createSlice({
   name: "trans",
   initialState,
   reducers: {
-    setCommand: (state, action: PayloadAction<command>) => {
+    setCommand: (state, action: PayloadAction<Command | null>) => {
       state.command = action.payload
     },
     resetTrans: () => initialState,

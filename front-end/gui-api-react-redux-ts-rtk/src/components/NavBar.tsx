@@ -7,11 +7,14 @@ import { Button } from '@mui/material'
 
 import LoginIcon from "@mui/icons-material/Login"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
+import LogoutIcon from '@mui/icons-material/Logout'
 
 import AuthorDialog from "./AuthorDialog"
 import LoadingDialog from "./LoadingDialog"
 import { openAuthor } from "../store/modalSlice"
 import { useAppSelector, useAppDispatch } from '../store/hook'
+import { AuthorKind } from '../store/interfaces'
+import { resetCust } from '../store/cust'
 
 const NavBar: React.FC = () => {
     const { username } = useAppSelector(state => state.cust)
@@ -20,22 +23,57 @@ const NavBar: React.FC = () => {
     return (
         <Box>
             <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <Toolbar>
-                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                <Toolbar sx={{ userSelect: 'none' }}>
+                    {/* LEFT */}
+                    <Typography variant="h6" sx={{ flex: 1 }}>
                         REST-API-BANK
                     </Typography>
-                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        { (username)? `${username}` : '' }
-                    </Typography>
-                    <Stack direction="row" spacing={1} >
-                        <Button component="label" variant="outlined" startIcon={<LoginIcon />}
-                                color="inherit" onClick={() => dispatch(openAuthor('Login'))}>
-                            Log in
+
+                    {/* CENTER */}
+                    {username && (
+                        <Typography
+                            variant="h6"
+                            sx={{
+                            flex: 1,
+                            textAlign: 'center',
+                            }}
+                        >
+                            {username}
+                        </Typography>
+                    )}
+
+                    {/* RIGHT */}
+                    <Stack direction="row" spacing={1} sx={{ flex: 1, justifyContent: 'flex-end' }}>
+                        {username ? (
+                        <Button
+                            variant="outlined"
+                            color="inherit"
+                            startIcon={<LogoutIcon />}
+                            onClick={() => dispatch(resetCust())}
+                        >
+                            Log out
                         </Button>
-                        <Button component="label" variant="outlined" startIcon={<PersonAddIcon />}
-                                color="inherit" onClick={() => dispatch(openAuthor('Signup'))}>
-                            Sign up
-                    </Button>
+                        ) : (
+                            <>
+                                <Button
+                                    variant="outlined"
+                                    color="inherit"
+                                    startIcon={<LoginIcon />}
+                                    onClick={() => dispatch(openAuthor(AuthorKind.Login))}
+                                >
+                                    Log in
+                                </Button>
+
+                                <Button
+                                    variant="outlined"
+                                    color="inherit"
+                                    startIcon={<PersonAddIcon />}
+                                    onClick={() => dispatch(openAuthor(AuthorKind.Register))}
+                                >
+                                    Sign up
+                                </Button>
+                            </>
+                        )}
                     </Stack>
                 </Toolbar>
             </AppBar>

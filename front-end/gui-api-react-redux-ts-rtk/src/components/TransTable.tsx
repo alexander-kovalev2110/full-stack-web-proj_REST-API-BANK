@@ -27,6 +27,10 @@ const TransTable: React.FC = () => {
     const { previousDisabled, nextDisabled } =
         useAppSelector(selectPaginationState)
 
+    if (tabAr.length === 0) {
+        return null
+    }
+
     return (
         <Box component="main" sx={{ flexGrow: 1, p: 2 }}>
             <Toolbar />

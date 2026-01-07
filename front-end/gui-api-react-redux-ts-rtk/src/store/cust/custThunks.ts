@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import { jwtDecode } from "jwt-decode"
 
 import { CustData, MyTokenPayload } from "./custTypes"
-import { authApi } from "../api/authApi"
+import { authApi } from "../api/custApi"
 import { parseAxiosError} from "../api/parseAxiosError"
 import { AuthorKind } from '../interfaces'
 

@@ -8,8 +8,8 @@ export const selectPaginatedTransactions = createSelector(
     (state: RootState) => state.pagination.page,
     (state: RootState) => state.pagination.pageSize,
   ],
-  (transactions, page, pageSize) =>
-    transactions.slice(page * pageSize, (page + 1) * pageSize)
+  (BASEs, page, pageSize) =>
+    BASEs.slice(page * pageSize, (page + 1) * pageSize)
 )
 
 /**

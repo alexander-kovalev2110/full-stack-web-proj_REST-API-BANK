@@ -2,8 +2,8 @@ import { AxiosRequestConfig } from "axios"
 import { Command } from "../interfaces"
 import { TransQuery } from "../trans"
 
-const TRANSACTION = "/transaction"
-const TRANSACTIONS = "/transactions"
+const BASE = "/transaction"
+const LIST = "/transactions"
 
 export const buildTransRequest = (
   payload: TransQuery
@@ -14,34 +14,34 @@ export const buildTransRequest = (
     case Command.AddTrans:
       return {
         method: "POST",
-        url: TRANSACTION,
+        url: BASE,
         data: { amount },
       }
 
     case Command.GetTrans:
       return {
         method: "GET",
-        url: `${TRANSACTION}/${transactionId}`,
+        url: `${BASE}/${transactionId}`,
       }
 
     case Command.GetTransByFilter:
       return {
         method: "GET",
-        url: TRANSACTIONS,
+        url: LIST,
         params: { amount, date },
       }
 
     case Command.UpdateTrans:
       return {
         method: "PATCH",
-        url: `${TRANSACTION}/${transactionId}`,
+        url: `${BASE}/${transactionId}`,
         data: { amount },
       }
 
     case Command.delTrans:
       return {
         method: "DELETE",
-        url: `${TRANSACTION}/${transactionId}`,
+        url: `${BASE}/${transactionId}`,
       }
 
     default:

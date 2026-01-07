@@ -18,7 +18,7 @@ listener({
     // 1️⃣ save token
     localStorage.setItem("token", action.payload.token)
 
-    // 2️⃣ clear old transactions
+    // 2️⃣ clear old BASEs
     api.dispatch(resetTrans())
   },
 })
@@ -38,7 +38,7 @@ listener({
 })
 
 /* ================================
-   TRANSACTION REQUEST
+   BASE REQUEST
 ================================ */
 listener({
   actionCreator: fetchTrans.fulfilled,

@@ -14,7 +14,7 @@ export type Transactions = {
     transactions: Transaction[]
 }
 
-// Input data for transaction search  
+// Input data for BASE search  
 export type TransQuery = {
   command: Command
   transactionId?: number

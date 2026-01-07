@@ -13,9 +13,7 @@ export const fetchTrans = createAsyncThunk<
   "trans/fetch",
   async (payload, { rejectWithValue }) => {
     try {
-      const requestConfig = buildTransRequest(
-        payload
-      )
+      const requestConfig = buildTransRequest(payload)
 
       const response = await axiosInstance(requestConfig)
       return response.data

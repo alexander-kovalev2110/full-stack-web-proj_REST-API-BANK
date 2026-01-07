@@ -78,7 +78,7 @@ const TransDialog: React.FC = () => {
   return (
     <Dialog open={transOpen} onClose={handleClose} maxWidth="xs" fullWidth>
       <DialogTitle>
-        Transaction Request
+         Transaction Request
         <IconButton
           aria-label="close"
           onClick={handleClose}

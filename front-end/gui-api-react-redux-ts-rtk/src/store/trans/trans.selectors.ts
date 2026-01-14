@@ -1,6 +1,6 @@
 // src/store/trans/transSelectors.ts
 import { createSelector } from "@reduxjs/toolkit"
-import { RootState } from "../../store"
+import { RootState } from ".."
 
 export const selectPaginatedTransactions = createSelector(
   [

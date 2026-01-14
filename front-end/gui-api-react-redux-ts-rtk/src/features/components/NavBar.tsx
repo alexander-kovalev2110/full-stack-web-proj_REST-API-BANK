@@ -9,12 +9,10 @@ import LoginIcon from "@mui/icons-material/Login"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
 import LogoutIcon from '@mui/icons-material/Logout'
 
-import AuthorDialog from "./AuthorDialog"
-import LoadingDialog from "./LoadingDialog"
-import { openAuthor } from "../store/modalSlice"
-import { useAppSelector, useAppDispatch } from '../store/hook'
-import { AuthorKind } from '../store/interfaces'
-import { resetCust } from '../store/cust'
+import { openAuthor } from "../../store/modal/modal.slice"
+import { useAppSelector, useAppDispatch } from '../../shared/hook'
+import { AuthorKind } from '../../shared/interfaces'
+import { resetCust } from '../../store/cust'
 
 const NavBar: React.FC = () => {
     const { username } = useAppSelector(state => state.cust)
@@ -77,10 +75,6 @@ const NavBar: React.FC = () => {
                     </Stack>
                 </Toolbar>
             </AppBar>
-
-            <AuthorDialog />
-            <LoadingDialog />
-
         </Box>
     )
 }

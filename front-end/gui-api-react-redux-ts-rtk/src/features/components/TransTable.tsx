@@ -12,13 +12,13 @@ import { Stack } from '@mui/material'
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 
-import { nextPage, previousPage } from "../store/paginationSlice"
-import { useAppSelector, useAppDispatch } from "../store/hook"
+import { nextPage, previousPage } from "../../store/pagination/pagination.slice"
+import { useAppSelector, useAppDispatch } from "../../shared/hook"
 
 import {
   selectPaginatedTransactions,
   selectPaginationState,
-} from "../store/trans/transSelectors"
+} from "../../store/trans/trans.selectors"
 
 const TransTable: React.FC = () => {
     const dispatch = useAppDispatch()

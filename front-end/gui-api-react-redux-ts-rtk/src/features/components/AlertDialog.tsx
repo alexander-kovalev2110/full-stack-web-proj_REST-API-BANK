@@ -1,6 +1,6 @@
 import { Snackbar, Alert } from "@mui/material"
-import { useAppSelector, useAppDispatch } from '../store/hook'
-import { clearError  } from '../store/uiSlice'
+import { useAppSelector, useAppDispatch } from '../../shared/hook'
+import { clearError  } from '../../store/ui/ui.slice'
 
 const AlertDialog: React.FC = () => {
     const { error } = useAppSelector(state => state.ui)

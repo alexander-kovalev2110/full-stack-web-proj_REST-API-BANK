@@ -1,8 +1,8 @@
 // src/store/trans/transSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { fetchTrans } from "./transThunks"
-import { TransState } from "./transTypes"
-import { Command } from "../interfaces"
+import { fetchTrans } from "./trans.thunks"
+import { TransState } from "./trans.types"
+import { Command } from "../../shared/interfaces"
 
 const initialState: TransState = {
   command: null,

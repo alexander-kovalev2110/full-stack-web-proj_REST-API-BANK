@@ -1,7 +1,7 @@
 // store/cust/custSlice.ts
 import { createSlice } from "@reduxjs/toolkit"
-import { CustState } from "./custTypes"
-import { fetchCust } from "./custThunks"
+import { CustState } from "./cust.types"
+import { fetchCust } from "./cust.thunks"
 
 const initialState: CustState = {
   username: null

@@ -1,6 +1,7 @@
+// src/api/trans.request.builder.ts
 import { AxiosRequestConfig } from "axios"
-import { Command } from "../interfaces"
-import { TransQuery } from "../trans"
+import { Command } from "../shared/interfaces"
+import { TransQuery } from "../store/trans/trans.types"
 
 const BASE = "/transaction"
 const LIST = "/transactions"
@@ -38,7 +39,7 @@ export const buildTransRequest = (
         data: { amount },
       }
 
-    case Command.delTrans:
+    case Command.DelTrans:
       return {
         method: "DELETE",
         url: `${BASE}/${transactionId}`,

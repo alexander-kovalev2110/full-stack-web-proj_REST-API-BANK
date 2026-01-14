@@ -10,10 +10,10 @@ import TransDialog from "../components/TransDialog"
 import TransTable from "../components/TransTable"
 import LoadingDialog from "../components/LoadingDialog"
 import NavBar from "../components/NavBar"
-import { setCommand } from "../store/trans"
-import { openTrans } from "../store/modalSlice"
-import { Command } from '../store/interfaces'
-import { useAppSelector, useAppDispatch } from '../store/hook'
+import { setCommand } from "../../store/trans"
+import { openTrans } from "../../store/modal/modal.slice"
+import { Command } from '../../shared/interfaces'
+import { useAppSelector, useAppDispatch } from '../../shared/hook'
 
 const drawerWidth = 240
 

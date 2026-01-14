@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AuthorKind } from './interfaces'
+import { AuthorKind } from '../../shared/interfaces'
 
 type ModalState = {
     authorOpen: boolean,

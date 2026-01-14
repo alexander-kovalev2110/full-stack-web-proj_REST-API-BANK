@@ -1,10 +1,10 @@
-// store/listeners/authListeners.ts
+// store/listeners/event.listeners.ts
 import { createListenerMiddleware } from "@reduxjs/toolkit"
-import { fetchCust } from "../cust/custThunks"
-import { fetchTrans} from "../trans/transThunks"
+import { fetchCust } from "../cust"
+import { fetchTrans} from "../trans"
 import { resetTrans } from "../trans"
-import { resetPagination } from "../paginationSlice"
-import { resetCust } from "../cust/custSlice"
+import { resetPagination } from "../pagination/pagination.slice"
+import { resetCust } from "../cust"
 
 export const authListenerMiddleware = createListenerMiddleware()
 const listener = authListenerMiddleware.startListening
@@ -15,10 +15,10 @@ const listener = authListenerMiddleware.startListening
 listener({
   actionCreator: fetchCust.fulfilled,
   effect: async (action, api) => {
-    // 1️⃣ save token
+    // save token
     localStorage.setItem("token", action.payload.token)
 
-    // 2️⃣ clear old BASEs
+    // clear old bases
     api.dispatch(resetTrans())
   },
 })
@@ -29,21 +29,21 @@ listener({
 listener({
   actionCreator: resetCust,
   effect: async (_, api) => {
-    // 1️⃣ remove token
+    // remove token
     localStorage.removeItem("token")
 
-    // 2️⃣ clear associated domains
+    // clear associated domains
     api.dispatch(resetTrans())
   },
 })
 
 /* ================================
-   BASE REQUEST
+   NEW COMMAND
 ================================ */
+// clear pagination data
 listener({
   actionCreator: fetchTrans.fulfilled,
   effect: (_, api) => {
     api.dispatch(resetPagination())
   },
 })
-

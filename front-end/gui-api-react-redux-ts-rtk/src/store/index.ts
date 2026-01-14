@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import uiSlice from './uiSlice'
-import paginationSlice from './paginationSlice'
-import custSlice from './cust/custSlice'
-import modalSlice from './modalSlice'
-import transSlice from './trans/transSlice'
+import uiSlice from './ui/ui.slice'
+import paginationSlice from './pagination/pagination.slice'
+import custSlice from './cust/cust.slice'
+import modalSlice from './modal/modal.slice'
+import transSlice from './trans/trans.slice'
 
-import { authListenerMiddleware } from "./listeners/authListeners"
+import { authListenerMiddleware } from "./listeners/event.listeners"
 
 export const store = configureStore({
   reducer: {

@@ -12,11 +12,11 @@ import {
 import CloseIcon from "@mui/icons-material/Close"
 import SendIcon from "@mui/icons-material/Send"
 
-import { fetchTrans } from "../store/trans"
-import { closeTrans } from "../store/modalSlice"
-import { Command } from "../store/interfaces"
-import { useAppSelector, useAppDispatch } from "../store/hook"
-import type { TransQuery } from "../store/trans/transTypes"
+import { fetchTrans } from "../../store/trans"
+import { closeTrans } from "../../store/modal/modal.slice"
+import { Command } from "../../shared/interfaces"
+import { useAppSelector, useAppDispatch } from "../../shared/hook"
+import type { TransQuery } from "../../store/trans/trans.types"
 
 const TransDialog: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -72,7 +72,7 @@ const TransDialog: React.FC = () => {
       { id: "transactionId", label: "Transaction ID", type: "number" },
       { id: "amount", label: "Amount", type: "number" }
     ],
-    [Command.delTrans]: [{ id: "transactionId", label: "Transaction ID", type: "number" }],
+    [Command.DelTrans]: [{ id: "transactionId", label: "Transaction ID", type: "number" }],
   }
 
   return (

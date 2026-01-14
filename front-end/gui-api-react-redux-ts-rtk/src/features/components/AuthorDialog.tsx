@@ -12,10 +12,10 @@ import CloseIcon from "@mui/icons-material/Close"
 import LoginIcon from "@mui/icons-material/Login"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
 
-import { closeAuthor } from "../store/modalSlice"
-import { fetchCust } from "../store/cust"
-import { useAppSelector, useAppDispatch } from '../store/hook'
-import { AuthorKind } from '../store/interfaces'
+import { closeAuthor } from "../../store/modal/modal.slice"
+import { fetchCust } from "../../store/cust"
+import { useAppSelector, useAppDispatch } from '../../shared/hook'
+import { AuthorKind } from '../../shared/interfaces'
 
 const AuthorDialog: React.FC = () => {
     const { authorOpen, authorKind } = useAppSelector(state => state.modal)
@@ -27,10 +27,10 @@ const AuthorDialog: React.FC = () => {
     // Request to the Customer DB
     const handleRequest = (authorKind: AuthorKind) => { 
         const name = nameRef.current?.value || ""
-        const pw = pwRef.current?.value || ""
+        const password = pwRef.current?.value || ""
 
         dispatch(closeAuthor())
-        dispatch(fetchCust({ authorKind, name, pw }))
+        dispatch(fetchCust({ authorKind, name, password }))
     }
 
     return (

@@ -1,5 +1,5 @@
 // src/store/trans/transTypes.ts
-import { Command, } from "../interfaces"
+import { Command, } from "../../shared/interfaces"
 import { AxiosRequestConfig } from "axios"
 
 // Types for exchange with "Trunsction" DB

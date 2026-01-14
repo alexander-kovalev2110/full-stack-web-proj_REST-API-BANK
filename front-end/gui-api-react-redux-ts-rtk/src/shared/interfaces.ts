@@ -1,11 +1,5 @@
 // Commonly used data types
 
-// Basic type for Actions
-export interface BaseAction<ActionTypes, Payload> {
-    type: ActionTypes
-    payload?: Payload
-}
-
 // Types of authorization (Navbar menu buttons)
 export enum AuthorKind {
   Login = "Login",
@@ -19,5 +13,5 @@ export enum Command {
     GetTrans = 'Get Transaction',
     GetTransByFilter = 'Get Transaction by Filter',
     UpdateTrans = 'Update Transaction',
-    delTrans = 'Delete Transaction',
+    DelTrans = 'Delete Transaction',
 }

@@ -1,13 +1,13 @@
 import { Routes,  Route } from 'react-router-dom'
-import HomePage from "./pages/HomePage"
-import TransPage from './pages/TransPage'
-import AlertDialog from "./components/AlertDialog"
+import AuthorPage from "./features/pages/AuthorPage"
+import TransPage from './features/pages/TransPage'
+import AlertDialog from "./features/components/AlertDialog"
 
 const App: React.FC = () => {
     return (
         <>
             <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<AuthorPage />} />
                 <Route path="/trans" element={<TransPage />} />
             </Routes>
 

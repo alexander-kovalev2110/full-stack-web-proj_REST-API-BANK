@@ -10,9 +10,8 @@ import TransDialog from "../components/TransDialog"
 import TransTable from "../components/TransTable"
 import LoadingDialog from "../components/LoadingDialog"
 import NavBar from "../components/NavBar"
-import { setCommand } from "../../store/trans"
 import { openTrans } from "../../store/modal/modal.slice"
-import { Command } from '../../shared/interfaces'
+import { TransAction } from "../../shared/ui-actions"
 import { useAppSelector, useAppDispatch } from '../../shared/hook'
 
 const drawerWidth = 240
@@ -29,10 +28,9 @@ const TransPage: React.FC = () => {
     }, [username])
     
     const dispatch = useAppDispatch()
-    
-    const menuHandler = (command: Command) => {
-        dispatch(setCommand(command))
-        dispatch(openTrans())
+
+    const menuHandler = (action: TransAction) => {
+        dispatch(openTrans(action))
     }
 
     return (
@@ -49,13 +47,25 @@ const TransPage: React.FC = () => {
                 <Toolbar />
                 <Box sx={{ overflow: 'auto' }}>
                     <List>
-                        {Object.values(Command).map((comm) => (
-                        <ListItem key={comm} disablePadding>
-                            <ListItemButton onClick={() => menuHandler(comm)}>
-                                <ListItemText primary={comm} />
-                            </ListItemButton>
-                        </ListItem>
-                        ))}
+                        <ListItemButton onClick={() => menuHandler(TransAction.Add)}>
+                            <ListItemText primary="Add Transaction" />
+                        </ListItemButton>
+
+                        <ListItemButton onClick={() => menuHandler(TransAction.Get)}>
+                            <ListItemText primary="Get Transaction" />
+                        </ListItemButton>
+
+                        <ListItemButton onClick={() => menuHandler(TransAction.Filter)}>
+                            <ListItemText primary="Get Transaction by Filter" />
+                        </ListItemButton>
+
+                        <ListItemButton onClick={() => menuHandler(TransAction.Update)}>
+                            <ListItemText primary="Update Transaction" />
+                        </ListItemButton>
+
+                        <ListItemButton onClick={() => menuHandler(TransAction.Delete)}>
+                            <ListItemText primary="Delete Transaction" />
+                        </ListItemButton>
                     </List>
                 </Box>
             </Drawer>

@@ -1,7 +1,13 @@
 // store/listeners/event.listeners.ts
-import { createListenerMiddleware } from "@reduxjs/toolkit"
+import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit"
 import { fetchCust } from "../cust"
-import { fetchTrans} from "../trans"
+import {
+  fetchTransactionsByFilter,
+  fetchTransactionById,
+  createTransaction,
+  updateTransaction,
+  deleteTransaction,
+} from "../trans"
 import { resetTrans } from "../trans"
 import { resetPagination } from "../pagination/pagination.slice"
 import { resetCust } from "../cust"
@@ -42,8 +48,14 @@ listener({
 ================================ */
 // clear pagination data
 listener({
-  actionCreator: fetchTrans.fulfilled,
-  effect: (_, api) => {
+  matcher: isAnyOf(
+    fetchTransactionsByFilter.fulfilled,
+    fetchTransactionById.fulfilled,
+    createTransaction.fulfilled,
+    updateTransaction.fulfilled,
+    deleteTransaction.fulfilled
+  ),
+  effect: async (_, api) => {
     api.dispatch(resetPagination())
   },
 })

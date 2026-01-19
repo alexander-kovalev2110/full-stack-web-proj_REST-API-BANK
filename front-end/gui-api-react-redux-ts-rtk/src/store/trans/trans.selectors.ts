@@ -2,14 +2,24 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { RootState } from ".."
 
+// export const selectPaginatedTransactions = createSelector(
+//   [
+//     (state: RootState) => state.trans.transactions,
+//     (state: RootState) => state.pagination.page,
+//     (state: RootState) => state.pagination.pageSize,
+//   ],
+//   (BASEs, page, pageSize) =>
+//     BASEs.slice(page * pageSize, (page + 1) * pageSize)
+// )
+
 export const selectPaginatedTransactions = createSelector(
   [
     (state: RootState) => state.trans.transactions,
     (state: RootState) => state.pagination.page,
     (state: RootState) => state.pagination.pageSize,
   ],
-  (BASEs, page, pageSize) =>
-    BASEs.slice(page * pageSize, (page + 1) * pageSize)
+  (transactions, page, pageSize) =>
+    transactions.slice(page * pageSize, (page + 1) * pageSize)
 )
 
 /**

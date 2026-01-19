@@ -2,99 +2,146 @@ import React, { useRef } from "react"
 import {
   Dialog,
   DialogTitle,
-  IconButton,
   DialogContent,
-  TextField,
   DialogActions,
-  Button
+  TextField,
+  Button,
+  IconButton,
 } from "@mui/material"
 
 import CloseIcon from "@mui/icons-material/Close"
 import SendIcon from "@mui/icons-material/Send"
 
-import { fetchTrans } from "../../store/trans"
+import { useAppDispatch, useAppSelector } from "../../shared/hook"
 import { closeTrans } from "../../store/modal/modal.slice"
-import { Command } from "../../shared/interfaces"
-import { useAppSelector, useAppDispatch } from "../../shared/hook"
-import type { TransQuery } from "../../store/trans/trans.types"
+
+import {
+  createTransaction,
+  updateTransaction,
+  deleteTransaction,
+  fetchTransactionById,
+  fetchTransactionsByFilter,
+} from "../../store/trans/trans.thunks"
+
+import { TransAction } from "../../shared/ui-actions"
+
+type FieldDef = {
+  id: string
+  label: string
+  type: string
+}
+
+/** UI-form schema (intent → fields) */
+const formSchema: Record<TransAction, FieldDef[]> = {
+  [TransAction.Add]: [
+    { id: "amount", label: "Amount", type: "number" },
+  ],
+
+  [TransAction.Update]: [
+    { id: "transactionId", label: "Transaction ID", type: "number" },
+    { id: "amount", label: "Amount", type: "number" },
+  ],
+
+  [TransAction.Delete]: [
+    { id: "transactionId", label: "Transaction ID", type: "number" },
+  ],
+
+  [TransAction.Get]: [
+    { id: "transactionId", label: "Transaction ID", type: "number" },
+  ],
+
+  [TransAction.Filter]: [
+    { id: "amount", label: "Amount", type: "number" },
+    { id: "date", label: "Date", type: "date" },
+  ],
+}
 
 const TransDialog: React.FC = () => {
   const dispatch = useAppDispatch()
-  const { transOpen } = useAppSelector((state) => state.modal)
-  const { command } = useAppSelector((state) => state.trans)
 
-  // Container for refs
+  const { transOpen, transAction } = useAppSelector(
+    (state) => state.modal
+  )
+
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
   const handleClose = () => dispatch(closeTrans())
 
-  const handleRequest = () => {
-    if (!command) return  
+  /** Collects values from inputs */
+  const collectFormData = () => {
+    const data: Record<string, any> = {}
 
-    const payload: TransQuery = { command }
- 
     Object.entries(inputRefs.current).forEach(([key, el]) => {
-      const v = el?.value
-      if (!v) return
+      if (!el?.value) return
 
-      if (key === "transactionId") {
-        const n = Number(v)
-        if (!Number.isNaN(n)) payload.transactionId = n
+      if (el.type === "number") {
+        const n = Number(el.value)
+        if (!Number.isNaN(n)) data[key] = n
         return
       }
 
-      if (key === "amount") {
-        const n = Number(v)
-        if (!Number.isNaN(n)) payload.amount = n
-        return
-      }
-
-      if (key === "date") {
-        payload.date = v;   // v in the format "YYYY-MM-DD"
-        return;
-      }
-
+      data[key] = el.value
     })
 
-    handleClose()
-    dispatch(fetchTrans(payload))
+    return data
   }
 
-  // Data for dynamic field rendering
-  const inpData: Record<Command, { id: string; label: string; type: string }[]> = {
-    [Command.AddTrans]: [{ id: "amount", label: "Amount", type: "number" }],
-    [Command.GetTrans]: [{ id: "transactionId", label: "Transaction ID", type: "number" }],
-    [Command.GetTransByFilter]: [
-      { id: "amount", label: "Amount", type: "number" },
-      { id: "date", label: "Date", type: "date" }
-    ],
-    [Command.UpdateTrans]: [
-      { id: "transactionId", label: "Transaction ID", type: "number" },
-      { id: "amount", label: "Amount", type: "number" }
-    ],
-    [Command.DelTrans]: [{ id: "transactionId", label: "Transaction ID", type: "number" }],
+  /** Intent → thunk mapping */
+  const submitHandlers: Record<
+    TransAction,
+    (data: Record<string, any>) => void
+  > = {
+    [TransAction.Add]: (data) =>
+      dispatch(createTransaction({ amount: data.amount })),
+
+    [TransAction.Update]: (data) =>
+      dispatch(updateTransaction({
+        id: String(data.transactionId),
+        amount: data.amount,
+      })),
+
+    [TransAction.Delete]: (data) =>
+      dispatch(deleteTransaction({
+        id: String(data.transactionId),
+      })),
+
+    [TransAction.Get]: (data) =>
+      dispatch(fetchTransactionById({
+        id: String(data.transactionId),
+      })),
+
+    [TransAction.Filter]: (data) =>
+      dispatch(fetchTransactionsByFilter({
+        amount: data.amount,
+        date: data.date,
+      })),
   }
+
+  const handleSubmit = () => {
+    if (!transAction) return
+
+    const data = collectFormData()
+    submitHandlers[transAction](data)
+    handleClose()
+  }
+
+  if (!transAction) return null
 
   return (
     <Dialog open={transOpen} onClose={handleClose} maxWidth="xs" fullWidth>
       <DialogTitle>
-         Transaction Request
+        Transaction
         <IconButton
           aria-label="close"
           onClick={handleClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[700]
-          }}
+          sx={{ position: "absolute", right: 8, top: 8 }}
         >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
       <DialogContent>
-        {command && inpData[command].map((field, idx) => (
+        {formSchema[transAction].map((field, idx) => (
           <TextField
             key={field.id}
             margin="dense"
@@ -102,14 +149,18 @@ const TransDialog: React.FC = () => {
             type={field.type}
             fullWidth
             variant="standard"
-            inputRef={(el) => (inputRefs.current[field.id] = el)}
             autoFocus={idx === 0}
+            inputRef={(el) => (inputRefs.current[field.id] = el)}
           />
         ))}
       </DialogContent>
 
       <DialogActions>
-        <Button variant="outlined" startIcon={<SendIcon />} onClick={handleRequest}>
+        <Button
+          variant="outlined"
+          startIcon={<SendIcon />}
+          onClick={handleSubmit}
+        >
           Submit
         </Button>
       </DialogActions>

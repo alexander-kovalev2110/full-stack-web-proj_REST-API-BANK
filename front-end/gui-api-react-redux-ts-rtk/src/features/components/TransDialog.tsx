@@ -17,10 +17,10 @@ import { closeTrans } from "../../store/modal/modal.slice"
 
 import {
   createTransaction,
-  updateTransaction,
-  deleteTransaction,
   fetchTransactionById,
   fetchTransactionsByFilter,
+  updateTransaction,
+  deleteTransaction,
 } from "../../store/trans/trans.thunks"
 
 import { TransAction } from "../../shared/ui-actions"
@@ -37,15 +37,6 @@ const formSchema: Record<TransAction, FieldDef[]> = {
     { id: "amount", label: "Amount", type: "number" },
   ],
 
-  [TransAction.Update]: [
-    { id: "transactionId", label: "Transaction ID", type: "number" },
-    { id: "amount", label: "Amount", type: "number" },
-  ],
-
-  [TransAction.Delete]: [
-    { id: "transactionId", label: "Transaction ID", type: "number" },
-  ],
-
   [TransAction.Get]: [
     { id: "transactionId", label: "Transaction ID", type: "number" },
   ],
@@ -53,6 +44,15 @@ const formSchema: Record<TransAction, FieldDef[]> = {
   [TransAction.Filter]: [
     { id: "amount", label: "Amount", type: "number" },
     { id: "date", label: "Date", type: "date" },
+  ],
+
+  [TransAction.Update]: [
+    { id: "transactionId", label: "Transaction ID", type: "number" },
+    { id: "amount", label: "Amount", type: "number" },
+  ],
+
+  [TransAction.Delete]: [
+    { id: "transactionId", label: "Transaction ID", type: "number" },
   ],
 }
 
@@ -94,6 +94,15 @@ const TransDialog: React.FC = () => {
     [TransAction.Add]: (data) =>
       dispatch(createTransaction({ amount: data.amount })),
 
+    [TransAction.Get]: (data) =>
+      dispatch(fetchTransactionById({ id: String(data.transactionId) })),
+
+    [TransAction.Filter]: (data) =>
+      dispatch(fetchTransactionsByFilter({
+        amount: data.amount,
+        date: data.date,
+      })),
+
     [TransAction.Update]: (data) =>
       dispatch(updateTransaction({
         id: String(data.transactionId),
@@ -101,20 +110,7 @@ const TransDialog: React.FC = () => {
       })),
 
     [TransAction.Delete]: (data) =>
-      dispatch(deleteTransaction({
-        id: String(data.transactionId),
-      })),
-
-    [TransAction.Get]: (data) =>
-      dispatch(fetchTransactionById({
-        id: String(data.transactionId),
-      })),
-
-    [TransAction.Filter]: (data) =>
-      dispatch(fetchTransactionsByFilter({
-        amount: data.amount,
-        date: data.date,
-      })),
+      dispatch(deleteTransaction({ id: String(data.transactionId) })),
   }
 
   const handleSubmit = () => {

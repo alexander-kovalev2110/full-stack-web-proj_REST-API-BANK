@@ -1,87 +1,193 @@
-import { useRef } from "react"
+// import { useRef } from "react"
+// import {
+//   Dialog,
+//   DialogTitle,
+//   DialogContent,
+//   DialogActions,
+//   TextField,
+//   IconButton,
+//   Button,
+// } from "@mui/material"
 
-import { Dialog } from "@mui/material"
-import { DialogTitle } from "@mui/material"
-import { IconButton } from "@mui/material"
-import { DialogContent } from "@mui/material"
-import { TextField } from "@mui/material"
-import { DialogActions } from "@mui/material"
-import { Button } from "@mui/material"
+// import CloseIcon from "@mui/icons-material/Close"
+// import LoginIcon from "@mui/icons-material/Login"
+// import PersonAddIcon from "@mui/icons-material/PersonAdd"
+
+// import { closeAuthor } from "../../store/modal/modal.slice"
+// import { loginCust, registerCust } from "../../store/cust"
+// import { useAppSelector, useAppDispatch } from "../../shared/hook"
+// import { AuthorAction } from "../../shared/ui-actions"
+
+// const AuthorDialog: React.FC = () => {
+//   const { authorOpen, authorAction } = useAppSelector(state => state.modal)
+//   const dispatch = useAppDispatch()
+
+//   const nameRef = useRef<HTMLInputElement>(null)
+//   const pwRef = useRef<HTMLInputElement>(null)
+
+//   const handleRequest = () => {
+//     const name = nameRef.current?.value || ""
+//     const password = pwRef.current?.value || ""
+
+//     dispatch(closeAuthor())
+
+//     if (authorAction === AuthorAction.Login) {
+//       dispatch(loginCust({ name, password }))
+//     } else {
+//       dispatch(registerCust({ name, password }))
+//     }
+//   }
+
+//   return (
+//     <Dialog
+//       open={authorOpen}
+//       maxWidth="xs"
+//       fullWidth
+//       onClose={() => dispatch(closeAuthor())}
+//     >
+//       <DialogTitle>
+//         Authorization
+//         <IconButton
+//           aria-label="close"
+//           onClick={() => dispatch(closeAuthor())}
+//           sx={{ position: "absolute", right: 8, top: 8 }}
+//         >
+//           <CloseIcon />
+//         </IconButton>
+//       </DialogTitle>
+
+//       <DialogContent>
+//         <TextField
+//           inputRef={nameRef}
+//           margin="dense"
+//           label="Name"
+//           fullWidth
+//           variant="standard"
+//         />
+//         <TextField
+//           inputRef={pwRef}
+//           margin="dense"
+//           label="Password"
+//           type="password"
+//           fullWidth
+//           variant="standard"
+//         />
+//       </DialogContent>
+
+//       <DialogActions>
+//         <Button
+//           variant="outlined"
+//           startIcon={
+//             authorAction === AuthorAction.Login
+//               ? <LoginIcon />
+//               : <PersonAddIcon />
+//           }
+//           onClick={handleRequest}
+//         >
+//           {authorAction === AuthorAction.Login ? "Log in" : "Sign up"}
+//         </Button>
+//       </DialogActions>
+//     </Dialog>
+//   )
+// }
+
+// export default AuthorDialog
+
+import { useRef } from "react"
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  IconButton,
+  Button,
+} from "@mui/material"
 
 import CloseIcon from "@mui/icons-material/Close"
 import LoginIcon from "@mui/icons-material/Login"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
 
 import { closeAuthor } from "../../store/modal/modal.slice"
-import { fetchCust } from "../../store/cust"
-import { useAppSelector, useAppDispatch } from '../../shared/hook'
-import { AuthorKind } from '../../shared/interfaces'
+import { loginCust, registerCust } from "../../store/cust"
+import { useAppDispatch, useAppSelector } from "../../shared/hook"
 
 const AuthorDialog: React.FC = () => {
-    const { authorOpen, authorKind } = useAppSelector(state => state.modal)
-    const dispatch = useAppDispatch()
+  const { authorOpen } = useAppSelector(state => state.modal)
+  const dispatch = useAppDispatch()
 
-    const nameRef = useRef<HTMLInputElement>(null)
-    const pwRef = useRef<HTMLInputElement>(null)
+  const nameRef = useRef<HTMLInputElement>(null)
+  const pwRef = useRef<HTMLInputElement>(null)
 
-    // Request to the Customer DB
-    const handleRequest = (authorKind: AuthorKind) => { 
-        const name = nameRef.current?.value || ""
-        const password = pwRef.current?.value || ""
+  const getPayload = () => ({
+    name: nameRef.current?.value || "",
+    password: pwRef.current?.value || "",
+  })
 
-        dispatch(closeAuthor())
-        dispatch(fetchCust({ authorKind, name, password }))
-    }
+  const handleLogin = () => {
+    dispatch(closeAuthor())
+    dispatch(loginCust(getPayload()))
+  }
 
-    return (
-        <Dialog open={authorOpen} maxWidth="xs" fullWidth
-                onClose={() => dispatch(closeAuthor())}>
-            <DialogTitle>
-                Authorization
-                <IconButton
-                    aria-label="close"
-                    onClick={() => dispatch(closeAuthor())}
-                    sx={{
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: (theme) => theme.palette.grey[700]
-                    }}
-                >
-                    <CloseIcon />
-                </IconButton>
-            </DialogTitle>
+  const handleRegister = () => {
+    dispatch(closeAuthor())
+    dispatch(registerCust(getPayload()))
+  }
 
-            <DialogContent>
-                <TextField
-                    inputRef={nameRef}
-                    margin="dense"
-                    label="Name"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                />
-                <TextField
-                    inputRef={pwRef}
-                    margin="dense"
-                    label="Password"
-                    type="password"
-                    fullWidth
-                    variant="standard"
-                />
-            </DialogContent>
-            
-            <DialogActions>
-                <Button
-                    variant="outlined"
-                    startIcon={authorKind === AuthorKind.Login ? <LoginIcon /> : <PersonAddIcon />}
-                    onClick={() => handleRequest(authorKind)}
-                >
-                   {authorKind === AuthorKind.Login ? "Log in" : "Sign up"}
-                </Button>
-            </DialogActions>
-        </Dialog>
-    )
+  return (
+    <Dialog
+      open={authorOpen}
+      maxWidth="xs"
+      fullWidth
+      onClose={() => dispatch(closeAuthor())}
+    >
+      <DialogTitle>
+        Authorization
+        <IconButton
+          onClick={() => dispatch(closeAuthor())}
+          sx={{ position: "absolute", right: 8, top: 8 }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+
+      <DialogContent>
+        <TextField
+          inputRef={nameRef}
+          margin="dense"
+          label="Name"
+          fullWidth
+          variant="standard"
+        />
+        <TextField
+          inputRef={pwRef}
+          margin="dense"
+          label="Password"
+          type="password"
+          fullWidth
+          variant="standard"
+        />
+      </DialogContent>
+
+      <DialogActions>
+        <Button
+          variant="outlined"
+          startIcon={<LoginIcon />}
+          onClick={handleLogin}
+        >
+          Log in
+        </Button>
+
+        <Button
+          variant="outlined"
+          startIcon={<PersonAddIcon />}
+          onClick={handleRegister}
+        >
+          Sign up
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
 }
 
 export default AuthorDialog

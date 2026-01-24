@@ -42,4 +42,3 @@ export const deleteTransaction = createAsyncThunk<
 >("trans/delete", async ({ id }) => {
   return transApi.remove(id)
 })
-

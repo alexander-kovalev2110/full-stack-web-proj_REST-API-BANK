@@ -1,16 +1,19 @@
 // store/listeners/event.listeners.ts
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit"
-import { fetchCust } from "../cust"
+import {
+  loginCust,
+  registerCust,
+  resetCust,
+} from "../cust"
 import {
   fetchTransactionsByFilter,
   fetchTransactionById,
   createTransaction,
   updateTransaction,
   deleteTransaction,
+  resetTrans,
 } from "../trans"
-import { resetTrans } from "../trans"
 import { resetPagination } from "../pagination/pagination.slice"
-import { resetCust } from "../cust"
 
 export const authListenerMiddleware = createListenerMiddleware()
 const listener = authListenerMiddleware.startListening
@@ -18,13 +21,17 @@ const listener = authListenerMiddleware.startListening
 /* ================================
    LOGIN / REGISTER SUCCESS
 ================================ */
-listener({
-  actionCreator: fetchCust.fulfilled,
-  effect: async (action, api) => {
-    // save token
-    localStorage.setItem("token", action.payload.token)
+type AuthSuccessAction =
+  | ReturnType<typeof loginCust.fulfilled>
+  | ReturnType<typeof registerCust.fulfilled>
 
-    // clear old bases
+listener({
+  matcher: isAnyOf(
+    loginCust.fulfilled,
+    registerCust.fulfilled
+  ),
+  effect: async (action: AuthSuccessAction, api) => {
+    localStorage.setItem("token", action.payload.token)
     api.dispatch(resetTrans())
   },
 })
@@ -35,10 +42,7 @@ listener({
 listener({
   actionCreator: resetCust,
   effect: async (_, api) => {
-    // remove token
     localStorage.removeItem("token")
-
-    // clear associated domains
     api.dispatch(resetTrans())
   },
 })
@@ -46,7 +50,6 @@ listener({
 /* ================================
    NEW COMMAND
 ================================ */
-// clear pagination data
 listener({
   matcher: isAnyOf(
     fetchTransactionsByFilter.fulfilled,
@@ -59,3 +62,4 @@ listener({
     api.dispatch(resetPagination())
   },
 })
+

@@ -1,41 +1,22 @@
-// store/cust/custThunks.ts
+// src/store/cust/cust.thunks.ts
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { jwtDecode } from "jwt-decode"
+import { authApi, CustRequest } from "../../api/cust.api"
+import { parseAuthToken } from "./parseAuthResponse"
 
-import { CustThunkArgs, MyTokenPayload } from "./cust.types"
-import { authApi } from "../../api/cust.api"
-import { parseAxiosError} from "../../api/axios-error.parser"
-import { AuthorKind } from '../../shared/interfaces'
-import { CustRequest } from "../../api/cust.api"
+/** Login */
+export const loginCust = createAsyncThunk<
+  { token: string; username: string },
+  CustRequest
+>("cust/login", async (payload) => {
+  const response = await authApi.login(payload)
+  return parseAuthToken(response.data.token)
+})
 
-export const fetchCust = createAsyncThunk<
-  { token: string, username: string },  // returned data (result)
-  CustThunkArgs,                        // arguments
-  { rejectValue: string }               // type of error
->(
-  "cust/fetch",
-  async ({ authorKind, name, password }, { rejectWithValue }) => {
-    try {
-      const payload: CustRequest = { name, password }
-
-      const response =
-        authorKind === AuthorKind.Login
-          ? await authApi.login(payload)
-          : await authApi.register(payload)
-
-      const token = response.data.token
-      const decoded = jwtDecode<MyTokenPayload>(token)
-
-      if (!decoded.username) {
-        return rejectWithValue("Invalid token payload")
-      }
-
-      return {                                                                                                                                                                         
-        token,
-        username: decoded.username
-      }
-    } catch (err: unknown) {
-      return rejectWithValue(parseAxiosError(err))
-    }
-  }
-)
+/** Register */
+export const registerCust = createAsyncThunk<
+  { token: string; username: string },
+  CustRequest
+>("cust/register", async (payload) => {
+  const response = await authApi.register(payload)
+  return parseAuthToken(response.data.token)
+})

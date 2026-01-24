@@ -1,10 +1,10 @@
 // store/cust/custTypes.ts
 import { JwtPayload } from "jwt-decode"
-import { AuthorKind } from '../../shared/interfaces'
+import { AuthorAction } from '../../shared/ui-actions'
 import { CustRequest } from "../../api/cust.api"
 
 export type CustThunkArgs = CustRequest & {
-  authorKind: AuthorKind
+  authorAction: AuthorAction
 }
 
 export type CustState = {

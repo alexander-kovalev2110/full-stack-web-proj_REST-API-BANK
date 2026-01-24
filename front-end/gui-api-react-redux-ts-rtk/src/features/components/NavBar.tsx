@@ -11,7 +11,6 @@ import LogoutIcon from '@mui/icons-material/Logout'
 
 import { openAuthor } from "../../store/modal/modal.slice"
 import { useAppSelector, useAppDispatch } from '../../shared/hook'
-import { AuthorKind } from '../../shared/interfaces'
 import { resetCust } from '../../store/cust'
 
 const NavBar: React.FC = () => {
@@ -57,19 +56,19 @@ const NavBar: React.FC = () => {
                                     variant="outlined"
                                     color="inherit"
                                     startIcon={<LoginIcon />}
-                                    onClick={() => dispatch(openAuthor(AuthorKind.Login))}
+                                    onClick={() => dispatch(openAuthor())}
                                 >
                                     Log in
                                 </Button>
 
-                                <Button
+                                {/* <Button
                                     variant="outlined"
                                     color="inherit"
                                     startIcon={<PersonAddIcon />}
-                                    onClick={() => dispatch(openAuthor(AuthorKind.Register))}
+                                    onClick={() => dispatch(openAuthor())}
                                 >
                                     Sign up
-                                </Button>
+                                </Button> */}
                             </>
                         )}
                     </Stack>

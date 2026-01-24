@@ -1,32 +1,27 @@
 // src/store/trans/transSelectors.ts
 import { createSelector } from "@reduxjs/toolkit"
 import { RootState } from ".."
+import { Transaction } from "./trans.types"
 
-// export const selectPaginatedTransactions = createSelector(
-//   [
-//     (state: RootState) => state.trans.transactions,
-//     (state: RootState) => state.pagination.page,
-//     (state: RootState) => state.pagination.pageSize,
-//   ],
-//   (BASEs, page, pageSize) =>
-//     BASEs.slice(page * pageSize, (page + 1) * pageSize)
-// )
-
+// Paginated transactions
 export const selectPaginatedTransactions = createSelector(
   [
     (state: RootState) => state.trans.transactions,
     (state: RootState) => state.pagination.page,
     (state: RootState) => state.pagination.pageSize,
   ],
-  (transactions, page, pageSize) =>
-    transactions.slice(page * pageSize, (page + 1) * pageSize)
+    (
+    transactions: Transaction[],
+    page: number,
+    pageSize: number
+  ): Transaction[] => {
+    const start = page * pageSize
+    const end = start + pageSize
+    return transactions.slice(start, end)
+  }
 )
 
-/**
- * Memoized selector
- * Returns a stable object
- * Removes warnings and unnecessary renderings
- */
+// Pagination UI state
 export const selectPaginationState = createSelector(
   [
     (state: RootState) => state.pagination.page,

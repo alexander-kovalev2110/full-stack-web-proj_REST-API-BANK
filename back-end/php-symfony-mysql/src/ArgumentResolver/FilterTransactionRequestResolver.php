@@ -4,16 +4,17 @@ namespace App\ArgumentResolver;
 
 use App\DTO\FilterTransactionRequest;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class FilterTransactionRequestResolver implements ValueResolverInterface
+class FilterTransactionRequestResolver implements ArgumentValueResolverInterface
 {
-    public function supports(Request $request, \ReflectionParameter $parameter): bool
+    public function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        return $parameter->getType()?->getName() === FilterTransactionRequest::class;
+        return $argument->getType() === FilterTransactionRequest::class;
     }
 
-    public function resolve(Request $request, \ReflectionParameter $parameter): iterable
+    public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         $amount = $request->query->get('amount');
         $date = $request->query->get('date');

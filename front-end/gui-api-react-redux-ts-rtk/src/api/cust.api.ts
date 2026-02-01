@@ -1,23 +1,16 @@
 // src/api/cust.api.ts
-import { axiosInstance } from "./axiosInstance"
-
-export type CustResponse = {
-  token: string
-}
-
-export type CustRequest = {
-  name: string,
-  password: string
-}
-
-const CUSTOMER = "/customer"
+import { axiosPublic } from "./axiosPublic"
+import { CustRequest, CustResponse } from "../store/cust/cust.types"
 
 export const authApi = {
-  login(payload: CustRequest) {
-    return axiosInstance.post<CustResponse>(`${CUSTOMER}/login`, payload)
+  async login(cust: CustRequest): Promise<CustResponse> {
+    const { data } = await axiosPublic.post<CustResponse>("/customer/login", cust)
+    return data
   },
 
-  register(payload: CustRequest) {
-    return axiosInstance.post<CustResponse>(`${CUSTOMER}/register`, payload)
+  async register(cust: CustRequest): Promise<CustResponse> {
+    const { data } = await axiosPublic.post<CustResponse>("/customer/register", cust)
+    return data
   },
 }
+

@@ -20,6 +20,10 @@ framework:
     serializer:
         enabled: true
 
+    profiler:
+        enabled: true
+        collect: true
+
 when@test:
     framework:
         test: true

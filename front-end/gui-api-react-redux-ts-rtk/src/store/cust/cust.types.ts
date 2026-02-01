@@ -1,10 +1,14 @@
 // store/cust/custTypes.ts
 import { JwtPayload } from "jwt-decode"
 import { AuthorAction } from '../../shared/ui-actions'
-import { CustRequest } from "../../api/cust.api"
 
-export type CustThunkArgs = CustRequest & {
-  authorAction: AuthorAction
+export type CustResponse = {
+  token: string
+}
+
+export type CustRequest = {
+  name: string
+  password: string
 }
 
 export type CustState = {

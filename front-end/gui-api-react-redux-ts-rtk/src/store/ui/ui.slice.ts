@@ -1,4 +1,4 @@
-// store/uiSlice.ts
+// store/ui.slice.ts
 import { createSlice, isPending, isRejected, isFulfilled } from "@reduxjs/toolkit"
 
 interface UIState {
@@ -26,11 +26,11 @@ const uiSlice = createSlice({
         state.loading = true
         state.error = null
       })
-      // ✅ success
+      // ✅ fulfilled (success)
       .addMatcher(isFulfilled, (state) => {
         state.loading = false
       })
-      // ❌ error
+      // ❌ rejected (error)
       .addMatcher(isRejected, (state, action) => {
         state.loading = false
         state.error =

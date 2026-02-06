@@ -1,8 +1,7 @@
 import { useEffect } from "react"
 import Box from "@mui/material/Box"
 import NavBar from "../components/NavBar"
-import LoadingDialog from "../components/LoadingDialog"
-import AuthorDialog from "..//components/AuthorDialog"
+import AuthorDialog from "../components/AuthorDialog"
 import { useNavigate } from "react-router-dom"
 import { useAppSelector } from '../../shared/hook'
 
@@ -21,7 +20,6 @@ const AuthorPage: React.FC = () => {
             <NavBar/>
             
             <AuthorDialog />
-            <LoadingDialog />
         </Box>
     )
 }

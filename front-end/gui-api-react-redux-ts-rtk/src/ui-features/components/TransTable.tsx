@@ -18,7 +18,7 @@ import { useAppSelector, useAppDispatch } from "../../shared/hook"
 import {
   selectPaginatedTransactions,
   selectPaginationState,
-} from "../../store/trans/trans.selectors"
+} from "../../store/pagination/trans.selectors"
 
 const TransTable: React.FC = () => {
     const dispatch = useAppDispatch()

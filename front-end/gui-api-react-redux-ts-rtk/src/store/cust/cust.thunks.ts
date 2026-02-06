@@ -1,19 +1,17 @@
 // src/store/cust/cust.thunks.ts
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { authApi } from "../../api/cust.api"
-import { CustRequest } from "./cust.types"
-import { parseAuthToken } from "./parseAuthResponse"
-import { ApiError, handleApiError } from "../shared/handleApiError"
+import { CustRequest, CustResponse } from "../../api/cust.types"
+import { ApiError, handleApiError } from "../store-shared/handleApiError"
 
-/** Login */
+// Login 
 export const loginCust = createAsyncThunk<
-  { token: string; username: string },
+  CustResponse,
   CustRequest,
   { rejectValue: ApiError }
 >("cust/login", async (payload, { rejectWithValue }) => {
   try {
-    const { token } = await authApi.login(payload)
-    return parseAuthToken(token)
+    return await authApi.login(payload)
   } catch (err) {
     return rejectWithValue(
       handleApiError(err, "Login failed")
@@ -21,18 +19,18 @@ export const loginCust = createAsyncThunk<
   }
 })
 
-/** Register */
+// Register 
 export const registerCust = createAsyncThunk<
-  { token: string; username: string },
+  CustResponse,
   CustRequest,
   { rejectValue: ApiError }
 >("cust/register", async (payload, { rejectWithValue }) => {
   try {
-    const { token } = await authApi.register(payload)
-    return parseAuthToken(token)
+    return await authApi.register(payload)
   } catch (err) {
     return rejectWithValue(
       handleApiError(err, "Register failed")
     )
   }
 })
+

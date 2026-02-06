@@ -1,49 +1,49 @@
-import { axiosInstance } from "./axiosInstance"
-import { Transactions } from "../store/trans/trans.types"
+// src/api/trans.api.ts
+import { axiosInstanceTrans } from "./axiosInstanceTrans"
+import { TransactionsResponse } from "./trans.types"
 
 export const transApi = {
-  /**
-  * Create transaction
-  * POST /transaction
-  */
-  async create(amount: number): Promise<Transactions> {
-    const { data } = await axiosInstance.post<Transactions>("/transaction", { amount })
+  // Create transaction
+  async create(amount: number): Promise<TransactionsResponse> {
+    const { data } = await axiosInstanceTrans.post<TransactionsResponse>(
+      "/transaction", 
+      { amount }
+    )
     return data
   },
 
-  /**
-  * Get transaction by id
-  * GET /transaction/:id
-  */
-  async getById(id: string): Promise<Transactions> {
-    const { data } = await axiosInstance.get<Transactions>(`/transaction/${id}`)
+  // Get transaction by id
+  async getById(id: string): Promise<TransactionsResponse> {
+    const { data } = await axiosInstanceTrans.get<TransactionsResponse>(
+      `/transaction/${id}`
+    )
     return data
   },
 
-  /**
-  * Get transactions by filter
-  * GET /transactions?amount=&date=
-  */
-  async getByFilter(params: { amount?: number, date?: string }): Promise<Transactions> {
-    const { data } = await axiosInstance.get<Transactions>("/transactions", { params })
+  // Get transactions by filter
+  async getByFilter(params: { amount?: number, date?: string }): Promise<TransactionsResponse> {
+    const { data } = await axiosInstanceTrans.get<TransactionsResponse>(
+      "/transactions", 
+      { params }
+    )
     return data
   },
 
-  /**
-  * Update transaction
-  * PATCH /transaction/:id
-  */
-  async update(id: string, amount: number): Promise<Transactions> {
-    const { data } = await axiosInstance.patch<Transactions>(`/transaction/${id}`, { amount })
+  // Update transaction
+  async update(id: string, amount: number): Promise<TransactionsResponse> {
+    const { data } = await axiosInstanceTrans.patch<TransactionsResponse>(
+      `/transaction/${id}`, 
+      { amount }
+    )
     return data
   },
 
-  /**
-  * Delete transaction
-  * DELETE /transaction/:id
-  */
-  async remove(id: string): Promise<Transactions> {
-    const { data } = await axiosInstance.delete<Transactions>(`/transaction/${id}`)
+
+  // Delete transaction
+  async remove(id: string): Promise<TransactionsResponse> {
+    const { data } = await axiosInstanceTrans.delete<TransactionsResponse>(
+      `/transaction/${id}`
+    )
     return data
   },
 }

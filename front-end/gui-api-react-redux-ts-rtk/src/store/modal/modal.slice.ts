@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { TransAction, AuthorAction  } from '../../shared/ui-actions'
+import { TransAction } from '../../shared/ui-actions'
 
 type ModalState = {
     authorOpen: boolean,

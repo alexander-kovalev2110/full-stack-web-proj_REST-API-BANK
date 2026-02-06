@@ -1,7 +1,5 @@
-// store/cust/custSlice.ts
-import { createSlice, isAnyOf } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
 import { CustState } from "./cust.types"
-import { loginCust, registerCust } from "./cust.thunks"
 
 const initialState: CustState = {
   username: null,
@@ -12,16 +10,12 @@ export const custSlice = createSlice({
   initialState,
   reducers: {
     resetCust: () => initialState,
-  },
-  extraReducers: (builder) => {
-    builder.addMatcher(
-      isAnyOf(loginCust.fulfilled, registerCust.fulfilled),
-      (state, action) => {
-        state.username = action.payload.username
-      }
-    )
+    
+    setUsername: (state, action: { payload: string }) => {
+      state.username = action.payload
+    },
   },
 })
 
-export const { resetCust } = custSlice.actions
+export const { resetCust, setUsername } = custSlice.actions
 export default custSlice.reducer

@@ -6,9 +6,3 @@ export enum TransAction {
   Update = "update",
   Delete = "delete",
 }
-
-// Type of authorization (Navbar menu buttons)
-export enum AuthorAction {
-  Login = "login",
-  Register = "register",
-}

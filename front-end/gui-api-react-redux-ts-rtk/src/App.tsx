@@ -1,7 +1,8 @@
 import { Routes,  Route } from 'react-router-dom'
-import AuthorPage from "./features/pages/AuthorPage"
-import TransPage from './features/pages/TransPage'
-import AlertDialog from "./features/components/AlertDialog"
+import AuthorPage from "./ui-features/pages/AuthorPage"
+import TransPage from './ui-features/pages/TransPage'
+import AlertDialog from "./ui-features/layouts/AlertDialog"
+import LoadingDialog from "./ui-features/layouts/LoadingDialog"
 
 const App: React.FC = () => {
     return (
@@ -12,6 +13,7 @@ const App: React.FC = () => {
             </Routes>
 
             <AlertDialog />
+            <LoadingDialog />
         </>
     )
 }

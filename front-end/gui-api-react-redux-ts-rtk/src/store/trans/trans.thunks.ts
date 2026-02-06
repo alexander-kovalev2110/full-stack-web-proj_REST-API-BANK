@@ -1,12 +1,12 @@
 // src/store/trans/trans.thunks.ts
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { Transactions } from "./trans.types"
+import { TransactionsResponse } from "../../api/trans.types"
 import { transApi } from "../../api/trans.api"
-import { ApiError, handleApiError } from "../shared/handleApiError"
+import { ApiError, handleApiError } from "../store-shared/handleApiError"
 
-/** Create transaction */
+// Create transaction
 export const createTransaction = createAsyncThunk<
-  Transactions,
+  TransactionsResponse,
   { amount: number },
   { rejectValue: ApiError }
 >("trans/create", async ({ amount }, { rejectWithValue }) => {
@@ -19,9 +19,9 @@ export const createTransaction = createAsyncThunk<
   }
 })
 
-/** Get transaction by id */
+// Get transaction by id
 export const fetchTransactionById = createAsyncThunk<
-  Transactions,
+  TransactionsResponse,
   { id: string },
   { rejectValue: ApiError }
 >("trans/fetchById", async ({ id }, { rejectWithValue }) => {
@@ -34,9 +34,9 @@ export const fetchTransactionById = createAsyncThunk<
   }
 })
 
-/** Get transactions by filter */
+// Get transactions by filter
 export const fetchTransactionsByFilter = createAsyncThunk<
-  Transactions,
+  TransactionsResponse,
   { amount: number; date: string },
   { rejectValue: ApiError }
 >("trans/fetchByFilter", async (payload, { rejectWithValue }) => {
@@ -49,9 +49,9 @@ export const fetchTransactionsByFilter = createAsyncThunk<
   }
 })
 
-/** Update transaction */
+// Update transaction
 export const updateTransaction = createAsyncThunk<
-  Transactions,
+  TransactionsResponse,
   { id: string; amount: number },
   { rejectValue: ApiError }
 >("trans/update", async ({ id, amount }, { rejectWithValue }) => {
@@ -64,9 +64,9 @@ export const updateTransaction = createAsyncThunk<
   }
 })
 
-/** Delete transaction */
+// Delete transaction
 export const deleteTransaction = createAsyncThunk<
-  Transactions,
+  TransactionsResponse,
   { id: string },
   { rejectValue: ApiError }
 >("trans/delete", async ({ id }, { rejectWithValue }) => {

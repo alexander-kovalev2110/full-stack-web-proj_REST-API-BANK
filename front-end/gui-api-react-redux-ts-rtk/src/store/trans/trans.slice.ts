@@ -1,6 +1,7 @@
-// src/store/trans/transSlice.ts
+// src/store/trans/trans.slice.ts
 import { createSlice } from "@reduxjs/toolkit"
-import { TransState, Transactions } from "./trans.types"
+import { TransState } from "./trans.types"
+import { TransactionsResponse } from "../../api/trans.types"
 
 const initialState: TransState = {
   transactions: [],
@@ -14,7 +15,7 @@ export const transSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addMatcher(
-      (action): action is { payload: Transactions } =>
+      (action): action is { payload: TransactionsResponse } =>
         action.type.startsWith("trans/") &&
         action.type.endsWith("/fulfilled"),
 

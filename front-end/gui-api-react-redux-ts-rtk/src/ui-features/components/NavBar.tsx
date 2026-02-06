@@ -6,7 +6,6 @@ import { Stack } from '@mui/material'
 import { Button } from '@mui/material'
 
 import LoginIcon from "@mui/icons-material/Login"
-import PersonAddIcon from "@mui/icons-material/PersonAdd"
 import LogoutIcon from '@mui/icons-material/Logout'
 
 import { openAuthor } from "../../store/modal/modal.slice"
@@ -51,25 +50,14 @@ const NavBar: React.FC = () => {
                             Log out
                         </Button>
                         ) : (
-                            <>
-                                <Button
-                                    variant="outlined"
-                                    color="inherit"
-                                    startIcon={<LoginIcon />}
-                                    onClick={() => dispatch(openAuthor())}
-                                >
-                                    Log in
-                                </Button>
-
-                                {/* <Button
-                                    variant="outlined"
-                                    color="inherit"
-                                    startIcon={<PersonAddIcon />}
-                                    onClick={() => dispatch(openAuthor())}
-                                >
-                                    Sign up
-                                </Button> */}
-                            </>
+                        <Button
+                            variant="outlined"
+                            color="inherit"
+                            startIcon={<LoginIcon />}
+                            onClick={() => dispatch(openAuthor())}
+                        >
+                            Log in
+                        </Button>
                         )}
                     </Stack>
                 </Toolbar>

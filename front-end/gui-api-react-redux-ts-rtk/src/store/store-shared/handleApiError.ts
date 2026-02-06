@@ -1,4 +1,4 @@
-// src/store/shared/handleApiError.ts
+// src/store/sstore-shared/handleApiError.ts
 import axios from "axios"
 
 export type ApiError = string | Record<string, string>

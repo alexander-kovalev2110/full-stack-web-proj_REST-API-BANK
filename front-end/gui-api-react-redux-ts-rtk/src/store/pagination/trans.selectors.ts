@@ -1,7 +1,7 @@
 // src/store/trans/transSelectors.ts
 import { createSelector } from "@reduxjs/toolkit"
 import { RootState } from ".."
-import { Transaction } from "./trans.types"
+import { Transaction } from "../../api/trans.types"
 
 // Paginated transactions
 export const selectPaginatedTransactions = createSelector(

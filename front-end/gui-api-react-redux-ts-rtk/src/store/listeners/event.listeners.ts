@@ -1,10 +1,13 @@
 // store/listeners/event.listeners.ts
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit"
+
 import {
   loginCust,
   registerCust,
   resetCust,
+  setUsername,
 } from "../cust"
+
 import {
   fetchTransactionsByFilter,
   fetchTransactionById,
@@ -13,7 +16,16 @@ import {
   deleteTransaction,
   resetTrans,
 } from "../trans"
+
 import { resetPagination } from "../pagination/pagination.slice"
+import { jwtDecode } from "jwt-decode"
+
+import { CustResponse } from "../../api/cust.types"
+import { PayloadAction } from "@reduxjs/toolkit"
+
+type JwtPayload = {
+  username: string
+}
 
 export const authListenerMiddleware = createListenerMiddleware()
 const listener = authListenerMiddleware.startListening
@@ -21,20 +33,29 @@ const listener = authListenerMiddleware.startListening
 /* ================================
    LOGIN / REGISTER SUCCESS
 ================================ */
-type AuthSuccessAction =
-  | ReturnType<typeof loginCust.fulfilled>
-  | ReturnType<typeof registerCust.fulfilled>
-
 listener({
   matcher: isAnyOf(
     loginCust.fulfilled,
     registerCust.fulfilled
   ),
-  effect: async (action: AuthSuccessAction, api) => {
-    localStorage.setItem("token", action.payload.token)
+  effect: async (
+    action: PayloadAction<CustResponse>,
+    api
+  ) => {
+    const { token } = action.payload
+
+    // 1. Save token
+    localStorage.setItem("token", token)
+
+    // 2. Decode username from token for UI
+    const decoded = jwtDecode<JwtPayload>(token)
+    api.dispatch(setUsername(decoded.username))
+
+    // 3. Reset dependent state
     api.dispatch(resetTrans())
   },
 })
+
 
 /* ================================
    LOGOUT
@@ -42,8 +63,8 @@ listener({
 listener({
   actionCreator: resetCust,
   effect: async (_, api) => {
-    localStorage.removeItem("token")
-    api.dispatch(resetTrans())
+    localStorage.removeItem("token")  // Remove token
+    api.dispatch(resetTrans())        // Reset dependent state
   },
 })
 

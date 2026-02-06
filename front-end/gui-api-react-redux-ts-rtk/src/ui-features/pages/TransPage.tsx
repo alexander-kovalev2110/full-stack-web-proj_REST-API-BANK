@@ -7,7 +7,6 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import TransDialog from "../components/TransDialog"
 import TransTable from "../components/TransTable"
-import LoadingDialog from "../components/LoadingDialog"
 import NavBar from "../components/NavBar"
 import { openTrans } from "../../store/modal/modal.slice"
 import { TransAction } from "../../shared/ui-actions"
@@ -71,7 +70,6 @@ const TransPage: React.FC = () => {
 
             <TransTable />
             <TransDialog />
-            <LoadingDialog />
         </Box>
     )
 }

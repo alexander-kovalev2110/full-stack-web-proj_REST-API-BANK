@@ -1,15 +1,13 @@
-// src/api/axiosInstance.ts
+// src/api/axiosInstanceTrans.ts
 import axios from "axios"
+import { API_URL } from "../config/env"
 
-// const API_URL = import.meta.env.VITE_API_URL
-const API_URL = "http://127.0.0.1:8000"
-
-export const axiosInstance = axios.create({
+export const axiosInstanceTrans = axios.create({
   baseURL: API_URL,
 })
 
 // Request interceptor
-axiosInstance.interceptors.request.use(
+axiosInstanceTrans.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token")
 

@@ -2,7 +2,7 @@
 import { axiosInstanseCust } from "./axiosInstanseCust"
 import { CustRequest, CustResponse } from "./cust.types"
 
-export const authApi = {
+export const custApi = {
   async login(cust: CustRequest): Promise<CustResponse> {
     const { data } = await axiosInstanseCust.post<CustResponse>(
       "/customer/login", 
@@ -19,4 +19,3 @@ export const authApi = {
     return data
   }
 }
-

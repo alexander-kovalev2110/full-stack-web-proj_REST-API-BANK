@@ -1,5 +1,5 @@
 import { Snackbar, Alert } from "@mui/material"
-import { useAppSelector, useAppDispatch } from '../../shared/hook'
+import { useAppSelector, useAppDispatch } from '../shared/hook'
 import { clearError  } from '../../store/ui/ui.slice'
 
 const AlertDialog: React.FC = () => {

@@ -31,9 +31,9 @@ Rendering the user interface and reacting to user interactions.
 **Examples:**
 
 ```
-src/components/
-src/pages/
-src/layouts/
+ui-features/components/
+ui-features/pages/
+ui-features/layouts/
 ```
 
 ---

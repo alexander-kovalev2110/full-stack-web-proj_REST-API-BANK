@@ -15,7 +15,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd"
 
 import { closeAuthor } from "../../store/modal/modal.slice"
 import { loginCust, registerCust } from "../../store/cust"
-import { useAppDispatch, useAppSelector } from "../../shared/hook"
+import { useAppDispatch, useAppSelector } from "../shared/hook"
 
 const AuthorDialog: React.FC = () => {
   const { authorOpen } = useAppSelector(state => state.modal)

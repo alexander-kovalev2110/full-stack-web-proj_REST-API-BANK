@@ -12,7 +12,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close"
 import SendIcon from "@mui/icons-material/Send"
 
-import { useAppDispatch, useAppSelector } from "../../shared/hook"
+import { useAppDispatch, useAppSelector } from "../shared/hook"
+import { TransAction } from "../shared/ui-actions"
 import { closeTrans } from "../../store/modal/modal.slice"
 
 import {
@@ -22,8 +23,6 @@ import {
   updateTransaction,
   deleteTransaction,
 } from "../../store/trans/trans.thunks"
-
-import { TransAction } from "../../shared/ui-actions"
 
 type FieldDef = {
   id: string

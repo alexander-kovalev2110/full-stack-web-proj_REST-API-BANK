@@ -13,7 +13,7 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 
 import { nextPage, previousPage } from "../../store/pagination/pagination.slice"
-import { useAppSelector, useAppDispatch } from "../../shared/hook"
+import { useAppSelector, useAppDispatch } from "../shared/hook"
 
 import {
   selectPaginatedTransactions,

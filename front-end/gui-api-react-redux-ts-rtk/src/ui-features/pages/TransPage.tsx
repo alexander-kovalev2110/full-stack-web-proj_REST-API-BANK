@@ -9,8 +9,8 @@ import TransDialog from "../components/TransDialog"
 import TransTable from "../components/TransTable"
 import NavBar from "../components/NavBar"
 import { openTrans } from "../../store/modal/modal.slice"
-import { TransAction } from "../../shared/ui-actions"
-import { useAppSelector, useAppDispatch } from '../../shared/hook'
+import { TransAction } from "../shared/ui-actions"
+import { useAppSelector, useAppDispatch } from '../shared/hook'
 
 const drawerWidth = 240
 

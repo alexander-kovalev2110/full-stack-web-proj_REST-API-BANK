@@ -1,5 +1,6 @@
 // store/listeners/event.listeners.ts
-import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit"
+import { createListenerMiddleware, isAnyOf, PayloadAction  } from "@reduxjs/toolkit"
+import { jwtDecode } from "jwt-decode"
 
 import {
   loginCust,
@@ -18,10 +19,9 @@ import {
 } from "../trans"
 
 import { resetPagination } from "../pagination/pagination.slice"
-import { jwtDecode } from "jwt-decode"
 
-import { CustResponse } from "../../api/cust.types"
-import { PayloadAction } from "@reduxjs/toolkit"
+import { CustResponse } from "../../infrastructure/api/cust/cust.types"
+import { tokenStorage } from "../../infrastructure/storage/token.storage"
 
 type JwtPayload = {
   username: string
@@ -45,7 +45,7 @@ listener({
     const { token } = action.payload
 
     // 1. Save token
-    localStorage.setItem("token", token)
+     tokenStorage.save(token)
 
     // 2. Decode username from token for UI
     const decoded = jwtDecode<JwtPayload>(token)
@@ -63,8 +63,8 @@ listener({
 listener({
   actionCreator: resetCust,
   effect: async (_, api) => {
-    localStorage.removeItem("token")  // Remove token
-    api.dispatch(resetTrans())        // Reset dependent state
+    tokenStorage.clear()          // Remove token
+    api.dispatch(resetTrans())    // Reset dependent state
   },
 })
 

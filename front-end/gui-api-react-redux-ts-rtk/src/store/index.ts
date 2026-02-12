@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import uiSlice from './ui/ui.slice'
+import uiSlice from './ui-layout/ui.slice'
 import paginationSlice from './pagination/pagination.slice'
 import custSlice from './cust/cust.slice'
 import modalSlice from './modal/modal.slice'

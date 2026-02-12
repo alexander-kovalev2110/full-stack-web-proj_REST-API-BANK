@@ -1,7 +1,7 @@
 // src/api/trans.types.ts
 
 export type Transaction = {
-  transactionId: number
+  transactionId: string
   amount: number
   date: string
 }

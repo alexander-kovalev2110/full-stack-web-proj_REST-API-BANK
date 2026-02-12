@@ -1,7 +1,7 @@
 // src/store/trans/trans.slice.ts
 import { createSlice } from "@reduxjs/toolkit"
 import { TransState } from "./trans.types"
-import { TransactionsResponse } from "../../api/trans.types"
+import { TransactionsResponse } from "../../infrastructure/api/trans/trans.types"
 
 const initialState: TransState = {
   transactions: [],

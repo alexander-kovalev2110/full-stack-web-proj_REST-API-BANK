@@ -60,7 +60,7 @@ Managing global UI-related state shared across the entire application.
 **Example:**
 
 ```
-src/store/ui/
+src/store/ui-layout/
   ui.slice.ts
 ```
 
@@ -109,7 +109,7 @@ Encapsulation of HTTP requests and backend contracts.
 **Example:**
 
 ```
-src/api/
+src/infrastructure/api/
   cust.api.ts
   cust.types.ts
   trans.api.ts
@@ -134,6 +134,16 @@ This separation allows:
 - centralized data transformation
 - stable internal domain model
 
+```
+src/domain/
+  cust/
+    cust.rules.ts
+    cust.types.ts
+  trans/
+    trans.rules.ts
+    trans.types.ts
+```
+
 ---
 
 ### 6. Side Effects & Cross-cutting Logic
@@ -155,7 +165,9 @@ This separation allows:
 UI
  ↓ dispatch(loginCust)
 Thunk
- ↓ API call
+ ↓
+Domain (rules)
+ ↓ 
 fulfilled action
  ↓
 Listener Middleware

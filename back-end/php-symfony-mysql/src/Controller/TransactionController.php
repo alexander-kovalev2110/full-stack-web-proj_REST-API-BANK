@@ -47,7 +47,7 @@ class TransactionController extends AbstractController
     {
         return $this->json(
             $this->transactionService->getTransaction(
-                $customer->getId(),
+                $customer,
                 $transactionId
             ), Response::HTTP_OK
         );
@@ -66,7 +66,7 @@ class TransactionController extends AbstractController
 
         return $this->json(
             $this->transactionService->changeAmount(
-                $customer->getId(),
+                $customer,
                 $transactionId,
                 $dto->amount
             ), Response::HTTP_OK
@@ -78,13 +78,14 @@ class TransactionController extends AbstractController
     {
         return $this->json(
             $this->transactionService->removeTransaction(
-                $customer->getId(),
+                $customer,
                 $transactionId
             ), Response::HTTP_OK
         );
     }
 
     #[Route('/transactions', name: 'get_transaction_by_filter', methods: ['GET'])]
+    // public function getTransactionByFilter(FilterTransactionRequest $dto, Customer $customer): JsonResponse
     public function getTransactionByFilter(Request $request, Customer $customer): JsonResponse
     {
         // Convert QUERY → DTO
@@ -97,7 +98,7 @@ class TransactionController extends AbstractController
 
         return $this->json(
             $this->transactionService->getTransactionByFilter(
-                $customer->getId(),
+                $customer,
                 $dto
             ), Response::HTTP_OK
         );

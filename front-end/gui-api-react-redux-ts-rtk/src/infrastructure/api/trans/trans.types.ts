@@ -1,4 +1,4 @@
-// src/api/trans.types.ts
+// src/infrastructure/api/trans.types.ts
 
 export type Transaction = {
   transactionId: string

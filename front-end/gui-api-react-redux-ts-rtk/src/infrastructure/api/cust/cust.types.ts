@@ -1,4 +1,4 @@
-// src/api/cust.types.ts
+// src/infrastructure/api/cust/cust.types.ts
 export type CustRequest = {
   name: string
   password: string

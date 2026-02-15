@@ -31,7 +31,7 @@ class CustomerController extends AbstractController
         /** @var RegisterRequest $dto */
         $dto =$this->serializer->deserialize(
             $request->getContent(),     // JSON string
-            RegisterRequest::class,     // Target class
+            RegisterRequest::class,     // Target class (type)
             'json'                      // Data format
         );
 
@@ -40,7 +40,8 @@ class CustomerController extends AbstractController
         $customer = $this->customerService->create($dto);
         $token = $this->tokenService->createToken($customer);
 
-        return $this->json(new AuthResponse($token), Response::HTTP_CREATED);   }
+        return $this->json(new AuthResponse($token), Response::HTTP_CREATED);   
+    }
 
     #[Route('/customer/login', name: 'login_customer', methods: ['POST'])]
     public function loginCustomer(Request $request): JsonResponse

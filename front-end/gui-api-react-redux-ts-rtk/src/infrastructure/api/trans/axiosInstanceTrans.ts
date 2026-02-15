@@ -1,4 +1,4 @@
-// src/api/axiosInstanceTrans.ts
+// src/infrastructure/api/trans/axiosInstanceTrans.ts
 import axios from "axios"
 import { API_URL } from "../../../config/env"
 import { tokenStorage } from "../../storage/token.storage"

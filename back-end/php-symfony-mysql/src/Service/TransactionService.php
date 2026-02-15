@@ -34,10 +34,10 @@ class TransactionService
         ]);
     }
 
-    public function getTransaction(int $customerId, int $transactionId): TransactionListResponse
+    public function getTransaction(Customer $customer, int $transactionId): TransactionListResponse
     {
         $transaction = $this->transactionRepo->findOneBy([
-            'customer' => $customerId, 
+            'customer' => $customer,
             'id'       => $transactionId,
         ]);
 
@@ -50,10 +50,10 @@ class TransactionService
         ]);
     }
 
-    public function changeAmount(int $customerId, int $transactionId, float $amount): TransactionListResponse
+    public function changeAmount(Customer $customer, int $transactionId, float $amount): TransactionListResponse
     {
         $transaction = $this->transactionRepo->findOneBy([
-            'customer' => $customerId,
+            'customer' => $customer,
             'id' => $transactionId
         ]);
 
@@ -69,10 +69,10 @@ class TransactionService
         ]);
     }
 
-    public function removeTransaction(int $customerId, int $transactionId): TransactionListResponse
+    public function removeTransaction(Customer $customer, int $transactionId): TransactionListResponse
     {
         $transaction = $this->transactionRepo->findOneBy([
-            'customer' => $customerId,
+            'customer' => $customer,
             'id' => $transactionId
         ]);
 
@@ -87,11 +87,11 @@ class TransactionService
         ]);
     }
 
-    public function getTransactionByFilter(int $customerId, FilterTransactionRequest $filter
+    public function getTransactionByFilter(Customer $customer, FilterTransactionRequest $filter
     ): TransactionListResponse
 
     {
-        $criteria = ['customer' => $customerId];
+        $criteria = ['customer' => $customer];
 
         if ($filter->amount !== null) {
             $criteria['amount'] = $filter->amount;

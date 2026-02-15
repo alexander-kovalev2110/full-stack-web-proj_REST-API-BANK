@@ -1,4 +1,4 @@
-// src/api/trans.api.ts
+// src/infrastructure/api/trans.api.ts
 import { axiosInstanceTrans } from "./axiosInstanceTrans"
 import { TransactionsResponse } from "./trans.types"
 

@@ -1,4 +1,4 @@
-// src/api/cust.api.ts
+// src/infrastructure/api/cust/cust.api.ts
 import { axiosInstanseCust } from "./axiosInstanseCust"
 import { CustRequest, CustResponse } from "./cust.types"
 

@@ -6,8 +6,10 @@ between HTTP, application, and domain logic.
 
 The architecture ensures predictable data flow:
 
+```nginx
 FE → Kernel → Security → Resolver → Controller → Service → Repository →
 Mapper → JsonResponse → FE
+```
 
 ------------------------------------------------------------------------
 
@@ -31,11 +33,17 @@ Mapper → JsonResponse → FE
 ### 1. Kernel Layer (HTTP Entry Point)
 
 **Purpose:**\
-Handles the incoming HTTP request and bootstraps the application.
 
+-   Handles the incoming HTTP request and bootstraps the application.
+-   Handled internally by Symfony’s HttpKernel.
+
+Flow:
+
+```nginx
 Incoming HTTP Request\
 ↓\
 Kernel
+```
 
 ------------------------------------------------------------------------
 
@@ -50,7 +58,9 @@ Responsibilities:
 -   resolving the authenticated `Customer`
 -   injecting user into controller arguments
 
+```nginx
 FE → Kernel → Security
+```
 
 ------------------------------------------------------------------------
 
@@ -61,7 +71,9 @@ Transform raw HTTP input into structured DTO objects.
 
 Example:
 
-App`\ArgumentResolver`{=tex}`\FilterTransactionRequestResolver`{=tex}
+```
+App\ArgumentResolver\FilterTransactionRequestResolver
+```
 
 Responsibilities:
 
@@ -72,8 +84,10 @@ Responsibilities:
 
 Example structure:
 
+```css
 src/ArgumentResolver/\
 FilterTransactionRequestResolver.php
+```
 
 ------------------------------------------------------------------------
 
@@ -84,7 +98,9 @@ Represent validated input data.
 
 Example:
 
-App`\DTO`{=tex}`\FilterTransactionRequest`{=tex}
+```
+App\DTO\FilterTransactionRequest
+```
 
 Characteristics:
 
@@ -94,8 +110,10 @@ Characteristics:
 
 Example structure:
 
+```css
 src/DTO/\
 FilterTransactionRequest.php
+```
 
 ------------------------------------------------------------------------
 
@@ -113,8 +131,19 @@ Characteristics:
 
 Example:
 
+```css
 src/Controller/\
 TransactionController.php
+```
+
+Example method:
+
+```php
+public function list(
+    Customer $customer,
+    FilterTransactionRequest $filter
+): JsonResponse
+```
 
 ------------------------------------------------------------------------
 
@@ -124,7 +153,6 @@ TransactionController.php
 Contains core application rules.
 
 Responsibilities:
-
 -   apply domain rules
 -   coordinate repositories
 -   throw domain exceptions
@@ -132,11 +160,12 @@ Responsibilities:
 
 Example:
 
+```css
 src/Service/\
 TransactionService.php
+```
 
 Principles:
-
 -   operates on domain entities (`Customer`)
 -   does not know about HTTP
 -   does not return JsonResponse
@@ -151,11 +180,12 @@ Encapsulate database access using Doctrine.
 
 Example:
 
+```css
 src/Repository/\
 TransactionRepository.php
+```
 
 Responsibilities:
-
 -   querying entities
 -   applying filters
 -   returning domain entities
@@ -169,12 +199,13 @@ Represent core business models.
 
 Examples:
 
+```css
 src/Entity/\
 Customer.php\
 Transaction.php
+```
 
 Characteristics:
-
 -   Doctrine ORM mapping
 -   relationships (ManyToOne, etc.)
 -   pure domain state
@@ -188,11 +219,12 @@ Transform domain entities into response DTOs.
 
 Example:
 
+```css
 src/Mapper/\
 TransactionMapper.php
+```
 
 Responsibilities:
-
 -   entity → array / response DTO
 -   formatting
 -   serialization preparation
@@ -206,11 +238,12 @@ Define explicit API response structure.
 
 Example:
 
+```css
 src/Response/\
 TransactionListResponse.php
+```
 
-Ensures:
-
+This ensures:
 -   stable API contracts
 -   backend-driven responses
 -   no direct entity exposure
@@ -221,15 +254,21 @@ Ensures:
 
 Validation happens in:
 
+```
 Resolver → ValidatorInterface
+```
 
 If validation fails:
 
+```
 BadRequestHttpException (400)
+```
 
 Domain errors are thrown in Services and handled by:
 
+```
 ExceptionListener
+```
 
 Ensuring consistent JSON error responses.
 
@@ -237,6 +276,7 @@ Ensuring consistent JSON error responses.
 
 ## Data Flow Example (Get Transactions)
 
+```psql
 FE\
 ↓\
 Kernel\
@@ -259,11 +299,13 @@ TransactionListResponse\
 JsonResponse\
 ↓\
 FE
+```
 
 ------------------------------------------------------------------------
 
 ## Folder Structure Overview
 
+```
 src/\
 ArgumentResolver/\
 Controller/\
@@ -274,6 +316,7 @@ Mapper/\
 Repository/\
 Response/\
 Service/
+```
 
 ------------------------------------------------------------------------
 

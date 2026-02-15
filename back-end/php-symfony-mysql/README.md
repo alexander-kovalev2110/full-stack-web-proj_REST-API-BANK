@@ -277,27 +277,27 @@ Ensuring consistent JSON error responses.
 ## Data Flow Example (Get Transactions)
 
 ```psql
-FE\
-↓\
-Kernel\
-↓\
-Security (resolve Customer)\
-↓\
-ArgumentResolver\
-↓ create & validate FilterTransactionRequest\
-↓\
-Controller\
-↓\
-TransactionService\
-↓\
-TransactionRepository (Doctrine)\
-↓\
-TransactionMapper\
-↓\
-TransactionListResponse\
-↓\
-JsonResponse\
-↓\
+FE
+ ↓
+Kernel
+ ↓
+Security (resolve Customer)
+ ↓
+ArgumentResolver
+ ↓ create & validate FilterTransactionRequest
+ ↓
+Controller
+ ↓
+TransactionService
+ ↓
+TransactionRepository (Doctrine)
+ ↓
+TransactionMapper
+ ↓
+TransactionListResponse
+ ↓
+JsonResponse
+ ↓
 FE
 ```
 
@@ -306,16 +306,16 @@ FE
 ## Folder Structure Overview
 
 ```
-src/\
-ArgumentResolver/\
-Controller/\
-DTO/\
-Entity/\
-Exception/\
-Mapper/\
-Repository/\
-Response/\
-Service/
+src/
+ArgumentResolver/
+Controller/
+DTO/
+Entity/
+Exception/
+Mapper/
+Repository/
+Response/
+Service
 ```
 
 ------------------------------------------------------------------------

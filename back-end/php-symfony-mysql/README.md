@@ -71,7 +71,7 @@ Transform raw HTTP input into structured DTO objects.
 
 Example structure:
 
-```css
+```
 src/ArgumentResolver
 FilterTransactionRequestResolver.php
 ```
@@ -92,8 +92,8 @@ Represent validated input data.
 
 Example structure:
 
-```css
-src/DTO/
+```
+src/DTO/Request/
 FilterTransactionRequest.php
 ```
 
@@ -119,14 +119,14 @@ Characteristics:
 
 Example:
 
-```css
+```
 src/Controller/
 TransactionController.php
 ```
 
 Example method:
 
-```php
+```
 public function getTransactionByFilter(
     Request $request, 
     Customer $customer
@@ -148,7 +148,7 @@ Responsibilities:
 
 Example:
 
-```css
+```
 src/Service/
 TransactionService.php
 ```
@@ -168,7 +168,7 @@ Encapsulate database access using Doctrine.
 
 Example:
 
-```css
+```
 src/Repository/
 TransactionRepository.php
 ```
@@ -187,7 +187,7 @@ Represent core business models.
 
 Examples:
 
-```css
+```
 src/Entity/
 Customer.php
 Transaction.php
@@ -207,7 +207,7 @@ Transform domain entities into response DTOs.
 
 Example:
 
-```css
+```
 src/Mapper/
 TransactionMapper.php
 ```
@@ -226,8 +226,8 @@ Define explicit API response structure.
 
 Example:
 
-```css
-src/Response/
+```
+src/DTO/Response/
 TransactionListResponse.php
 ```
 
@@ -299,6 +299,8 @@ src/
 ArgumentResolver/
 Controller/
 DTO/
+  Request/
+  Response/
 Entity/
 EventListener/
 Exception/

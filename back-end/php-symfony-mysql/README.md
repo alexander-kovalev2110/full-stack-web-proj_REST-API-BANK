@@ -6,7 +6,7 @@ between HTTP, application, and domain logic.
 
 The architecture ensures predictable data flow:
 
-```nginx
+```
 FE → Kernel → Security → Resolver → Controller → Service → Repository →
 Mapper → JsonResponse → FE
 ```
@@ -32,16 +32,16 @@ Mapper → JsonResponse → FE
 
 ### 1. Kernel Layer (HTTP Entry Point)
 
-**Purpose:**\
+**Purpose:**
 
 -   Handles the incoming HTTP request and bootstraps the application.
 -   Handled internally by Symfony’s HttpKernel.
 
 Flow:
 
-```nginx
-Incoming HTTP Request\
-↓\
+```
+Incoming HTTP Request
+ ↓
 Kernel
 ```
 
@@ -49,7 +49,7 @@ Kernel
 
 ### 2. Security Layer
 
-**Purpose:**\
+**Purpose:**
 Authentication and user resolution.
 
 Responsibilities:
@@ -58,7 +58,7 @@ Responsibilities:
 -   resolving the authenticated `Customer`
 -   injecting user into controller arguments
 
-```nginx
+```
 FE → Kernel → Security
 ```
 
@@ -66,13 +66,14 @@ FE → Kernel → Security
 
 ### 3. Argument Resolver Layer
 
-**Purpose:**\
+**Purpose:**
 Transform raw HTTP input into structured DTO objects.
 
-Example:
+Example structure:
 
-```
-App\ArgumentResolver\FilterTransactionRequestResolver
+```css
+src/ArgumentResolver
+FilterTransactionRequestResolver.php
 ```
 
 Responsibilities:
@@ -82,24 +83,18 @@ Responsibilities:
 -   validate DTO
 -   stop execution on invalid input (400)
 
-Example structure:
-
-```css
-src/ArgumentResolver/\
-FilterTransactionRequestResolver.php
-```
-
 ------------------------------------------------------------------------
 
 ### 4. DTO Layer (Request Models)
 
-**Purpose:**\
+**Purpose:**
 Represent validated input data.
 
-Example:
+Example structure:
 
-```
-App\DTO\FilterTransactionRequest
+```css
+src/DTO/
+FilterTransactionRequest.php
 ```
 
 Characteristics:
@@ -108,18 +103,11 @@ Characteristics:
 -   Symfony validation attributes
 -   normalization (string → float, string → DateTimeImmutable)
 
-Example structure:
-
-```css
-src/DTO/\
-FilterTransactionRequest.php
-```
-
 ------------------------------------------------------------------------
 
 ### 5. Controller Layer (HTTP Orchestration)
 
-**Purpose:**\
+**Purpose:**
 Coordinate request handling without containing business logic.
 
 Characteristics:
@@ -132,16 +120,16 @@ Characteristics:
 Example:
 
 ```css
-src/Controller/\
+src/Controller/
 TransactionController.php
 ```
 
 Example method:
 
 ```php
-public function list(
-    Customer $customer,
-    FilterTransactionRequest $filter
+public function getTransactionByFilter(
+    Request $request, 
+    Customer $customer
 ): JsonResponse
 ```
 
@@ -149,7 +137,7 @@ public function list(
 
 ### 6. Service Layer (Business Logic)
 
-**Purpose:**\
+**Purpose:**
 Contains core application rules.
 
 Responsibilities:
@@ -161,7 +149,7 @@ Responsibilities:
 Example:
 
 ```css
-src/Service/\
+src/Service/
 TransactionService.php
 ```
 
@@ -175,13 +163,13 @@ Principles:
 
 ### 7. Repository Layer (Data Access)
 
-**Purpose:**\
+**Purpose:**
 Encapsulate database access using Doctrine.
 
 Example:
 
 ```css
-src/Repository/\
+src/Repository/
 TransactionRepository.php
 ```
 
@@ -194,14 +182,14 @@ Responsibilities:
 
 ### 8. Domain Layer (Entities)
 
-**Purpose:**\
+**Purpose:**
 Represent core business models.
 
 Examples:
 
 ```css
-src/Entity/\
-Customer.php\
+src/Entity/
+Customer.php
 Transaction.php
 ```
 
@@ -214,13 +202,13 @@ Characteristics:
 
 ### 9. Mapper Layer (Entity → Response)
 
-**Purpose:**\
+**Purpose:**
 Transform domain entities into response DTOs.
 
 Example:
 
 ```css
-src/Mapper/\
+src/Mapper/
 TransactionMapper.php
 ```
 
@@ -233,13 +221,13 @@ Responsibilities:
 
 ### 10. Response Layer (Output Models)
 
-**Purpose:**\
+**Purpose:**
 Define explicit API response structure.
 
 Example:
 
 ```css
-src/Response/\
+src/Response/
 TransactionListResponse.php
 ```
 
@@ -267,16 +255,17 @@ BadRequestHttpException (400)
 Domain errors are thrown in Services and handled by:
 
 ```
-ExceptionListener
+src/EventListener/
+ApiExceptionListener.php
 ```
 
 Ensuring consistent JSON error responses.
 
 ------------------------------------------------------------------------
 
-## Data Flow Example (Get Transactions)
+## Data Flow Example (Get Transactions By Filter)
 
-```psql
+```
 FE
  ↓
 Kernel
@@ -311,11 +300,11 @@ ArgumentResolver/
 Controller/
 DTO/
 Entity/
+EventListener/
 Exception/
 Mapper/
 Repository/
-Response/
-Service
+Service/
 ```
 
 ------------------------------------------------------------------------

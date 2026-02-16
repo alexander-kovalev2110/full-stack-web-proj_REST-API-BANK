@@ -296,17 +296,17 @@ FE
 
 ```
 src/
-ArgumentResolver/
-Controller/
-DTO/
-  Request/
-  Response/
-Entity/
-EventListener/
-Exception/
-Mapper/
-Repository/
-Service/
+  ArgumentResolver/
+  Controller/
+  DTO/
+    Request/
+    Response/
+  Entity/
+  EventListener/
+  Exception/
+  Mapper/
+  Repository/
+  Service/
 ```
 
 ------------------------------------------------------------------------

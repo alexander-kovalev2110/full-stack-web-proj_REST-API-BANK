@@ -5,7 +5,7 @@ import { CustRequest, CustResponse } from "./cust.types"
 export const custApi = {
   async login(cust: CustRequest): Promise<CustResponse> {
     const { data } = await axiosInstanseCust.post<CustResponse>(
-      "/customer/login", 
+      "/customers/login", 
       cust
     )
     return data
@@ -13,7 +13,7 @@ export const custApi = {
 
   async register(cust: CustRequest): Promise<CustResponse> {
     const { data } = await axiosInstanseCust.post<CustResponse>(
-      "/customer/register", 
+      "/customers/register", 
       cust
     )
     return data

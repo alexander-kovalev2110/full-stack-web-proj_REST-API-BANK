@@ -24,7 +24,7 @@ class CustomerController extends AbstractController
         private readonly SerializerInterface $serializer,
     ) {}
 
-    #[Route('/customer/register', name: 'create_customer', methods: ['POST'])]
+    #[Route('/customers/register', name: 'create_customer', methods: ['POST'])]
     public function createCustomer(Request $request): JsonResponse
     {
         // Deserializing a JSON request body into a DTO
@@ -43,7 +43,7 @@ class CustomerController extends AbstractController
         return $this->json(new AuthResponse($token), Response::HTTP_CREATED);   
     }
 
-    #[Route('/customer/login', name: 'login_customer', methods: ['POST'])]
+    #[Route('/customers/login', name: 'login_customer', methods: ['POST'])]
     public function loginCustomer(Request $request): JsonResponse
     {
         /** @var LoginRequest $dto */

@@ -6,7 +6,7 @@ export const transApi = {
   // Create transaction
   async create(amount: number): Promise<TransactionsResponse> {
     const { data } = await axiosInstanceTrans.post<TransactionsResponse>(
-      "/transaction", 
+      "/transactions", 
       { amount }
     )
     return data
@@ -15,7 +15,7 @@ export const transApi = {
   // Get transaction by id
   async getById(id: string): Promise<TransactionsResponse> {
     const { data } = await axiosInstanceTrans.get<TransactionsResponse>(
-      `/transaction/${id}`
+      `/transactions/${id}`
     )
     return data
   },
@@ -32,7 +32,7 @@ export const transApi = {
   // Update transaction
   async update(id: string, amount: number): Promise<TransactionsResponse> {
     const { data } = await axiosInstanceTrans.patch<TransactionsResponse>(
-      `/transaction/${id}`, 
+      `/transactions/${id}`, 
       { amount }
     )
     return data
@@ -42,7 +42,7 @@ export const transApi = {
   // Delete transaction
   async remove(id: string): Promise<TransactionsResponse> {
     const { data } = await axiosInstanceTrans.delete<TransactionsResponse>(
-      `/transaction/${id}`
+      `/transactions/${id}`
     )
     return data
   },

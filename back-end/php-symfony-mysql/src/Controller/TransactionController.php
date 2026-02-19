@@ -22,7 +22,7 @@ class TransactionController extends AbstractController
         private readonly SerializerInterface $serializer
     ) {}
 
-    #[Route('/transaction', name: 'add_transaction', methods: ['POST'])]
+    #[Route('/transactions', name: 'add_transaction', methods: ['POST'])]
     public function createTransaction(Request $request, Customer $customer): JsonResponse
     {
         $dto = $this->serializer->deserialize(
@@ -42,7 +42,7 @@ class TransactionController extends AbstractController
         );
     }
 
-    #[Route('/transaction/{transactionId}', name: 'get_transaction', methods: ['GET'])]
+    #[Route('/transactions/{transactionId}', name: 'get_transaction', methods: ['GET'])]
     public function getTransaction(int $transactionId, Customer $customer): JsonResponse
     {
         return $this->json(
@@ -53,7 +53,7 @@ class TransactionController extends AbstractController
         );
     }
 
-    #[Route('/transaction/{transactionId}', name: 'update_transaction', methods: ['PATCH'])]
+    #[Route('/transactions/{transactionId}', name: 'update_transaction', methods: ['PATCH'])]
     public function updateTransaction(int $transactionId, Request $request, Customer $customer): JsonResponse
     {
         $dto = $this->serializer->deserialize(
@@ -73,7 +73,7 @@ class TransactionController extends AbstractController
         );
     }
 
-    #[Route('/transaction/{transactionId}', name: 'delete_transaction', methods: ['DELETE'])]
+    #[Route('/transactions/{transactionId}', name: 'delete_transaction', methods: ['DELETE'])]
     public function deleteTransaction(int $transactionId, Customer $customer): JsonResponse
     {
         return $this->json(

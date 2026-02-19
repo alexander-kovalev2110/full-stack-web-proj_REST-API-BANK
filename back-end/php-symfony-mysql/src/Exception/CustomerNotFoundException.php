@@ -6,12 +6,12 @@ final class CustomerNotFoundException extends DomainException
 {
     public function __construct()
     {
-        parent::__construct('Customer not found.');
+        parent::__construct('Unauthorized.');
     }
 
     public function getStatusCode(): int
     {
-        return 404;
+        return 401;
     }
 }
 

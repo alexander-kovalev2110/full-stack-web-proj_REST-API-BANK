@@ -8,13 +8,14 @@ servers:
     description: Dev server
      
 paths:
-  /customer/login:
+  /customers/login:
     post:
       summary: Customer login
       tags:
         - Customers
       operationId: loginCustomer
       requestBody:
+        description: Customer credentials for authentication
         required: true
         content:
           application/json:
@@ -40,7 +41,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'       
 
-  /customer/register:
+  /customers/register:
     post:
       summary: Customer registration
       tags:
@@ -66,7 +67,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error' 
 
-  /transaction:
+  /transactions:
     post:
       summary: Create transaction
       tags:
@@ -100,7 +101,41 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /transaction/{id}:
+  # /transactions:
+    get:
+      summary: Get transactions by filter
+      tags:
+        - Transactions
+      operationId: getTransactionsByFilter
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: amount
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Transactions list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsResponse'
+        '400':
+          description: Invalid filter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /transactions/{id}:
     get:
       summary: Get transaction by ID
       tags:
@@ -194,39 +229,39 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /transactions:
-    get:
-      summary: Get transactions by filter
-      tags:
-        - Transactions
-      operationId: getTransactionsByFilter
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: amount
-          in: query
-          required: false
-          schema:
-            type: number
-        - name: date
-          in: query
-          required: false
-          schema:
-            type: string
-            format: date
-      responses:
-        '200':
-          description: Transactions list
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionsResponse'
-        '400':
-          description: Invalid filter
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+  # /transactions:
+  #   get:
+  #     summary: Get transactions by filter
+  #     tags:
+  #       - Transactions
+  #     operationId: getTransactionsByFilter
+  #     security:
+  #       - bearerAuth: []
+  #     parameters:
+  #       - name: amount
+  #         in: query
+  #         required: false
+  #         schema:
+  #           type: number
+  #       - name: date
+  #         in: query
+  #         required: false
+  #         schema:
+  #           type: string
+  #           format: date
+  #     responses:
+  #       '200':
+  #         description: Transactions list
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/TransactionsResponse'
+  #       '400':
+  #         description: Invalid filter
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Error'
 
 components:
 

@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
+#[ORM\Table(name: "customers")]
 class Customer implements UserInterface, PasswordAuthenticatedUserInterface
 // class Customer
 {

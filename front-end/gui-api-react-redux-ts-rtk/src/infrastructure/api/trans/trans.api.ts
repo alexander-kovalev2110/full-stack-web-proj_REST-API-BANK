@@ -21,7 +21,12 @@ export const transApi = {
   },
 
   // Get transactions by filter
-  async getByFilter(params: { amount?: number, date?: string }): Promise<TransactionsResponse> {
+  async getByFilter(params: { 
+    amount?: number
+    date?: string
+    page?: number
+    limit?: number
+  }): Promise<TransactionsResponse> {
     const { data } = await axiosInstanceTrans.get<TransactionsResponse>(
       "/transactions", 
       { params }

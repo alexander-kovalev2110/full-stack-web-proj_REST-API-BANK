@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Service;
 
 use App\Entity\Customer;
@@ -19,6 +18,7 @@ class TransactionService
         private readonly TransactionRepository $transactionRepo
     ){}
 
+    // CREATE
     public function createTransaction(Customer $customer, float $amount): TransactionListResponse
     {
         $transaction = (new Transaction())
@@ -29,27 +29,35 @@ class TransactionService
         $this->em->persist($transaction);
         $this->em->flush();
 
-        return new TransactionListResponse([
-            TransactionMapper::fromEntity($transaction)
-        ]);
+        return new TransactionListResponse(
+            transactions: [TransactionMapper::fromEntity($transaction)],
+            total: 1,
+            page: 1,
+            limit: 1
+        );
     }
 
+    // GET BY ID
     public function getTransaction(Customer $customer, int $transactionId): TransactionListResponse
     {
         $transaction = $this->transactionRepo->findOneBy([
             'customer' => $customer,
-            'id'       => $transactionId,
+            'id' => $transactionId
         ]);
 
         if (!$transaction) {
             throw new TransactionNotFoundException();
         }
 
-        return new TransactionListResponse([
-            TransactionMapper::fromEntity($transaction),
-        ]);
+        return new TransactionListResponse(
+            transactions: [TransactionMapper::fromEntity($transaction)],
+            total: 1,
+            page: 1,
+            limit: 1
+        );
     }
 
+    // UPDATE
     public function changeAmount(Customer $customer, int $transactionId, float $amount): TransactionListResponse
     {
         $transaction = $this->transactionRepo->findOneBy([
@@ -64,11 +72,15 @@ class TransactionService
         $transaction->setAmount($amount);
         $this->em->flush();
 
-        return new TransactionListResponse([
-            TransactionMapper::fromEntity($transaction)
-        ]);
+        return new TransactionListResponse(
+            transactions: [TransactionMapper::fromEntity($transaction)],
+            total: 1,
+            page: 1,
+            limit: 1
+        );
     }
 
+    // DELETE
     public function removeTransaction(Customer $customer, int $transactionId): TransactionListResponse
     {
         $transaction = $this->transactionRepo->findOneBy([
@@ -83,28 +95,48 @@ class TransactionService
         $this->em->remove($transaction);
         $this->em->flush();
 
-        return new TransactionListResponse([
-        ]);
+        return new TransactionListResponse(
+            transactions: [],
+            total: 0,
+            page: 1,
+            limit: 1
+        );
     }
 
-    public function getTransactionByFilter(Customer $customer, FilterTransactionRequest $filter
-    ): TransactionListResponse
-
+    // GET BY FILTER (PAGINATION)
+    public function getTransactionByFilter(Customer $customer, FilterTransactionRequest $filter): TransactionListResponse
     {
-        $criteria = ['customer' => $customer];
+        $qb = $this->transactionRepo->createQueryBuilder('t')
+            ->where('t.customer = :customer')
+            ->setParameter('customer', $customer);
 
         if ($filter->amount !== null) {
-            $criteria['amount'] = $filter->amount;
+            $qb->andWhere('t.amount = :amount')->setParameter('amount', $filter->amount);
         }
 
         if ($filter->date !== null) {
-            $criteria['date'] = $filter->date;
+            $start = $filter->date->setTime(0,0,0);
+            $end   = $filter->date->setTime(23,59,59);
+            $qb->andWhere('t.date BETWEEN :start AND :end')
+                ->setParameter('start', $start)
+                ->setParameter('end', $end);
         }
 
-        $transactions = $this->transactionRepo->findBy($criteria);
+        $countQb = clone $qb;
+        $total = (int) $countQb->select('COUNT(t.id)')->getQuery()->getSingleScalarResult();
+
+        $offset = ($filter->page - 1) * $filter->limit;
+        $qb->setFirstResult($offset)
+           ->setMaxResults($filter->limit)
+           ->orderBy('t.date', 'ASC');
+
+        $transactions = $qb->getQuery()->getResult();
 
         return new TransactionListResponse(
-            TransactionMapper::fromEntities($transactions)
+            transactions: TransactionMapper::fromEntities($transactions),
+            total: $total,
+            page: $filter->page,
+            limit: $filter->limit
         );
     }
 }

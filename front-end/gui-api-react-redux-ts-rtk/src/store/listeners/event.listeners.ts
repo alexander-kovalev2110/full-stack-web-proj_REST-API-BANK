@@ -16,9 +16,10 @@ import {
   updateTransaction,
   deleteTransaction,
   resetTrans,
+  // resetPagination
 } from "../trans"
 
-import { resetPagination } from "../pagination/pagination.slice"
+// import { resetPagination } from "../trans/trans.slice"
 
 import { CustResponse } from "../../infrastructure/api/cust/cust.types"
 import { tokenStorage } from "../../infrastructure/storage/token.storage"
@@ -71,16 +72,16 @@ listener({
 /* ================================
    NEW COMMAND
 ================================ */
-listener({
-  matcher: isAnyOf(
-    fetchTransactionsByFilter.fulfilled,
-    fetchTransactionById.fulfilled,
-    createTransaction.fulfilled,
-    updateTransaction.fulfilled,
-    deleteTransaction.fulfilled
-  ),
-  effect: async (_, api) => {
-    api.dispatch(resetPagination())
-  },
-})
+// listener({
+//   matcher: isAnyOf(
+//     fetchTransactionsByFilter.fulfilled,
+//     fetchTransactionById.fulfilled,
+//     createTransaction.fulfilled,
+//     updateTransaction.fulfilled,
+//     deleteTransaction.fulfilled
+//   ),
+//   effect: async (_, api) => {
+//     api.dispatch(resetPagination())
+//   },
+// })
 

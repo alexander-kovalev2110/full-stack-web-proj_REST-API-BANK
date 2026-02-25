@@ -1,3 +1,5 @@
+import React, { useEffect } from "react"
+
 import Box from '@mui/material/Box'
 import { Paper } from "@mui/material"
 import { Table } from "@mui/material"
@@ -12,23 +14,30 @@ import { Stack } from '@mui/material'
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 
-import { nextPage, previousPage } from "../../store/pagination/pagination.slice"
+import { nextPage, previousPage } from "../../store/trans/trans.slice"
+import { fetchTransactionsByFilter } from "../../store/trans/trans.thunks"
 import { useAppSelector, useAppDispatch } from "../shared/hook"
 
 import {
   selectPaginatedTransactions,
   selectPaginationState,
-} from "../../store/pagination/trans.selectors"
+} from "../../store/trans/trans.selectors"
 
 const TransTable: React.FC = () => {
     const dispatch = useAppDispatch()
 
     const tabAr = useAppSelector(selectPaginatedTransactions)
-    const { previousDisabled, nextDisabled } =
+    const { previousDisabled, nextDisabled, page } =
         useAppSelector(selectPaginationState)
 
-    if (tabAr.length === 0) {
-        return null
+    const handlePrev = () => {
+        dispatch(previousPage())
+        dispatch(fetchTransactionsByFilter())
+    }
+
+    const handleNext = () => {
+        dispatch(nextPage())
+        dispatch(fetchTransactionsByFilter())
     }
 
     return (
@@ -58,12 +67,12 @@ const TransTable: React.FC = () => {
             <Stack direction="row" spacing={2} ml={2} mt={2}>
                 <Button variant="outlined" startIcon={<NavigateBeforeIcon />}
                         disabled={previousDisabled} 
-                        onClick={() => dispatch(previousPage())}>
+                        onClick={handlePrev}>
                     Previous
                 </Button>
                 <Button variant="outlined" startIcon={<NavigateNextIcon />}
                         disabled={nextDisabled} 
-                        onClick={() => dispatch(nextPage())} >
+                        onClick={handleNext} >
                     Next
                 </Button>
             </Stack>

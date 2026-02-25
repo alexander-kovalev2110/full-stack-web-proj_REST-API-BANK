@@ -24,6 +24,7 @@ class CustomerController extends AbstractController
         private readonly SerializerInterface $serializer,
     ) {}
 
+    // REGESTERING A NEW CLIENT
     #[Route('/customers/register', name: 'create_customer', methods: ['POST'])]
     public function createCustomer(Request $request): JsonResponse
     {
@@ -43,6 +44,7 @@ class CustomerController extends AbstractController
         return $this->json(new AuthResponse($token), Response::HTTP_CREATED);   
     }
 
+    // CLIENT AUTHENTICATION
     #[Route('/customers/login', name: 'login_customer', methods: ['POST'])]
     public function loginCustomer(Request $request): JsonResponse
     {

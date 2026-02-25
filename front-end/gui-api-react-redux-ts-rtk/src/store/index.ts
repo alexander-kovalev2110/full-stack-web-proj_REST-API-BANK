@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import uiSlice from './ui-layout/ui.slice'
-import paginationSlice from './pagination/pagination.slice'
+// import paginationSlice from './pagination/pagination.slice'
 import custSlice from './cust/cust.slice'
 import modalSlice from './modal/modal.slice'
 import transSlice from './trans/trans.slice'
@@ -13,7 +13,7 @@ export const store = configureStore({
     cust: custSlice,
     modal: modalSlice,
     trans: transSlice,
-    pagination: paginationSlice
+    // pagination: paginationSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(authListenerMiddleware.middleware),

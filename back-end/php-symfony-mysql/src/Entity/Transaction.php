@@ -6,6 +6,7 @@ use App\Repository\TransactionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
+#[ORM\Table(name: "transactions")]
 class Transaction
 {
     #[ORM\Id]

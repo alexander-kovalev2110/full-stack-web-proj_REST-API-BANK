@@ -22,85 +22,78 @@ class TransactionController extends AbstractController
         private readonly SerializerInterface $serializer
     ) {}
 
+    // CREATE
     #[Route('/transactions', name: 'add_transaction', methods: ['POST'])]
     public function createTransaction(Request $request, Customer $customer): JsonResponse
     {
         $dto = $this->serializer->deserialize(
-            $request->getContent(), 
-            AmountTransactionRequest::class, 
+            $request->getContent(),
+            AmountTransactionRequest::class,
             'json'
         );
 
         $this->validator->validate($dto);
 
         return $this->json(
-            $this->transactionService->createTransaction(
-                $customer, 
-                $dto->amount
-            ), 
+            $this->transactionService->createTransaction($customer, $dto->amount),
             Response::HTTP_CREATED
         );
     }
 
+    // GET BY ID
     #[Route('/transactions/{transactionId}', name: 'get_transaction', methods: ['GET'])]
     public function getTransaction(int $transactionId, Customer $customer): JsonResponse
     {
         return $this->json(
-            $this->transactionService->getTransaction(
-                $customer,
-                $transactionId
-            ), Response::HTTP_OK
+            $this->transactionService->getTransaction($customer, $transactionId),
+            Response::HTTP_OK
         );
     }
 
+    // UPDATE
     #[Route('/transactions/{transactionId}', name: 'update_transaction', methods: ['PATCH'])]
     public function updateTransaction(int $transactionId, Request $request, Customer $customer): JsonResponse
     {
         $dto = $this->serializer->deserialize(
-            $request->getContent(), 
-            AmountTransactionRequest::class, 
+            $request->getContent(),
+            AmountTransactionRequest::class,
             'json'
         );
 
         $this->validator->validate($dto);
 
         return $this->json(
-            $this->transactionService->changeAmount(
-                $customer,
-                $transactionId,
-                $dto->amount
-            ), Response::HTTP_OK
+            $this->transactionService->changeAmount($customer, $transactionId, $dto->amount),
+            Response::HTTP_OK
         );
     }
 
+    // DELETE
     #[Route('/transactions/{transactionId}', name: 'delete_transaction', methods: ['DELETE'])]
     public function deleteTransaction(int $transactionId, Customer $customer): JsonResponse
     {
         return $this->json(
-            $this->transactionService->removeTransaction(
-                $customer,
-                $transactionId
-            ), Response::HTTP_OK
+            $this->transactionService->removeTransaction($customer, $transactionId),
+            Response::HTTP_OK
         );
     }
 
+    // GET BY FILTER (PAGINATION)
     #[Route('/transactions', name: 'get_transaction_by_filter', methods: ['GET'])]
-    // public function getTransactionByFilter(FilterTransactionRequest $dto, Customer $customer): JsonResponse
     public function getTransactionByFilter(Request $request, Customer $customer): JsonResponse
     {
-        // Convert QUERY → DTO
         $dto = new FilterTransactionRequest(
-            amount: $request->query->get('amount'),
-            date: $request->query->get('date')
+            date: $request->query->get('date'),
+            amount: $request->query->get('amount') !== null ? (float)$request->query->get('amount') : null,
+            page: (int)$request->query->get('page', 1),
+            limit: (int)$request->query->get('limit', 10)
         );
 
         $this->validator->validate($dto);
 
         return $this->json(
-            $this->transactionService->getTransactionByFilter(
-                $customer,
-                $dto
-            ), Response::HTTP_OK
+            $this->transactionService->getTransactionByFilter($customer, $dto),
+            Response::HTTP_OK
         );
     }
 }

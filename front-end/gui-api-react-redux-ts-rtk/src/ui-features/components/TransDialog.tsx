@@ -15,6 +15,7 @@ import SendIcon from "@mui/icons-material/Send"
 import { useAppDispatch, useAppSelector } from "../shared/hook"
 import { TransAction } from "../shared/ui-actions"
 import { closeTrans } from "../../store/modal/modal.slice"
+import { setFilter, resetTrans } from "../../store/trans/trans.slice"
 
 import {
   createTransaction,
@@ -96,11 +97,14 @@ const TransDialog: React.FC = () => {
     [TransAction.Get]: (data) =>
       dispatch(fetchTransactionById({ id: String(data.transactionId) })),
 
-    [TransAction.Filter]: (data) =>
-      dispatch(fetchTransactionsByFilter({
+    [TransAction.Filter]: (data) => {
+      dispatch(setFilter({
         amount: data.amount,
         date: data.date,
-      })),
+      }))
+
+      dispatch(fetchTransactionsByFilter())
+    },
 
     [TransAction.Update]: (data) =>
       dispatch(updateTransaction({
@@ -113,6 +117,7 @@ const TransDialog: React.FC = () => {
   }
 
   const handleSubmit = () => {
+    dispatch(resetTrans())
     if (!transAction) return
 
     const data = collectFormData()

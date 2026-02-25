@@ -2,6 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { TransactionsResponse } from "../../infrastructure/api/trans/trans.types"
 import { transApi } from "../../infrastructure/api/trans/trans.api"
+import { RootState } from ".."
 import { handleApiError } from "../../infrastructure/api/error/handleApiError"
 import { validateAmount } from "../../domain/trans/trans.rules"
 
@@ -41,28 +42,25 @@ export const fetchTransactionById = createAsyncThunk<
   }
 })
 
-// Get transactions by filter
-export const fetchTransactionsByFilter = createAsyncThunk<
-  TransactionsResponse,
-  { amount: number; date: string },
-  { rejectValue: string }
->("trans/fetchByFilter", async (payload, { rejectWithValue }) => {
-  // Domain rule
-  if (payload.amount !== undefined) {
-    const error = validateAmount(payload.amount)
-    if (error) {
-      return rejectWithValue(error)
+export const fetchTransactionsByFilter = createAsyncThunk(
+  "trans/fetchByFilter",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const state = getState() as RootState
+      const { page, pageSize, filter } = state.trans
+
+      return await transApi.getByFilter({
+        ...filter,
+        page: page + 1,      // 🔥 Important
+        limit: pageSize,
+      })
+
+    } catch (error: any) {
+      return rejectWithValue(error.message)
     }
   }
+)
 
-  try {
-    return await transApi.getByFilter(payload)
-  } catch (err) {
-    return rejectWithValue(
-      handleApiError(err, "Failed to fetch transactions")
-    )
-  }
-})
 
 // Update transaction
 export const updateTransaction = createAsyncThunk<

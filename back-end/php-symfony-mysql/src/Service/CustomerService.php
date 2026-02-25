@@ -20,9 +20,7 @@ class CustomerService
         private readonly CustomerRepository $customerRepo,
     ) {}
 
-    /**
-     * Registering a new client
-     */
+    // REGESTERING A NEW CLIENT
     public function create(RegisterRequest $dto): Customer
     {
         // Check for existence
@@ -42,10 +40,8 @@ class CustomerService
 
         return $customer;
     }
-
-    /**
-     * Client authentication
-     */
+ 
+    // CLIENT AUTHENTICATION
     public function login(LoginRequest $dto): Customer
     {
         $customer = $this->customerRepo->findOneBy(['name' => $dto->name]);

@@ -8,5 +8,8 @@ export type Transaction = {
 
 export type TransactionsResponse = {
   transactions: Transaction[]
+  total: number
+  page: number
+  limit: number
 }
 

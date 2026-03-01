@@ -1,3 +1,5 @@
+// src/ui-features/ui-types/ui-actions.ts
+
 // The type used when working with the command menu
 export enum TransAction {
   Add = "add",

@@ -1,6 +1,6 @@
 import React from "react";
 import { Dialog, Box, CircularProgress, Typography } from "@mui/material";
-import { useAppSelector } from "../shared/hook";
+import { useAppSelector } from "../ui-types/ui-hooks";
 
 const LoadingDialog: React.FC = () => {
   const { loading } = useAppSelector(state => state.ui);

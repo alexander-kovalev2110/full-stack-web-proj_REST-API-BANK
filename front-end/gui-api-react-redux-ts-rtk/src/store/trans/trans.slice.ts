@@ -47,24 +47,9 @@ export const transSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    // =====================================
-    // PAGINATION (ONLY THIS HAS SPECIAL LOGIC)
-    // =====================================
-    builder.addCase(
-      fetchTransactionsByFilter.fulfilled,
-      (state, action: PayloadAction<TransactionsResponse>) => {
-        state.transactions = action.payload.transactions
-        state.total = action.payload.total
-        state.page = action.payload.page - 1   // 🔥 Important
-        state.pageSize = action.payload.limit
-      }
-    )
-
-    // =====================================
-    // ALL OTHER CRUD METHODS (COMMON LOGIC)
-    // =====================================
     builder.addMatcher(
       isAnyOf(
+        fetchTransactionsByFilter.fulfilled,
         createTransaction.fulfilled,
         fetchTransactionById.fulfilled,
         updateTransaction.fulfilled,
@@ -72,12 +57,11 @@ export const transSlice = createSlice({
       ),
       (state, action: PayloadAction<TransactionsResponse>) => {
         state.transactions = action.payload.transactions
-        // state.total = action.payload.total ?? state.total
+        state.total = action.payload.total ?? state.total
       }
     )
   },
 })
 
 export const { resetTrans, setFilter, previousPage, nextPage } = transSlice.actions
-// export const { resetTrans, setFilter, previousPage, nextPage, resetPagination } = transSlice.actions
 export default transSlice.reducer

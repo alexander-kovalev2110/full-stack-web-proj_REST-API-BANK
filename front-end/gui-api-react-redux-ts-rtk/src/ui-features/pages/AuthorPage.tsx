@@ -3,7 +3,7 @@ import Box from "@mui/material/Box"
 import NavBar from "../components/NavBar"
 import AuthorDialog from "../components/AuthorDialog"
 import { useNavigate } from "react-router-dom"
-import { useAppSelector } from '../shared/hook'
+import { useAppSelector } from '../ui-types/ui-hooks'
 
 const AuthorPage: React.FC = () => {
     const  { username } = useAppSelector(state => state.cust)

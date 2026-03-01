@@ -32,8 +32,6 @@ class TransactionService
         return new TransactionListResponse(
             transactions: [TransactionMapper::fromEntity($transaction)],
             total: 1,
-            page: 1,
-            limit: 1
         );
     }
 
@@ -52,8 +50,6 @@ class TransactionService
         return new TransactionListResponse(
             transactions: [TransactionMapper::fromEntity($transaction)],
             total: 1,
-            page: 1,
-            limit: 1
         );
     }
 
@@ -75,8 +71,6 @@ class TransactionService
         return new TransactionListResponse(
             transactions: [TransactionMapper::fromEntity($transaction)],
             total: 1,
-            page: 1,
-            limit: 1
         );
     }
 
@@ -98,8 +92,6 @@ class TransactionService
         return new TransactionListResponse(
             transactions: [],
             total: 0,
-            page: 1,
-            limit: 1
         );
     }
 
@@ -135,8 +127,6 @@ class TransactionService
         return new TransactionListResponse(
             transactions: TransactionMapper::fromEntities($transactions),
             total: $total,
-            page: $filter->page,
-            limit: $filter->limit
         );
     }
 }

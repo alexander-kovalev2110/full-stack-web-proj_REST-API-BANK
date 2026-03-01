@@ -9,7 +9,7 @@ import LoginIcon from "@mui/icons-material/Login"
 import LogoutIcon from '@mui/icons-material/Logout'
 
 import { openAuthor } from "../../store/modal/modal.slice"
-import { useAppSelector, useAppDispatch } from '../shared/hook'
+import { useAppSelector, useAppDispatch } from '../ui-types/ui-hooks'
 import { resetCust } from '../../store/cust'
 
 const NavBar: React.FC = () => {

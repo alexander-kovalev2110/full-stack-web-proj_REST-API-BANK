@@ -13,7 +13,5 @@ class TransactionListResponse
     public function __construct(
         public array $transactions = [],
         public int $total = 0,
-        public int $page = 1,
-        public int $limit = 10
     ) {}
 }

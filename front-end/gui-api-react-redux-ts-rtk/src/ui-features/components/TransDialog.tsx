@@ -12,8 +12,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close"
 import SendIcon from "@mui/icons-material/Send"
 
-import { useAppDispatch, useAppSelector } from "../shared/hook"
-import { TransAction } from "../shared/ui-actions"
+import { useAppDispatch, useAppSelector } from "../ui-types/ui-hooks"
+import { TransAction } from "../ui-types/ui-actions"
 import { closeTrans } from "../../store/modal/modal.slice"
 import { setFilter, resetTrans } from "../../store/trans/trans.slice"
 

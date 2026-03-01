@@ -16,7 +16,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 
 import { nextPage, previousPage } from "../../store/trans/trans.slice"
 import { fetchTransactionsByFilter } from "../../store/trans/trans.thunks"
-import { useAppSelector, useAppDispatch } from "../shared/hook"
+import { useAppSelector, useAppDispatch } from "../ui-types/ui-hooks"
 
 import {
   selectPaginatedTransactions,

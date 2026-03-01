@@ -9,24 +9,12 @@ import {
   setUsername,
 } from "../cust"
 
-import {
-  fetchTransactionsByFilter,
-  fetchTransactionById,
-  createTransaction,
-  updateTransaction,
-  deleteTransaction,
-  resetTrans,
-  // resetPagination
-} from "../trans"
-
-// import { resetPagination } from "../trans/trans.slice"
-
 import { CustResponse } from "../../infrastructure/api/cust/cust.types"
 import { tokenStorage } from "../../infrastructure/storage/token.storage"
 
-type JwtPayload = {
-  username: string
-}
+import { resetTrans } from "../trans"
+
+type JwtPayload = { username: string }
 
 export const authListenerMiddleware = createListenerMiddleware()
 const listener = authListenerMiddleware.startListening
@@ -68,20 +56,3 @@ listener({
     api.dispatch(resetTrans())    // Reset dependent state
   },
 })
-
-/* ================================
-   NEW COMMAND
-================================ */
-// listener({
-//   matcher: isAnyOf(
-//     fetchTransactionsByFilter.fulfilled,
-//     fetchTransactionById.fulfilled,
-//     createTransaction.fulfilled,
-//     updateTransaction.fulfilled,
-//     deleteTransaction.fulfilled
-//   ),
-//   effect: async (_, api) => {
-//     api.dispatch(resetPagination())
-//   },
-// })
-

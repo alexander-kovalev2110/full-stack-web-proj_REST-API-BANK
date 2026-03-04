@@ -79,21 +79,31 @@ class TransactionController extends AbstractController
     }
 
     // GET BY FILTER (PAGINATION)
-    #[Route('/transactions', name: 'get_transaction_by_filter', methods: ['GET'])]
-    public function getTransactionByFilter(Request $request, Customer $customer): JsonResponse
-    {
-        $dto = new FilterTransactionRequest(
-            date: $request->query->get('date'),
-            amount: $request->query->get('amount') !== null ? (float)$request->query->get('amount') : null,
-            page: (int)$request->query->get('page', 1),
-            limit: (int)$request->query->get('limit', 10)
-        );
+    // #[Route('/transactions', name: 'get_transaction_by_filter', methods: ['GET'])]
+    // public function getTransactionByFilter(Request $request, Customer $customer): JsonResponse
+    // {
+    //     $dto = new FilterTransactionRequest(
+    //         date: $request->query->get('date'),
+    //         amount: $request->query->get('amount') !== null ? (float)$request->query->get('amount') : null,
+    //         page: (int)$request->query->get('page', 1),
+    //         limit: (int)$request->query->get('limit', 10)
+    //     );
 
-        $this->validator->validate($dto);
+    //     $this->validator->validate($dto);
 
+    //     return $this->json(
+    //         $this->transactionService->getTransactionByFilter($customer, $dto),
+    //         Response::HTTP_OK
+    //     );
+    // }
+
+    #[Route('/transactions', methods: ['GET'])]
+    public function getTransactionByFilter(
+        FilterTransactionRequest $dto,
+        Customer $customer
+    ): JsonResponse {
         return $this->json(
-            $this->transactionService->getTransactionByFilter($customer, $dto),
-            Response::HTTP_OK
+            $this->transactionService->getTransactionByFilter($customer, $dto)
         );
     }
 }
